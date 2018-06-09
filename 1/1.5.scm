@@ -21,6 +21,6 @@ Applicative-order evaluation:
 Normal-order evaluation:
 (if (= 0 0)
       0
-      (p)))
+      (p))
 (0)
 0
