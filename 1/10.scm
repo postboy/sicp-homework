@@ -41,7 +41,7 @@ Consider the following procedures, where A is the procedure defined above:
 2^n
 
 (define (h n) (A 2 n))
-I couldn't figure out.
+2[(^2) repeats (n-1) times], i.e. for n=1 it's 2, for n=4 it's 2^2^2^2
 
 (A 2 4) = 65536 = 2^16 = (2^8)^2 = ((2^4)^2)^2 = (((2^2)^2)^2)^2
 (A 2 3) = 16 = 2^4 = (2^2)^2
