@@ -1,7 +1,7 @@
-# Structure and Interpretation of Computer Programs, everyone!
+## Structure and Interpretation of Computer Programs, everyone!
 
 Unsolved: 1.13
 
 Unfinised: 1.14, 1.18
 
-Licence: public domain, of course
+Licence: public domain
