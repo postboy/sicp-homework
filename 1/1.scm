@@ -1,10 +1,6 @@
 ; Exercise 1.1.  Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
 
-(define (assert exp act)
-  (cond ((eq? exp act)
-	 #t)
-	(else
-	 (display "assert failed!"))))
+(load "ch1_common.scm")
 
 (assert 10 10)
 
