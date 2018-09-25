@@ -1,7 +1,6 @@
 ; common code for this chapter
 
 (define (assert exp act)
-  (cond ((eq? exp act)
-	 #t)
-	(else
-	 (display "assert failed!"))))
+  (if (eq? exp act)
+	 #t
+	 (display "assert failed!")))
