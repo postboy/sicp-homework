@@ -2,6 +2,6 @@
 
 Unsolved: 1.13
 
-Unfinised: 1.14, 1.18
+Unfinised: 1.18
 
 Licence: public domain

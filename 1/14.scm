@@ -49,4 +49,12 @@
 
 ; Longest path depends on n lineary: as we can see, it has length (amount + kinds-of-coins). During the execution we should get down from (cc 11 5) to 1 first, and then get back accumulating results. Space complexity -- O(n).
 
-; TODO: Other people say that time complexity is O(n^5). Sadly enough, I don't get it :( I can say only that complexity is at least O(n).
+; How many different paths do we have? To find it out, let's first simplify situation as much as possible. See the tree above for an illustration.
+
+; Let's suppose that we have only 1 kind of coins (1 cent). We clearly have the longest path ((10 1), (9 1) and so on) plus bonus "pseudopath" consisting of fruitless attempts to exchange money with 0 kinds of coins ((11 0), (10 0) and so on). This "pseudopath" doubles the amount of steps, but it doesn't matter in terms of complexity due to the very definition of order of growth. Number of paths is constant, path length is O(n), so overall number of steps (aka time complexity) is O(n).
+
+; Let's suppose that we have 2 kinds of coins (1 and 5 cents). We still can make change with n 1 cent coins. We can make change with n/5 5 cent coins plus n%5 1 cent coins. We also can do everything in between: n/5-1 5 cent coins plus some 1 cent coins, n/5-2 5 cent coins plus some 1 cent coins and so on. Overall we have n/5+1 paths, from using n/5 5 cent coins to using 0 5 cent coins. Number of paths is O(n), path length is O(n), so time complexity is O(n^2).
+
+; With 3 kinds of coins (1, 5, 10 cents) we obviously have all options from previous case plus many more using from 1 to n/10 10 cents coins. Judging by previous reasoning and especially by growth from first case to second, I suppose (though I'm not sure) that overall number of paths is O(n^2) now. OK, then time complexity must be O(n^3).
+
+; Judging by everything we saw up to this point, adding new kind of coins adds 1 to the power of n in time complexity. If this observation is right then time complexity of initial case with 5 kinds of coins is O(n^5).
