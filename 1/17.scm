@@ -2,6 +2,7 @@
 
 (load "ch1_common.scm")
 
+; this example shows that our language can also substract
 (define (* a b)
   (if (= b 0)
       0
@@ -15,12 +16,14 @@
 (define (halve n)
   (/ n 2))
 
+; does usage of this function still allowed?
 (define (even? n)
   (= (remainder n 2) 0))
 
+; analogous to * function, we use substaction
 (define (fast-mul a b)
   (cond ((= b 0) 0)
-        ((even? b) (double (fast-mul a (halve b))))
+        ((even? b) (fast-mul (double a) (halve b)))
         (else (+ a (fast-mul a (- b 1))))))
 
 (define (test-mul f)
@@ -42,3 +45,6 @@
   (assert 15 (f 3 5)))
 
 (test-mul fast-mul)
+
+; crosschecked: https://github.com/ivanjovanovic/sicp/blob/master/1.2/e-1.17.scm
+; My solution is slightly better because it uses less memory.

@@ -28,3 +28,5 @@
 (assert 27 (my-expt 3 3))
 (assert 81 (my-expt 3 4))
 (assert 243 (my-expt 3 5))
+
+; crosschecked: https://github.com/ivanjovanovic/sicp/blob/master/1.2/e-1.16.scm
