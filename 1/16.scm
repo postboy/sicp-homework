@@ -7,8 +7,7 @@
 
 (define (my-expt-iter b n a)
   (cond ((= n 0) a)
-	((= n 2) (my-expt-iter b 0 (* (square b) a)))
-	((even? n) (my-expt-iter b (/ n 2) (* (square b) a)))
+	((even? n) (my-expt-iter (square b) (/ n 2) a))
 	(else (my-expt-iter b (- n 1) (* b a)))))
 
 (define (my-expt b n)
