@@ -4,11 +4,11 @@
 
 ; quite simple procedure, but it uses substraction
 
-(define (fast-mul-iter a b res)
-  (cond ((= b 0) res)
-	((= b 2) (fast-mul-iter a 0 (+ res (double a))))
-        ((even? b) (fast-mul-iter a (halve b) (+ res (double a))))
-        (else (fast-mul-iter a (- b 1) (+ res a)))))
+(define (fast-mul-iter a b sum)
+  (cond ((= b 0) 0)
+	((= b 1) (+ a sum))
+        ((even? b) (fast-mul-iter (double a) (halve b) sum))
+        (else (fast-mul-iter a (- b 1) (+ sum a)))))
 
 ; TODO: version without substraction
 

@@ -10,15 +10,17 @@
 
 ; This algorithm takes a number of steps that is linear in b. Now suppose we include, together with addition, operations double, which doubles an integer, and halve, which divides an (even) integer by 2. Using these, design a multiplication procedure analogous to fast-expt that uses a logarithmic number of steps.
 
+; does usage of this function still allowed?
+(define (even? n)
+  (= (remainder n 2) 0))
+
 (define (double n)
   (* n 2))
 
 (define (halve n)
-  (/ n 2))
-
-; does usage of this function still allowed?
-(define (even? n)
-  (= (remainder n 2) 0))
+  (if (even? n)
+      (/ n 2)
+      (display "halve is defined only for even numbers!")))
 
 ; analogous to * function, we use substaction
 (define (fast-mul a b)
