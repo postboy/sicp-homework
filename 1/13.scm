@@ -1,4 +1,4 @@
-; Exercise 1.13.  Prove that Fib(n) is the closest integer to a^n/5, where a = (1 + sqrt(5))/2. Hint: Let b = (1 - sqrt(5))/2. Use induction and the definition of the Fibonacci numbers (see section 1.2.2) to prove that Fib(n) = (a^n - b^n)/sqrt(5).
+; Exercise 1.13.  Prove that Fib(n) is the closest integer to a^n/sqrt(5), where a = (1 + sqrt(5))/2. Hint: Let b = (1 - sqrt(5))/2. Use induction and the definition of the Fibonacci numbers (see section 1.2.2) to prove that Fib(n) = (a^n - b^n)/sqrt(5).
 
 ; f(n) = (a^n - b^n)/sqrt(5)
 ; c = sqrt(5)
@@ -24,4 +24,24 @@
 ; f(1) = (1 + c - 1 + c) / (2^1 * c) = 2c / 2c = 1
 ; Initial values are right. It means that overall the formula is right!
 
-; TODO: prove that Fib(n) is the closest integer to a^n/5
+; g(n) = a^n/c
+; Now let's prove that Fib(n) is the closest integer to g(n). This statement is true if the following condition is met:
+; |g(n) - Fib(n)| < 1/2, where n >= 0
+; |a^n/c - (a^n-b^n)/c| < 1/2
+; |a^n/c - a^n/c + b^n/c| < 1/2
+; |b^n/c| < 1/2
+; c > 0, so
+; |b^n| < c/2
+; |((1-c)/2)^n| < c/2
+; |(1-c)^n/2^n| < c/2
+; |(1-c)^n| < c*2^(n-1)
+; |(1-c)^n| = |(-1.2...)^n| < 1.3^n
+; c*2^(n-1) > 2*2^(n-1) = 2^n
+; 1.3^n < 2^n for n > 0
+; Let's glue all this together:
+; |(1-c)^n| < 1.3^n < 2^n < c*2^(n-1) for n > 0, which means that |(1-c)^n| < c*2^(n-1) for n > 0
+; Now we have to manually analyze edge-case n = 0:
+; g(0) = a^0 / c = 1/c = 1/sqrt(5) = 0.447...
+; |0.447... - 0| < 0.5
+; 0.447... < 0.5
+; Now we finally proved all required statements.
