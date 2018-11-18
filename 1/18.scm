@@ -5,21 +5,33 @@
 ; quite simple procedure, but it uses substraction
 
 (define (fast-mul-iter a b sum)
-  (cond ((= b 0) 0)
-	((= b 1) (+ a sum))
+  (cond ((= b 0) sum)
         ((even? b) (fast-mul-iter (double a) (halve b) sum))
         (else (fast-mul-iter a (- b 1) (+ sum a)))))
 
-; TODO: version without substraction
-
-;(define (fast-mul-iter a b count res)
-;  (cond ((= count b) res)
-;	((> b (double count))) (fast-mul-iter a b (double count) (+ res (double a))))
-;	((= b 2) (fast-mul-iter a 0 (+ res (double a))))
-;        ((even? b) 
-;        (else (fast-mul-iter a b (+ count 1) (+ res a)))))
-
 (define (fast-mul-i a b)
   (fast-mul-iter a b 0))
+
+(test-mul fast-mul-i)
+
+; But what about Russian peasant algorithm? Honestly, I didn't managed to reinvent it by myself, so googling helped me one more time. It still uses substraction though, but in very subtle way.
+
+(define (fast-mul-iter a b sum)
+  (cond ((= b 0) sum)
+        ((even? b) (fast-mul-iter (double a) (halve b) sum))
+        (else (fast-mul-iter (double a) (halve (- b 1)) (+ sum a)))))
+
+(test-mul fast-mul-i)
+
+; With the following definition of halve we can define function without substraction:
+(define (halve n)
+  (quotient n 2))
+
+(define (fast-mul-iter a b sum)
+  (cond ((= b 0) sum)
+        ((even? b) (fast-mul-iter (double a) (halve b) sum))
+        (else (fast-mul-iter (double a) (halve b) (+ sum a)))))
+
+; Isn't this beautiful?
 
 (test-mul fast-mul-i)
