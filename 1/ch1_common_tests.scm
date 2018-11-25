@@ -1,7 +1,8 @@
 (load "ch1_common.scm")
 
-(assert 0 0)   ; #t
-(assert 0 1)   ; #f
-(assert 'a 'a) ; #t
-(assert 'a 'b) ; #f
-(assert 0 'a)  ; #f
+(assert #t (assert 0 0))
+(assert #t (assert 'a 'a))
+; following lines cause error messages on console
+(assert #f (assert 0 1))
+(assert #f (assert 'a 'b))
+(assert #f (assert 0 'a))

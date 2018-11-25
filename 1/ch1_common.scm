@@ -1,9 +1,11 @@
 ; common code for this chapter
 
+(define (display-all . vs)
+  (for-each display vs))
+
 (define (assert exp act)
-  (if (eq? exp act)
-	 #t
-	 (display "assert failed!")))
+  (cond ((eq? exp act) #t)
+	(else (display-all "assert failed: " exp " != " act) #f)))
 
 ; function that computes square roots
 
