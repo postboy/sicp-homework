@@ -1,6 +1,6 @@
 ; Exercise 1.1.  Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
 
-(load "ch1_common.scm")
+(load "ch11_common.scm")
 
 (assert 10 10)
 

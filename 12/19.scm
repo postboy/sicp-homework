@@ -13,7 +13,7 @@
 
 ; now let's substitute it in the procedure
 
-(load "ch1_common.scm")
+(load "ch12_common.scm")
 
 (define (fib-iter a b p q count)
   (cond ((= count 0) b)

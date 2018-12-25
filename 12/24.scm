@@ -1,6 +1,6 @@
 ; Exercise 1.24.  Modify the timed-prime-test procedure of exercise 1.22 to use fast-prime? (the Fermat method), and test each of the 12 primes you found in that exercise.
 
-(load "ch1_common.scm")
+(load "ch12_common.scm")
 
 (define (fermat-test n)
   (define (try-it a)

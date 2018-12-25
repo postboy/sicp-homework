@@ -1,6 +1,6 @@
 ; Exercise 1.10.  The following procedure computes a mathematical function called Ackermann's function.
 
-(load "ch1_common.scm")
+(load "ch12_common.scm")
 
 (define (A x y)
   (cond ((= y 0) 0)

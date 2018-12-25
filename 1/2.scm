@@ -1,6 +1,6 @@
 ; Exercise 1.2.  Translate the following expression into prefix form <...>
 
-(load "ch1_common.scm")
+(load "ch11_common.scm")
 
 ; assert don't work here
 ;(assert (/ -37 150)

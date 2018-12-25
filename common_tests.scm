@@ -1,4 +1,4 @@
-(load "ch1_common.scm")
+(load "common.scm")
 
 (assert #t (assert 0 0))
 (assert #t (assert 'a 'a))
