@@ -1,5 +1,12 @@
 (load "../common.scm")
 
+; gcd
+
+(define (gcd a b)
+  (if (= b 0)
+      a
+      (gcd b (remainder a b))))
+
 ; smallest-divisor
 
 (define (divides? a b)
@@ -19,7 +26,7 @@
 ; timed-prime-test
 
 (define (prime? n)
-  (= n (smallest-divisor n)))
+  (and (> n 1) (= n (smallest-divisor n))))
 
 (define (report-prime elapsed-time)
   (display " *** ")

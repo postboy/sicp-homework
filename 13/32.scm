@@ -3,12 +3,6 @@
 
 (load "ch13_common.scm")
 
-(define (product term a next b)
-  (accumulate * 1 term a next b))
-
-(define (sum term a next b)
-  (accumulate + 0 term a next b))
-
 (define (accumulate combiner null-value term a next b)
   (if (> a b)
       null-value

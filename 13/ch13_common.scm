@@ -4,6 +4,9 @@
 
 (define (cube x) (* x x x))
 
+(define (sum term a next b)
+  (accumulate + 0 term a next b))
+
 (define (s-integral f a b n)
   (define h (/ (- b a) n))
   (define (y k) (f (+ a (* k h))))
@@ -18,6 +21,9 @@
 (define (inc n) (+ n 1))
 
 (define (identity x) x)
+
+(define (product term a next b)
+  (accumulate * 1 term a next b))
 
 (define (factorial n)
   (product identity 1 inc n))

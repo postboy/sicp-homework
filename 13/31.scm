@@ -2,6 +2,15 @@
 
 (load "ch13_common.scm")
 
+(define (product term a next b)
+  (if (> a b)
+      1
+      (* (term a)
+         (product term (next a) next b))))
+
+(test-factorial
+ factorial)
+
 (define (pi-approx n)
   (define (term k)
     (if (even? k)
@@ -14,14 +23,6 @@
 (pi-approx 100)   ; 3.1263793980429817
 (pi-approx 1000)  ; 3.140026946105016
 (pi-approx 10000) ; 3.1414356249917024
-
-(define (product term a next b)
-  (if (> a b)
-      1
-      (* (term a)
-         (product term (next a) next b))))
-
-(test-factorial factorial)
 
 ; b.  If your product procedure generates a recursive process, write one that generates an iterative process. If it generates an iterative process, write one that generates a recursive process.
 
