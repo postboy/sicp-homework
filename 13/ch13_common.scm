@@ -1,8 +1,26 @@
 (load "../common.scm")
 
-; inc
+; s-integral
+
+(define (cube x) (* x x x))
+
+(define (s-integral f a b n)
+  (define h (/ (- b a) n))
+  (define (y k) (f (+ a (* k h))))
+  (define (term k)
+    (cond ((or (= k 0) (= k n)) (y k))
+	  ((even? k) (* 2 (y k)))
+	  (else (* 4 (y k)))))
+  (* (/ h 3) (sum term 0 inc n)))
+
+; factorial
 
 (define (inc n) (+ n 1))
+
+(define (identity x) x)
+
+(define (factorial n)
+  (product identity 1 inc n))
 
 ; test-factorial
 
