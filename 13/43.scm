@@ -9,3 +9,4 @@
 
 (assert 25 ((repeated square 1) 5))
 (assert 625 ((repeated square 2) 5))
+(assert 3 ((repeated inc 3) 0))
