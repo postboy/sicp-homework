@@ -3,8 +3,6 @@
 
 (load "ch13_common.scm")
 
-(define (dec n) (- n 1))
-
 (define (cont-frac n d k)
   (define (iter i delta)
     (if (= i 0)
