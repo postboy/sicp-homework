@@ -46,17 +46,19 @@
 
 (define tolerance 0.00001)
 
+(define (fp-close-enough? v1 v2)
+  (< (abs (- v1 v2)) tolerance))
+
+(define (fp-try f guess i print?)
+  (let ((next (f guess)))
+    (cond (print?
+	   (display-all i ": " next) (newline)))
+    (if (fp-close-enough? guess next)
+	next
+	(fp-try f next (inc i) print?))))
+
 (define (fixed-point-internal f first-guess print?)
-  (define (close-enough? v1 v2)
-    (< (abs (- v1 v2)) tolerance))
-  (define (try guess i)
-    (let ((next (f guess)))
-      (cond (print?
-	     (display-all i ": " next) (newline)))
-      (if (close-enough? guess next)
-          next
-          (try next (inc i)))))
-  (try first-guess 1))
+  (fp-try f first-guess 1 print?))
 
 (define (fixed-point f first-guess)
   (fixed-point-internal f first-guess #f))
