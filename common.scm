@@ -7,3 +7,8 @@
 (define (assert exp act)
   (cond ((eq? exp act) #t)
 	(else (display-all "assert failed: " exp " != " act) #f)))
+
+; average
+
+(define (average x y)
+  (/ (+ x y) 2))
