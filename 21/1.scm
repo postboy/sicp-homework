@@ -20,10 +20,8 @@
   (let ((n (numer x))
 	(d (denom x)))
     (newline)
-    (display n)
-    (display "/")
-    (display d)
-    (/ n d)))
+    (display-all n "/" d)
+    (/ n d))) 
 
 (assert (print-rat (make-rat -1 1)) (/ (- 1) 1))
 (assert (print-rat (make-rat 1 -1)) (/ (- 1) 1))
