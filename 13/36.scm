@@ -2,5 +2,10 @@
 
 (load "ch13_common.scm")
 
-(fixed-point-dbg (lambda (x) (/ (log 1000) (log x))) 2.0)             ; 4.555532270803653, 34 iterations
-(fixed-point-dbg (lambda (x) (average (/ (log 1000) (log x)) x)) 2.0) ; 4.555537551999825, 9 iterations
+(assert
+ (fixed-point-dbg (lambda (x) (/ (log 1000) (log x))) 2.0)
+ 4.555532270803653) ; 34 iterations
+
+(assert
+ (fixed-point-dbg (lambda (x) (average (/ (log 1000) (log x)) x)) 2.0)
+ 4.555537551999825) ; 9 iterations

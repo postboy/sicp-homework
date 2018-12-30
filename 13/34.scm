@@ -2,8 +2,7 @@
 
 (load "ch13_common.scm")
 
-(define (f g)
-  (g 2))
+(define (f g) (g 2))
 
 ; Then we have
 

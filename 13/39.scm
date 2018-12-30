@@ -11,8 +11,7 @@
     (+ (* i 2) -1.0))
   (cont-frac n d k))
 
-(tan-cf 0 10) ; actual 0, expected 0
-(tan-cf 1 10) ; 1.56, 1.56
-(tan-cf 3 10) ; -0.14, -0.14
-(tan-cf 9 10) ; -0.62, -0.45
-(tan-cf 9 15) ; -0.45, -0.45
+(assert (tan-cf 0 10) 0)
+(assert (tan-cf 1 10) 1.557407724654902)
+(assert (tan-cf 3 10) -0.1425465438397583)
+(assert (tan-cf 9 15) -0.4523402017392058)

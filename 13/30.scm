@@ -9,6 +9,5 @@
         (iter (next a) (+ (term a) result))))
   (iter a 0))
 
-; assert don't work here
-(s-integral cube 0 1 100)  ; 1/4
-(s-integral cube 0 1 1000) ; 1/4
+(assert (s-integral cube 0 1 100) 1/4)
+(assert (s-integral cube 0 1 1000) 1/4)

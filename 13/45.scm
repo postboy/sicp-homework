@@ -59,4 +59,4 @@
 ; - - - 3 3 5 7 9 - - (33-37) - this values may be senseless
 
 ; Let's try a bigger base to check ourselves:
-(nroot (expt 5 20) 20 2)
+(assert (nroot (expt 5 20) 20 2) 5.000001287724648)

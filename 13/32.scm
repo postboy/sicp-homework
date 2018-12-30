@@ -11,9 +11,8 @@
 
 (test-factorial factorial)
 
-; assert don't work here
-(s-integral cube 0 1 100)  ; 1/4
-(s-integral cube 0 1 1000) ; 1/4
+(assert (s-integral cube 0 1 100) 1/4)
+(assert (s-integral cube 0 1 1000) 1/4)
 
 ; b. If your accumulate procedure generates a recursive process, write one that generates an iterative process. If it generates an iterative process, write one that generates a recursive process.
 
@@ -26,6 +25,5 @@
 
 (test-factorial factorial)
 
-; assert don't work here
-(s-integral cube 0 1 100)  ; 1/4
-(s-integral cube 0 1 1000) ; 1/4
+(assert (s-integral cube 0 1 100) 1/4)
+(assert (s-integral cube 0 1 1000) 1/4)

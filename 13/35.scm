@@ -8,4 +8,4 @@
 ; By definition, function f(x) has fixed-point x0 if x0 = f(x0), and here we have exactly this situation.
 
 ; y ~ 1.6180 (see 1.2.2)
-(fixed-point (lambda (x) (+ 1 (/ 1 x))) 1.0) ; 1.6180327868852458
+(assert (fixed-point (lambda (x) (+ 1 (/ 1 x))) 1.0) 1.6180327868852458)

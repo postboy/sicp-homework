@@ -8,7 +8,6 @@
       (+ (term a)
          (sum term (next a) next b))))
 
-; assert don't work here
-(s-integral cube 0 1 100)  ; 1/4
-(s-integral cube 0 1 1000) ; 1/4
+(assert (s-integral cube 0 1 100) 1/4)
+(assert (s-integral cube 0 1 1000) 1/4)
 ; Indeed, this results are more exact than those we've got from an integral routine.

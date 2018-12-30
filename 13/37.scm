@@ -11,10 +11,10 @@
   (iter k 0))
 
 ; y ~ 1.6180 (see 1.2.2)
-(/ 1 (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 1))  ; 1.
-(/ 1 (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 5))  ; 1.6
-(/ 1 (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 10)) ; 1.6181818181818184 ~ 1.6181
-(/ 1 (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 11)) ; 1.6179775280898876 ~ 1.6180
+(assert (/ 1 (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 1)) 1.)
+(assert (/ 1 (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 5)) 1.6)
+(assert (/ 1 (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 10)) 1.6181818181818184) ; 1.6181
+(assert (/ 1 (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 11)) 1.6179775280898876) ; 1.6180
 ; That was our goal! We've got it on 11 iterations.
 
 ; b. If your cont-frac procedure generates a recursive process, write one that generates an iterative process. If it generates an iterative process, write one that generates a recursive process.
@@ -26,5 +26,5 @@
 	(/ (n i) (+ (d i) (delta (inc i))))))
   (/ (n 1) (+ (d 1) (delta 2))))
 
-(/ 1 (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 1))  ; 1.
-(/ 1 (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 11)) ; 1.6179775280898876 ~ 1.6180
+(assert (/ 1 (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 1)) 1.)
+(assert (/ 1 (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 11)) 1.6179775280898876) ; 1.6180

@@ -5,6 +5,6 @@
 (define (cubic a b c)
   (lambda (x) (+ (cube x) (* (square x) a) (* b x) c)))
 
-(newtons-method (cubic 1 1 -3) 1)    ; actual: 1, expected: 1
-(newtons-method (cubic 1 1 1) 1)     ; -0.9999999999997796, -1
-(newtons-method (cubic 10 20 30) 1)  ; -7.961132876317207, -7.9611
+(assert (newtons-method (cubic 1 1 -3) 1) 1)
+(assert (newtons-method (cubic 1 1 1) 1) -0.9999999999997796)
+(assert (newtons-method (cubic 10 20 30) 1) -7.961132876317207)

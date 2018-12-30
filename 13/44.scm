@@ -10,10 +10,10 @@
 (define (smooth f)
   (lambda (x) (average (f (- x dx)) (f x) (f (+ x dx)))))
 
-(assert 8 (cube 2))
-((smooth cube) 2) ; 8.000004
+(assert (cube 2) 8)
+(assert ((smooth cube) 2) 8.000004)
 
 (define (nsmooth f n)
   ((repeated smooth n) f))
 
-((nsmooth cube 2) 2) ; 8.000008000000001
+(assert ((nsmooth cube 2) 2) 8.000008000000001)
