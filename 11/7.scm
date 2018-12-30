@@ -5,11 +5,11 @@
 ; does not evaluates at all with old procedures
 ; (sqrt 4000000000000000000000)
 
-; evaluates to ~.0313 with old procedures, and this is totally wrong
-(sqrt 0.000004)
+; totally wrong
+(assert (sqrt 0.000004) .03129261341049664)
 
-; evaluates to .03125 - wrong
-(sqrt 0)
+; wrong too
+(assert (sqrt 0) 0.03125)
 
 ; Floating-point division by zero
 (sqrt -1)
@@ -17,8 +17,8 @@
 ; Due to the nature of floating-point numbers, representation precision of big numbers will make old test inadequate: every new guess will be just equal to the old one, so computation process won't converge. Old test isn't adequate for small numbers either because it can produce results with computational error bigger than result itself.
 
 ; does the improvement of guess changed it less than on 0.1%?
-(define (good-enough? guess x)
-  (< (abs (- (improve guess x)
+(define (sqrt-good-enough? guess x)
+  (< (abs (- (sqrt-improve guess x)
 	     guess))
      (* 0.001 guess)))
 
@@ -29,8 +29,8 @@
 
 ; this operations work right after algorithm change
 
-(sqrt 4000000000000000000000) ; ~6.32 * 10^10
-(sqrt 0.000004) ; 0.002
-(sqrt 1) ; 1
-(assert 0 (sqrt 0))
-(assert 0 (sqrt -1))
+(assert (sqrt 4000000000000000000000) 63266789089.78024)
+(assert (sqrt 0.000004) 2.001107733030763e-3)
+(assert (sqrt 1) 1.)
+(assert (sqrt 0) 0)
+(assert (sqrt -1) 0)

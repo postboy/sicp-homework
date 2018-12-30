@@ -5,7 +5,7 @@
 
 ; display-all can be changed to error for debugging convenience
 (define (assert exp act)
-  (cond ((eq? exp act) #t)
+  (cond ((equal? exp act) #t)
 	(else (display-all "assert failed: " exp " != " act) #f)))
 
 ; average

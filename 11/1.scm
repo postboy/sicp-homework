@@ -19,7 +19,7 @@
 
 (assert 19
 	(+ a b
-	      (* a b)))
+	   (* a b)))
 
 (assert #f (= a b))
 
