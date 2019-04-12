@@ -26,8 +26,8 @@
     (x-point (end-segment s))
     )
    (average
-    (x-point (start-segment s))
-    (x-point (end-segment s))
+    (y-point (start-segment s))
+    (y-point (end-segment s))
     )))
 
 (define zero (make-point 0 0))
@@ -37,9 +37,12 @@
 (define two (make-point 2 2))
 (define six (make-point 6 6))
 (define ten (make-point 10 10))
+(define tricky-ten (make-point 10 -10))
 
 (define two-to-ten (make-segment two ten))
 (define zero-to-minus-one (make-segment zero minus-one))
+(define tricky-ten-to-tricky-ten (make-segment tricky-ten tricky-ten))
 
 (assert (print-point (midpoint-segment two-to-ten)) six)
 (assert (print-point (midpoint-segment zero-to-minus-one)) minus-half)
+(assert (print-point (midpoint-segment tricky-ten-to-tricky-ten)) tricky-ten)
