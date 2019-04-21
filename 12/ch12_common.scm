@@ -1,12 +1,5 @@
 (load "../common.scm")
 
-; gcd
-
-(define (gcd a b)
-  (if (= b 0)
-      a
-      (gcd b (remainder a b))))
-
 ; smallest-divisor
 
 (define (divides? a b)
