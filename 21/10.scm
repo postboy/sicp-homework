@@ -2,18 +2,23 @@
 
 (load "8.scm")
 
+(define (negative? i) (and (> 0 (lower-bound i)) (> 0 (upper-bound i))))
+(define (positive? i) (and (< 0 (lower-bound i)) (< 0 (upper-bound i))))
+(define (spans-zero? i) (and (>= 0 (lower-bound i)) (<= 0 (upper-bound i))))
+
 (define (div-interval x y)
-  (if (and (>= 0 (lower-bound y)) (<= 0 (upper-bound y)))
+  (if (spans-zero? y)
       (display-all "error: second interval spans zero: " y)
       (mul-interval x 
 		    (make-interval (/ 1.0 (upper-bound y))
 				   (/ 1.0 (lower-bound y))))))
 
+; commented lines cause error messages
 (assert (div-interval sample-int sample-int) div-result)
-(div-interval sample-int sub-result) ; error
+; (div-interval sample-int sub-result)
 
 (define lobound-zero (make-interval 0 1))
-(div-interval sample-int lobound-zero) ; error
+; (div-interval sample-int lobound-zero)
 
 (define upbound-zero (make-interval -1 0))
-(div-interval sample-int upbound-zero) ; error
+; (div-interval sample-int upbound-zero)
