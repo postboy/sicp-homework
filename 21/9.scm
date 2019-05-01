@@ -2,13 +2,12 @@
 
 (load "8.scm")
 
-(define (iwidth i)
-  (/ (- (upper-bound i) (lower-bound i))
-     2))
+(define (width i)
+  (/ (- (upper-bound i) (lower-bound i)) 2))
 
 ; Let's find out formula for addition using substitution:
-; (iwidth (add-interval x y))
-; First, let's substitute iwidth definition:
+; (width (add-interval x y))
+; First, let's substitute width definition:
 ; (/ (- (upper-bound (add-interval x y))
 ;       (lower-bound (add-interval x y)))
 ;    2)
@@ -25,12 +24,12 @@
 ;       2)
 ;    (/ (- (upper-bound y) (lower-bound y))
 ;       2))
-; By definition of iwidth this is equivalent to
-; (+ (iwidth x) (iwidth y))
+; By definition of width this is equivalent to
+; (+ (width x) (width y))
 
 ; Let's find out formula for substraction using substitution:
-; (iwidth (sub-interval x y))
-; First, let's substitute iwidth definition:
+; (width (sub-interval x y))
+; First, let's substitute width definition:
 ; (/ (- (upper-bound (sub-interval x y))
 ;       (lower-bound (sub-interval x y)))
 ;    2)
@@ -44,14 +43,14 @@
 ;    2)
 ; This formula is the same as in previous example.
 
-(assert (iwidth add-result) (+ (iwidth sample-int)
-			       (iwidth sample-int)))
-(assert (iwidth sub-result) (+ (iwidth sample-int)
-			       (iwidth sample-int)))
+(assert (width add-result) (+ (width sample-int)
+			      (width sample-int)))
+(assert (width sub-result) (+ (width sample-int)
+			      (width sample-int)))
 
-(assert (+ (iwidth mul-result) 0.0) (+ (iwidth sample-int)
-				       (iwidth sample-int)
-				       0.5))
-(assert (iwidth div-result) (+ (iwidth sample-int)
-			       (iwidth sample-int)
-			       -0.25))
+(assert (+ (width mul-result) 0.0) (+ (width sample-int)
+				      (width sample-int)
+				      0.5))
+(assert (width div-result) (+ (width sample-int)
+			      (width sample-int)
+			      -0.25))
