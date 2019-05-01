@@ -8,12 +8,12 @@
   (/ (+ (lower-bound i) (upper-bound i)) 2))
 
 (define (make-center-percent c p)
-  (make-center-width c (/ (* c p) 100)))
+  (make-center-width c (* c (/ p 100))))
 (define (percent i)
-  (* (/ (width i) (center i)) 100))
+  (* (/ (width i) (center i)) 100.0))
 
 (define one-to-three (make-interval 1 3))
 (define percent-int (make-center-percent 2 50))
 (assert one-to-three percent-int)
 (assert 2 (center percent-int))
-(assert 50 (percent percent-int))
+(assert 50.0 (percent percent-int))
