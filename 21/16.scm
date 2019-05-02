@@ -1,0 +1,5 @@
+; Exercise 2.16.  Explain, in general, why equivalent algebraic expressions may lead to different answers. Can you devise an interval-arithmetic package that does not have this shortcoming, or is this task impossible? (Warning: This problem is very difficult.)
+
+; In general, algebraic expressions and real computations are two distinct things. Equivalent algebraic expressions can have different properties regarding their precision in real computations, i.e. their results' precisions can differ. This happens because initial data is in general inexact (i.e. represented with some precision), and all operations in general will differently "carry" this inexactness to intermediate and final data. Note that in general, operations will combine inexactness of their arguments.
+
+; Maybe we could create a package that will properly simplify expressions, but I'm not sure if it's possible from mathematical point of view. This problem is indeed very difficult and is widely covered in literature about metrology, interval arithmetic and floating-point arithmetic.
