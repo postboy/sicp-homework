@@ -28,5 +28,5 @@
 ; (list <a1> <a2> ... <an>) = (cons <a1> (cons <a2> (cons ... (cons <an> nil) ...)))
 ; Also, nil is not on the end of list, where it should be.
 
-(assert (list 16 9 4 1) (square-list-3 (list 1 2 3 4)))
-(assert (cons (cons (cons (cons nil 1) 4) 9) 16) (square-list-4 (list 1 2 3 4)))
+(assert '(16 9 4 1) (square-list-3 '(1 2 3 4)))
+(assert (cons (cons (cons (cons nil 1) 4) 9) 16) (square-list-4 '(1 2 3 4)))

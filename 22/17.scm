@@ -7,4 +7,4 @@
       l
       (last-pair (cdr l))))
 
-(assert (list 34) (last-pair (list 23 72 149 34)))
+(assert '(34) (last-pair '(23 72 149 34)))

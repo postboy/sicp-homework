@@ -17,5 +17,5 @@
 (define (square-list-2 items)
   (map square items))
 
-(assert (list 1 4 9 16) (square-list-1 (list 1 2 3 4)))
-(assert (list 1 4 9 16) (square-list-2 (list 1 2 3 4)))
+(assert '(1 4 9 16) (square-list-1 '(1 2 3 4)))
+(assert '(1 4 9 16) (square-list-2 '(1 2 3 4)))

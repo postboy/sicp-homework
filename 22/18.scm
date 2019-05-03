@@ -12,5 +12,5 @@
       l
       (append (reverse (cdr l)) (list (car l)))))
 
-(assert (list 25 16 9 4 1) (reverse (list 1 4 9 16 25)))
-(assert (list) (reverse (list)))
+(assert '(25 16 9 4 1) (reverse '(1 4 9 16 25)))
+(assert '() (reverse '()))
