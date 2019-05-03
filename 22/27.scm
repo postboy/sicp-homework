@@ -11,4 +11,4 @@
 
 (assert '((3 4) (1 2)) (reverse x))
 (assert '((4 3) (2 1)) (deep-reverse x))
-(assert '() (deep-reverse (list)))
+(assert '() (deep-reverse '()))
