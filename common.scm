@@ -4,9 +4,9 @@
   (for-each display vs))
 
 ; display-all can be changed to error for debugging convenience
-(define (assert exp act)
-  (cond ((equal? exp act) #t)
-	(else (display-all "assert failed: " exp " != " act) #f)))
+(define (assert a b)
+  (cond ((equal? a b) #t)
+	(else (display-all "assert failed: " a " != " b) #f)))
 
 ; average
 
