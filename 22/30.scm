@@ -10,7 +10,7 @@
 
 (assert (square-tree '(1 (2 (3 4) 5) (6 7))) '(1 (4 (9 16) 25) (36 49)))
 
-(define (scale-tree tree factor)
+(define (square-tree tree)
   (map (lambda (sub-tree)
          (if (pair? sub-tree)
              (square-tree sub-tree)
