@@ -1,7 +1,5 @@
 (load "../common.scm")
 
-; dec
-
 (define (dec n) (- n 1))
 
 ; s-integral
@@ -21,8 +19,6 @@
   (* (/ h 3) (sum term 0 inc n)))
 
 ; factorial
-
-(define (inc n) (+ n 1))
 
 (define (identity x) x)
 

@@ -1,5 +1,3 @@
-; assert
-
 (define (display-all . vs)
   (for-each display vs))
 
@@ -8,14 +6,12 @@
   (cond ((equal? a b) #t)
 	(else (display-all "assert failed: " a " != " b) #f)))
 
-; average
-
 (define (average x y)
   (/ (+ x y) 2))
-
-; gcd
 
 (define (gcd a b)
   (if (= b 0)
       a
       (gcd b (remainder a b))))
+
+(define (inc n) (+ n 1))
