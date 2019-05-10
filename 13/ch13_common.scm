@@ -1,7 +1,5 @@
 (load "../common.scm")
 
-(define (dec n) (- n 1))
-
 ; s-integral
 
 (define (cube x) (* x x x))
