@@ -27,6 +27,7 @@
    (* s (ycor-vect v))))
 
 (define v13 (make-vect 1 3))
+(define v31 (make-vect 3 1))
 (define v26 (make-vect 2 6))
 
 (assert v26 (add-vect v13 v13))
