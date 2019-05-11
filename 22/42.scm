@@ -51,13 +51,12 @@
 (assert #f (check-pos p23 p32))
 (assert #t (check-pos p12 p33))
 
-(define (list-ref items n)
-  (if (= n 0)
-      (car items)
-      (list-ref (cdr items) (- n 1))))
-
 (define (safe? k positions)
-  (define kth-col (car (filter (lambda (pos) (eq? k (get-col pos))) positions)))
+  (define filtered (filter (lambda (pos) (eq? k (get-col pos))) positions))
+  (define kth-col
+    (if (eq? 1 (length filtered))
+	(car filtered)
+	nil))
   (define (and-wrapper x y)
     (and x y))
   (accumulate and-wrapper #t
@@ -85,8 +84,9 @@
           (queen-cols (- k 1))))))
   (queen-cols board-size))
 
-(assert '(()) (queens 0))
-(assert '(((1 1))) (queens 1))
+(assert (queens 0) '(()))
+(assert (queens 1) '(((1 1))))
+(assert (queens 4) '(((3 4) (1 3) (4 2) (2 1)) ((2 4) (4 3) (1 2) (3 1))))
 
 (assert (length (queens 0)) 1)
 (assert (length (queens 1)) 1)
