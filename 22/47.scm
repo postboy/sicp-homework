@@ -23,6 +23,7 @@
 (define (make-frame origin edge1 edge2)
   (cons origin (cons edge1 edge2)))
 
+; origin-frame and edge1-frame from above are still fine
 (define (edge2-frame f)
   (cddr f))
 
