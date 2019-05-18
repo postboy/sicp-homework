@@ -6,6 +6,8 @@
   (cond ((equal? a b) #t)
 	(else (display-all "assert failed: " a " != " b) #f)))
 
+(define (identity x) x)
+
 (define (average x y)
   (/ (+ x y) 2))
 

@@ -18,8 +18,6 @@
 
 ; factorial
 
-(define (identity x) x)
-
 (define (product term a next b)
   (accumulate * 1 term a next b))
 
