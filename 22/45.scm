@@ -1,7 +1,8 @@
 ; Exercise 2.45.  Right-split and up-split can be expressed as instances of a general splitting operation. Define a procedure split with the property that evaluating <...> produces procedures right-split and up-split with the same behaviors as the ones already defined.
 
-#lang sicp
-(#%require sicp-pict)
+(load "51.scm")
+
+(define device (make-graphics-device (car (enumerate-graphics-types))))
 
 (define (split out-comb in-comb)
   (lambda (painter n)
@@ -13,5 +14,10 @@
 (define right-split (split beside below))
 (define up-split (split below beside))
 
-(paint (right-split einstein 4))
-(paint (up-split einstein 4))
+(graphics-clear device)
+((right-split wave 4) miniframe)
+
+(graphics-clear device)
+((up-split wave 4) miniframe)
+
+(graphics-close device)

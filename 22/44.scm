@@ -1,9 +1,8 @@
 ; Exercise 2.44.  Define the procedure up-split used by corner-split. It is similar to right-split, except that it switches the roles of below and beside.
 
-; I couldn't test this within GNU/MIT Scheme and had to switch to DrRacket for this picture language.
+(load "51.scm")
 
-#lang sicp
-(#%require sicp-pict)
+(define device (make-graphics-device (car (enumerate-graphics-types))))
 
 (define (right-split painter n)
   (if (= n 0)
@@ -28,6 +27,13 @@
           (beside (below painter top-left)
                   (below bottom-right corner))))))
 
-(paint (right-split einstein 4))
-(paint (up-split einstein 4))
-(paint (corner-split einstein 4))
+(graphics-clear device)
+((right-split wave 4) miniframe)
+
+(graphics-clear device)
+((up-split wave 4) miniframe)
+
+(graphics-clear device)
+((corner-split wave 4) miniframe)
+
+(graphics-close device)
