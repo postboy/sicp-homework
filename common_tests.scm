@@ -1,12 +1,18 @@
 (load "common.scm")
 
+(assert #t (assert #f #f))
 (assert #t (assert 0 0))
 (assert #t (assert 'a 'a))
 (assert #t (assert 1/4 1/4))
 (assert #t (assert 0.1 0.1))
-; following lines cause error messages on console
+(assert #t (assert '(this is a list) '(this is a list)))
+; following lines cause error messages on REPL
+(assert #f (assert #f #t))
 (assert #f (assert 0 1))
 (assert #f (assert 'a 'b))
 (assert #f (assert 0 'a))
 (assert #f (assert 0 0.1))
 (assert #f (assert 0 1/4))
+(assert #f (assert 'a '()))
+(assert #f (assert '(this is a list) '()))
+(assert #f (assert '(this is a list) '(this (is a) list)))
