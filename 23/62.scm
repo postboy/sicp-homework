@@ -1,6 +1,6 @@
 ; Exercise 2.62.  Give a O(n) implementation of union-set for sets represented as ordered lists.
 
-(load "ch22_common.scm")
+(load "ch23_common.scm")
 
 (define (union-set set1 set2)
   (cond ((null? set1) set2)

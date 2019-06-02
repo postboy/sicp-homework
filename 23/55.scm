@@ -1,6 +1,6 @@
 ; Exercise 2.55.  Eva Lu Ator types to the interpreter the expression <...>. To her surprise, the interpreter prints back quote. Explain.
 
-(load "ch22_common.scm")
+(load "ch23_common.scm")
 
 (assert 'quote (car ''abracadabra))
 

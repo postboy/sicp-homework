@@ -36,3 +36,5 @@
 
 (define (prime? n)
   (and (> n 1) (= n (smallest-divisor n))))
+
+(define nil '())

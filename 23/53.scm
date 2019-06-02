@@ -1,6 +1,6 @@
 ; Exercise 2.53.  What would the interpreter print in response to evaluating each of the following expressions?
 
-(load "ch22_common.scm")
+(load "ch23_common.scm")
 
 (define (memq item x)
   (cond ((null? x) false)

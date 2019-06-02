@@ -1,6 +1,6 @@
 ; Exercise 2.59.  Implement the union-set operation for the unordered-list representation of sets.
 
-(load "ch22_common.scm")
+(load "ch23_common.scm")
 
 (define (union-set set1 set2)
   (cond ((null? set1) set2)
