@@ -15,8 +15,8 @@
 
 (define sample-tree
   (make-tree '(5 abc)
-	     (make-tree '(1 def) '() '())
-	     (make-tree '(10 hjk) '() '())))
+	     (make-tree '(1 def) nil nil)
+	     (make-tree '(10 hjk) nil nil)))
 
 (assert (lookup 5 sample-tree) '(5 abc))
 (assert (lookup 1 sample-tree) '(1 def))
