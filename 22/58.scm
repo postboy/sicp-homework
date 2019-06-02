@@ -35,4 +35,49 @@
 
 ; b. The problem becomes substantially harder if we allow standard algebraic notation, such as (x + 3 * (x + y + 2)), which drops unnecessary parentheses and assumes that multiplication is done before addition. Can you design appropriate predicates, selectors, and constructors for this notation such that our derivative program still works?
 
-;(assert (deriv '(x + 3 * (x + y + 2)) 'x) 4)
+(define (operation expr)
+  (if (memq '+ expr)
+      '+
+      '*))
+
+(define (sum? expr)
+  (eq? '+ (operation expr)))
+
+(define (product? expr)
+  (eq? '* (operation expr)))
+
+(define (elt-or-list l)
+  (if (null? (cdr l))
+      (car l)
+      l))
+
+(define (list-until separator l)
+  (define (iter l result)
+    (if (eq? (car l) separator)
+	result
+	(iter (cdr l) (append result (list (car l))))))
+  (iter l nil))
+
+(define (list-after separator l)
+  (cdr (memq separator l)))
+
+(define (addend expr)
+  (elt-or-list (list-until '+ expr)))
+
+(define (augend expr)
+  (elt-or-list (list-after '+ expr)))
+
+(define (multiplier expr)
+  (elt-or-list (list-until '* expr)))
+
+(define (multiplicand expr)
+  (elt-or-list (list-after '* expr)))
+
+(assert (deriv '(x * x * x) 'x) '((x * (x + x)) + (x * x)))
+(assert (deriv '(x * (x * x)) 'x) '((x * (x + x)) + (x * x)))
+(assert (deriv '(x + x + x) 'x) 3)
+(assert (deriv '(x + (x + x)) 'x) 3)
+(assert (deriv '(x + x * x + x) 'x) '(1 + ((x + x) + 1)))
+(assert (deriv '(x + (x * x) + x) 'x) '(1 + ((x + x) + 1)))
+(assert (deriv '(x + 3 * (x + y + 2)) 'x) 4)
+(assert (deriv '((x + x) * (x + x)) 'x) '(((x + x) * 2) + (2 * (x + x))))
