@@ -60,3 +60,7 @@
 ; b. Do the two procedures have the same order of growth in the number of steps required to convert a balanced tree with n elements to a list? If not, which one grows more slowly?
 
 ; Those functions have different orders of growth. First function looks simpler and clearer, but for collecting results it uses append (O(n)) and cons (O(1)) for every entry while second uses only cons. For that reason, second functions grows slower.
+
+; Both functions implement a divide-and-conquer algorithms. Let's say that times required for solving task of size n with each of this algorithms are T1(n) and T2(n). In general, on each step we need to make O(n) or O(1) (first or second function) work and divide task on two equal subtasks: T1(n) = 2*T1(n/2) + O(n), T2(n) = 2*T2(n/2) + O(1). According to master theorem for divide-and-conquer recurrences, overall complexities of such algorithms are O(n * log(n)) and O(n).
+
+(define (tree->list tree) (tree->list-2 tree))
