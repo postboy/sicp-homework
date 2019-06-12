@@ -58,4 +58,6 @@
 
 (define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
 
-(assert (decode sample-message sample-tree) '(A D A B B C A))
+(define sample-decoded '(A D A B B C A))
+
+(assert (decode sample-message sample-tree) sample-decoded)
