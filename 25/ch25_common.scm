@@ -52,8 +52,7 @@
        (lambda (x y) (tag (/ x y))))
   (put 'make 'scheme-number
        (lambda (x) (tag x)))
-  (put 'equ? '(scheme-number scheme-number)
-       (lambda (x y) (= x y)))
+  (put 'equ? '(scheme-number scheme-number) equ?)
   (put '=zero? '(scheme-number)
        (lambda (x) (equ? x zero)))
   'done)
