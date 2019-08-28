@@ -33,10 +33,15 @@
 (define (div x y) (apply-generic 'div x y))
 
 (define (equ? x y) (apply-generic 'equ? x y))
+(define (=zero? x) (apply-generic '=zero? x))
 
 (define (install-scheme-number-package)
+  ;; internal procedures
+  (define (equ? x y) (= x y))
+  (define zero 0)
+  ;; interface to rest of the system
   (define (tag x)
-    (attach-tag 'scheme-number x))    
+    (attach-tag 'scheme-number x))
   (put 'add '(scheme-number scheme-number)
        (lambda (x y) (tag (+ x y))))
   (put 'sub '(scheme-number scheme-number)
@@ -49,6 +54,8 @@
        (lambda (x) (tag x)))
   (put 'equ? '(scheme-number scheme-number)
        (lambda (x y) (= x y)))
+  (put '=zero? '(scheme-number)
+       (lambda (x) (equ? x zero)))
   'done)
 
 (define (make-scheme-number n)
@@ -80,6 +87,7 @@
     (and (= (numer x) (numer y))
 	 (or (= (numer x) 0)
 	     (= (denom x) (denom y)))))
+  (define zero (make-rat 0 1))
   ;; interface to rest of the system
   (define (tag x) (attach-tag 'rational x))
   (put 'add '(rational rational)
@@ -93,6 +101,8 @@
   (put 'make 'rational
        (lambda (n d) (tag (make-rat n d))))
   (put 'equ? '(rational rational) equ?)
+  (put '=zero? '(rational)
+       (lambda (x) (equ? x zero)))
   'done)
 
 (define (make-rational n d)
@@ -113,6 +123,7 @@
   (define (equ? x y)
     (and (= (real-part x) (real-part y))
 	 (= (imag-part x) (imag-part y))))
+  (define zero (make-from-real-imag 0 0))
   ;; interface to the rest of the system
   (define (tag x) (attach-tag 'rectangular x))
   (put 'real-part '(rectangular) real-part)
@@ -124,6 +135,8 @@
   (put 'make-from-mag-ang 'rectangular 
        (lambda (r a) (tag (make-from-mag-ang r a))))
   (put 'equ? '(rectangular rectangular) equ?)
+  (put '=zero? '(rectangular)
+       (lambda (x) (equ? x zero)))
   'done)
 
 (define (install-complex-package)
@@ -159,8 +172,9 @@
        (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'complex
        (lambda (r a) (tag (make-from-mag-ang r a))))
-  ;; Call equ? implementation for underlying types (see 2.77).
+  ;; Call implementations for underlying types (see 2.77).
   (put 'equ? '(complex complex) equ?)
+  (put '=zero? '(complex) =zero?)
   'done)
 
 (define (make-complex-from-real-imag x y)
