@@ -32,6 +32,8 @@
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
 
+(define (equ? x y) (apply-generic 'equ? x y))
+
 (define (install-scheme-number-package)
   (define (tag x)
     (attach-tag 'scheme-number x))    
@@ -45,6 +47,8 @@
        (lambda (x y) (tag (/ x y))))
   (put 'make 'scheme-number
        (lambda (x) (tag x)))
+  (put 'equ? '(scheme-number scheme-number)
+       (lambda (x y) (= x y)))
   'done)
 
 (define (make-scheme-number n)
@@ -71,6 +75,11 @@
   (define (div-rat x y)
     (make-rat (* (numer x) (denom y))
               (* (denom x) (numer y))))
+  ;; Zeroes like 0/1 and 0/2 are equal. make-rat already simplified numer and denom.
+  (define (equ? x y)
+    (and (= (numer x) (numer y))
+	 (or (= (numer x) 0)
+	     (= (denom x) (denom y)))))
   ;; interface to rest of the system
   (define (tag x) (attach-tag 'rational x))
   (put 'add '(rational rational)
@@ -83,6 +92,7 @@
        (lambda (x y) (tag (div-rat x y))))
   (put 'make 'rational
        (lambda (n d) (tag (make-rat n d))))
+  (put 'equ? '(rational rational) equ?)
   'done)
 
 (define (make-rational n d)
@@ -100,6 +110,9 @@
     (atan (imag-part z) (real-part z)))
   (define (make-from-mag-ang r a) 
     (cons (* r (cos a)) (* r (sin a))))
+  (define (equ? x y)
+    (and (= (real-part x) (real-part y))
+	 (= (imag-part x) (imag-part y))))
   ;; interface to the rest of the system
   (define (tag x) (attach-tag 'rectangular x))
   (put 'real-part '(rectangular) real-part)
@@ -110,6 +123,7 @@
        (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'rectangular 
        (lambda (r a) (tag (make-from-mag-ang r a))))
+  (put 'equ? '(rectangular rectangular) equ?)
   'done)
 
 (define (install-complex-package)
@@ -145,6 +159,8 @@
        (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'complex
        (lambda (r a) (tag (make-from-mag-ang r a))))
+  ;; Call equ? implementation for underlying types (see 2.77).
+  (put 'equ? '(complex complex) equ?)
   'done)
 
 (define (make-complex-from-real-imag x y)
