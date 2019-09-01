@@ -55,6 +55,8 @@
   (put 'equ? '(scheme-number scheme-number) equ?)
   (put '=zero? '(scheme-number)
        (lambda (x) (equ? x zero)))
+  (put 'exp '(scheme-number scheme-number)
+     (lambda (x y) (tag (expt x y)))) ; using primitive expt
   'done)
 
 (define (make-scheme-number n)
@@ -185,3 +187,11 @@
 (install-rational-package)
 (install-rectangular-package)
 (install-complex-package)
+
+(define *coercion-table* (make-hash-table))
+
+(define (put-coercion from to proc)
+  (hash-table/put! *coercion-table* (list from to) proc))
+
+(define (get-coercion from to)
+  (hash-table/get *coercion-table* (list from to) #f))
