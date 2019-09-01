@@ -3,13 +3,9 @@
 ; Solution is there:
 (load "ch25_common.scm")
 
-(define sn0 (make-scheme-number 0))
-(define sn1 (make-scheme-number 1))
 (assert (=zero? sn0) #t)
 (assert (=zero? sn1) #f)
 
-(define rat0 (make-rational 0 100))
-(define rat1 (make-rational 1 1))
 (assert (=zero? rat0) #t)
 (assert (=zero? rat1) #f)
 

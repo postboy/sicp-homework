@@ -192,6 +192,12 @@
 (install-rectangular-package)
 (install-complex-package)
 
+(define sn0 (make-scheme-number 0))
+(define sn1 (make-scheme-number 1))
+
+(define rat0 (make-rational 0 100))
+(define rat1 (make-rational 1 1))
+
 (define comp00 (make-complex-from-real-imag 0 0))
 (define comp01 (make-complex-from-real-imag 0 1))
 (define comp10 (make-complex-from-real-imag 1 0))

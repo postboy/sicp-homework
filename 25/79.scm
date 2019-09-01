@@ -3,20 +3,16 @@
 ; Solution is there:
 (load "ch25_common.scm")
 
-(define sn0 (make-scheme-number 0))
-(define sn1 (make-scheme-number 1))
 (assert (equ? sn0 sn1) #f)
 (assert (equ? sn0 sn0) #t)
 
 (define rat05 (make-rational 1 2))
-(define rat0-first (make-rational 0 1))
 (define rat0-second (make-rational 0 2))
-(define rat1-first (make-rational 1 1))
 (define rat1-second (make-rational 2 2))
-(assert (equ? rat1-first rat05) #f)
-(assert (equ? rat0-first rat1-first) #f)
-(assert (equ? rat0-first rat0-second) #t)
-(assert (equ? rat1-first rat1-second) #t)
+(assert (equ? rat1 rat05) #f)
+(assert (equ? rat0 rat1) #f)
+(assert (equ? rat0 rat0-second) #t)
+(assert (equ? rat1 rat1-second) #t)
 
 (assert (equ? comp01 comp00) #f)
 (assert (equ? comp10 comp00) #f)

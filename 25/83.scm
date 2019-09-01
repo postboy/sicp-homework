@@ -39,12 +39,11 @@
 (install-real-package)
 
 (define integer0 (make-integer 0))
-(define rational0 (make-rational 0 1))
 (define real0 (make-real 0.0))
-(define complex0 (make-complex-from-real-imag 0.0 0.0))
+(define complex0-from-real (make-complex-from-real-imag 0.0 0.0))
 
-(assert (raise integer0) rational0)
-(assert (raise rational0) real0)
-(assert (raise real0) complex0)
+(assert (raise integer0) rat0)
+(assert (raise rat0) real0)
+(assert (raise real0) complex0-from-real)
 ; this call produces an error
-; (raise complex0)
+; (raise complex0-from-real)
