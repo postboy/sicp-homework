@@ -18,9 +18,6 @@
 (assert (equ? rat0-first rat0-second) #t)
 (assert (equ? rat1-first rat1-second) #t)
 
-(define comp01 (make-complex-from-real-imag 0 1))
-(define comp10 (make-complex-from-real-imag 1 0))
-(define comp11 (make-complex-from-real-imag 1 1))
-(assert (equ? comp01 comp11) #f)
-(assert (equ? comp10 comp11) #f)
-(assert (equ? comp11 comp11) #t)
+(assert (equ? comp01 comp00) #f)
+(assert (equ? comp10 comp00) #f)
+(assert (equ? comp00 comp00) #t)

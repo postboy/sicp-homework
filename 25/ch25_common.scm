@@ -192,6 +192,10 @@
 (install-rectangular-package)
 (install-complex-package)
 
+(define comp00 (make-complex-from-real-imag 0 0))
+(define comp01 (make-complex-from-real-imag 0 1))
+(define comp10 (make-complex-from-real-imag 1 0))
+
 (define *coercion-table* (make-hash-table))
 
 (define (put-coercion from to proc)

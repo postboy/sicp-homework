@@ -37,8 +37,6 @@
 ; and have put a procedure for exponentiation in the Scheme-number package but not in any other package: <...>
 ; What happens if we call exp with two complex numbers as arguments?
 
-(define comp00 (make-complex-from-real-imag 0 0))
-
 ; (exp comp00 comp00)
 ; This call will never return because after useless "coercion" we'll get exactly the same operation as we had before. Execution does not proceed towards solution with every recursion step, and this is fundamentally wrong. Note that we won't get "Aborting!: maximum recursion depth exceeded" message unless we change
 ; (apply-generic op (t1->t2 a1) a2))

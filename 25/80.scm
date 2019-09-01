@@ -13,9 +13,6 @@
 (assert (=zero? rat0) #t)
 (assert (=zero? rat1) #f)
 
-(define comp00 (make-complex-from-real-imag 0 0))
-(define comp01 (make-complex-from-real-imag 0 1))
-(define comp10 (make-complex-from-real-imag 1 0))
 (assert (=zero? comp00) #t)
 (assert (=zero? comp01) #f)
 (assert (=zero? comp10) #f)
