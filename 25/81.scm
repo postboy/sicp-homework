@@ -78,4 +78,4 @@
                      (list op type-tags)))))))
 
 ; this call produces an error
-(exp comp00 comp00)
+; (exp comp00 comp00)

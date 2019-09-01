@@ -56,7 +56,7 @@
   (put '=zero? '(scheme-number)
        (lambda (x) (equ? x zero)))
   (put 'exp '(scheme-number scheme-number)
-     (lambda (x y) (tag (expt x y)))) ; using primitive expt
+       (lambda (x y) (tag (expt x y)))) ; using primitive expt
   'done)
 
 (define (make-scheme-number n)
@@ -104,6 +104,10 @@
   (put 'equ? '(rational rational) equ?)
   (put '=zero? '(rational)
        (lambda (x) (equ? x zero)))
+  ;; tower of types functions
+  ;; Ideally tower should be separated from packages. I had to sacrifice modularity for deduplication or vice versa, and I have prioritized deduplication.
+  (put 'raise '(rational)
+       (lambda (x) (make-real (/ (numer x) (denom x)))))
   'done)
 
 (define (make-rational n d)
