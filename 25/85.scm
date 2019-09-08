@@ -8,6 +8,7 @@
 (assert (project real0) rat0)
 (assert (project rat0) integer0)
 (assert (project rat05) integer0)
+
 ; this call produces an error
 ; (project integer0)
 
