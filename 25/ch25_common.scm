@@ -108,6 +108,8 @@
   ;; Ideally tower should be separated from packages. I had to sacrifice modularity for deduplication or vice versa, and I have prioritized deduplication.
   (put 'raise '(rational)
        (lambda (x) (make-real (/ (numer x) (denom x)))))
+  (put 'project '(rational)
+       (lambda (x) (make-integer (round (/ (numer x) (denom x))))))
   'done)
 
 (define (make-rational n d)
@@ -180,6 +182,9 @@
   ;; Call implementations for underlying types (see 2.77).
   (put 'equ? '(complex complex) equ?)
   (put '=zero? '(complex) =zero?)
+  ;; tower of types functions
+  (put 'project '(complex)
+       (lambda (z) (make-real (real-part z))))
   'done)
 
 (define (make-complex-from-real-imag x y)
@@ -197,6 +202,7 @@
 
 (define rat0 (make-rational 0 100))
 (define rat1 (make-rational 1 1))
+(define rat05 (make-rational 1 2))
 
 (define comp00 (make-complex-from-real-imag 0 0))
 (define comp01 (make-complex-from-real-imag 0 1))

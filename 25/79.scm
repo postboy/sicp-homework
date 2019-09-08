@@ -6,7 +6,6 @@
 (assert (equ? sn0 sn1) #f)
 (assert (equ? sn0 sn0) #t)
 
-(define rat05 (make-rational 1 2))
 (define rat0-second (make-rational 0 2))
 (define rat1-second (make-rational 2 2))
 (assert (equ? rat1 rat05) #f)

@@ -2,7 +2,7 @@
 
 (load "83.scm")
 
-(define (apply-generic op . args)
+(define (apply-generic-internal op . args)
   (define (no-method-defined type-tags)
     (error "No method for these types" (list op type-tags)))
   (define tower (list 'integer 'rational 'real 'complex))
@@ -27,6 +27,9 @@
 			(apply-generic op a1 (raise a2)))
 		       (else ; type1 = type2
 			(no-method-defined type-tags)))))))))
+
+(define (apply-generic op . args)
+  (apply apply-generic-internal (cons op args)))
 
 (assert (add complex0-from-real complex0-from-real) complex0-from-real)
 (assert (add integer0 complex0-from-real) complex0-from-real)

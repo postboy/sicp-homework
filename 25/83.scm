@@ -10,6 +10,7 @@
     (attach-tag 'integer x))
   (put 'make 'integer
        (lambda (x) (tag x)))
+  (put 'equ? '(integer integer) =)
   ;; tower of types functions
   (put 'raise '(integer)
      (lambda (x) (make-rational x 1)))
@@ -27,9 +28,12 @@
     (attach-tag 'real x))
   (put 'make 'real
        (lambda (x) (tag (make-real x))))
+  (put 'equ? '(real real) =)
   ;; tower of types functions
   (put 'raise '(real)
        (lambda (x) (make-complex-from-real-imag x 0.0)))
+  (put 'project '(real)
+       (lambda (x) (make-rational (round->exact x) 1)))
   'done)
 
 (define (make-real n)
@@ -47,3 +51,6 @@
 (assert (raise real0) complex0-from-real)
 ; this call produces an error
 ; (raise complex0-from-real)
+
+(assert (equ? integer0 integer0) #t)
+(assert (equ? real0 real0) #t)
