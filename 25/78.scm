@@ -3,7 +3,7 @@
 ; Solution is there:
 (load "ch25_common.scm")
 
-(assert (make-scheme-number 3) 3)
+(assert sn1 1)
 (assert (add 3 3) 6)
 (assert (sub 3 3) 0)
 (assert (mul 3 3) 9)

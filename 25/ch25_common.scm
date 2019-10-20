@@ -44,6 +44,8 @@
   ;; interface to rest of the system
   (define (tag x)
     (attach-tag 'scheme-number x))
+  (put 'make 'scheme-number
+       (lambda (x) (tag x)))
   (put 'add '(scheme-number scheme-number)
        (lambda (x y) (tag (+ x y))))
   (put 'sub '(scheme-number scheme-number)
@@ -52,13 +54,11 @@
        (lambda (x y) (tag (* x y))))
   (put 'div '(scheme-number scheme-number)
        (lambda (x y) (tag (/ x y))))
-  (put 'make 'scheme-number
-       (lambda (x) (tag x)))
+  (put 'exp '(scheme-number scheme-number)
+       (lambda (x y) (tag (expt x y)))) ; using primitive expt
   (put 'equ? '(scheme-number scheme-number) equ?)
   (put '=zero? '(scheme-number)
        (lambda (x) (equ? x zero)))
-  (put 'exp '(scheme-number scheme-number)
-       (lambda (x y) (tag (expt x y)))) ; using primitive expt
   'done)
 
 (define (make-scheme-number n)
@@ -93,6 +93,8 @@
   (define zero (make-rat 0 1))
   ;; interface to rest of the system
   (define (tag x) (attach-tag 'rational x))
+  (put 'make 'rational
+       (lambda (n d) (tag (make-rat n d))))
   (put 'add '(rational rational)
        (lambda (x y) (tag (add-rat x y))))
   (put 'sub '(rational rational)
@@ -101,8 +103,6 @@
        (lambda (x y) (tag (mul-rat x y))))
   (put 'div '(rational rational)
        (lambda (x y) (tag (div-rat x y))))
-  (put 'make 'rational
-       (lambda (n d) (tag (make-rat n d))))
   (put 'equ? '(rational rational) equ?)
   (put '=zero? '(rational)
        (lambda (x) (equ? x zero)))
@@ -124,7 +124,7 @@
   (define (make-from-real-imag x y) (cons x y))
   (define (magnitude z)
     (sqrt (+ (square (real-part z))
-             (square (imag-part z)))))
+	     (square (imag-part z)))))
   (define (angle z)
     (atan (imag-part z) (real-part z)))
   (define (make-from-mag-ang r a) 
@@ -135,14 +135,14 @@
   (define zero (make-from-real-imag 0 0))
   ;; interface to the rest of the system
   (define (tag x) (attach-tag 'rectangular x))
-  (put 'real-part '(rectangular) real-part)
-  (put 'imag-part '(rectangular) imag-part)
-  (put 'magnitude '(rectangular) magnitude)
-  (put 'angle '(rectangular) angle)
   (put 'make-from-real-imag 'rectangular 
        (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'rectangular 
        (lambda (r a) (tag (make-from-mag-ang r a))))
+  (put 'real-part '(rectangular) real-part)
+  (put 'imag-part '(rectangular) imag-part)
+  (put 'magnitude '(rectangular) magnitude)
+  (put 'angle '(rectangular) angle)
   (put 'equ? '(rectangular rectangular) equ?)
   (put '=zero? '(rectangular)
        (lambda (x) (equ? x zero)))
@@ -169,6 +169,10 @@
                        (- (angle z1) (angle z2))))
   ;; interface to rest of the system
   (define (tag z) (attach-tag 'complex z))
+  (put 'make-from-real-imag 'complex
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'complex
+       (lambda (r a) (tag (make-from-mag-ang r a))))
   (put 'add '(complex complex)
        (lambda (z1 z2) (tag (add-complex z1 z2))))
   (put 'sub '(complex complex)
@@ -177,11 +181,7 @@
        (lambda (z1 z2) (tag (mul-complex z1 z2))))
   (put 'div '(complex complex)
        (lambda (z1 z2) (tag (div-complex z1 z2))))
-  (put 'make-from-real-imag 'complex
-       (lambda (x y) (tag (make-from-real-imag x y))))
-  (put 'make-from-mag-ang 'complex
-       (lambda (r a) (tag (make-from-mag-ang r a))))
-  ;; Call implementations for underlying types (see 2.77).
+  ;; call implementations for underlying types (see 2.77)
   (put 'equ? '(complex complex) equ?)
   (put '=zero? '(complex) =zero?)
   ;; tower of types functions
