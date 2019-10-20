@@ -30,10 +30,7 @@
               scheme-number->scheme-number)
 (put-coercion 'complex 'complex complex->complex)
 
-; a. With Louis's coercion procedures installed, what happens if apply-generic is called with two arguments of type scheme-number or two arguments of type complex for an operation that is not found in the table for those types? For example, assume that we've defined a generic exponentiation operation:
-
-(define (exp x y) (apply-generic 'exp x y))
-
+; a. With Louis's coercion procedures installed, what happens if apply-generic is called with two arguments of type scheme-number or two arguments of type complex for an operation that is not found in the table for those types? For example, assume that we've defined a generic exponentiation operation: <...>
 ; and have put a procedure for exponentiation in the Scheme-number package but not in any other package: <...>
 ; What happens if we call exp with two complex numbers as arguments?
 

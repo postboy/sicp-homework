@@ -34,14 +34,16 @@
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
 
+(define (exp x y) (apply-generic 'exp x y))
+
 (define (equ? x y) (apply-generic 'equ? x y))
 (define (=zero? x) (apply-generic '=zero? x))
 
 (define (install-scheme-number-package)
-  ;; internal procedures
-  (define (equ? x y) (= x y))
+  ; internal for package
+  (define (equ-sn? x y) (= x y))
   (define zero 0)
-  ;; interface to rest of the system
+  ; interface to rest of the system
   (define (tag x)
     (attach-tag 'scheme-number x))
   (put 'make 'scheme-number
@@ -56,16 +58,16 @@
        (lambda (x y) (tag (/ x y))))
   (put 'exp '(scheme-number scheme-number)
        (lambda (x y) (tag (expt x y)))) ; using primitive expt
-  (put 'equ? '(scheme-number scheme-number) equ?)
+  (put 'equ? '(scheme-number scheme-number) equ-sn?)
   (put '=zero? '(scheme-number)
-       (lambda (x) (equ? x zero)))
+       (lambda (x) (equ-sn? x zero)))
   'done)
 
 (define (make-scheme-number n)
   ((get 'make 'scheme-number) n))
 
 (define (install-rational-package)
-  ;; internal procedures
+  ; internal for package
   (define (numer x) (car x))
   (define (denom x) (cdr x))
   (define (make-rat n d)
@@ -85,13 +87,13 @@
   (define (div-rat x y)
     (make-rat (* (numer x) (denom y))
               (* (denom x) (numer y))))
-  ;; Zeroes like 0/1 and 0/2 are equal. make-rat already simplified numer and denom.
-  (define (equ? x y)
+  ; Zeroes like 0/1 and 0/2 are equal. make-rat already simplified numer and denom.
+  (define (equ-rat? x y)
     (and (= (numer x) (numer y))
 	 (or (= (numer x) 0)
 	     (= (denom x) (denom y)))))
   (define zero (make-rat 0 1))
-  ;; interface to rest of the system
+  ; interface to rest of the system
   (define (tag x) (attach-tag 'rational x))
   (put 'make 'rational
        (lambda (n d) (tag (make-rat n d))))
@@ -103,11 +105,11 @@
        (lambda (x y) (tag (mul-rat x y))))
   (put 'div '(rational rational)
        (lambda (x y) (tag (div-rat x y))))
-  (put 'equ? '(rational rational) equ?)
+  (put 'equ? '(rational rational) equ-rat?)
   (put '=zero? '(rational)
-       (lambda (x) (equ? x zero)))
-  ;; tower of types functions
-  ;; Ideally tower should be separated from packages. I had to sacrifice modularity for deduplication or vice versa, and I have prioritized deduplication.
+       (lambda (x) (equ-rat? x zero)))
+  ; tower of types functions
+  ; Ideally tower should be separated from packages. I had to sacrifice modularity for deduplication or vice versa, and I have prioritized deduplication.
   (put 'raise '(rational)
        (lambda (x) (make-real (/ (numer x) (denom x)))))
   (put 'project '(rational)
@@ -118,7 +120,7 @@
   ((get 'make 'rational) n d))
 
 (define (install-rectangular-package)
-  ;; internal procedures
+  ; internal for package
   (define (real-part z) (car z))
   (define (imag-part z) (cdr z))
   (define (make-from-real-imag x y) (cons x y))
@@ -129,11 +131,11 @@
     (atan (imag-part z) (real-part z)))
   (define (make-from-mag-ang r a) 
     (cons (* r (cos a)) (* r (sin a))))
-  (define (equ? x y)
+  (define (equ-rect? x y)
     (and (= (real-part x) (real-part y))
 	 (= (imag-part x) (imag-part y))))
   (define zero (make-from-real-imag 0 0))
-  ;; interface to the rest of the system
+  ; interface to the rest of the system
   (define (tag x) (attach-tag 'rectangular x))
   (put 'make-from-real-imag 'rectangular 
        (lambda (x y) (tag (make-from-real-imag x y))))
@@ -143,18 +145,18 @@
   (put 'imag-part '(rectangular) imag-part)
   (put 'magnitude '(rectangular) magnitude)
   (put 'angle '(rectangular) angle)
-  (put 'equ? '(rectangular rectangular) equ?)
+  (put 'equ? '(rectangular rectangular) equ-rect?)
   (put '=zero? '(rectangular)
-       (lambda (x) (equ? x zero)))
+       (lambda (x) (equ-rect? x zero)))
   'done)
 
 (define (install-complex-package)
-  ;; imported procedures from rectangular and polar packages
+  ; imported procedures from rectangular and polar packages
   (define (make-from-real-imag x y)
     ((get 'make-from-real-imag 'rectangular) x y))
   (define (make-from-mag-ang r a)
     ((get 'make-from-mag-ang 'polar) r a))
-  ;; internal procedures
+  ; internal for package
   (define (add-complex z1 z2)
     (make-from-real-imag (+ (real-part z1) (real-part z2))
                          (+ (imag-part z1) (imag-part z2))))
@@ -167,7 +169,7 @@
   (define (div-complex z1 z2)
     (make-from-mag-ang (/ (magnitude z1) (magnitude z2))
                        (- (angle z1) (angle z2))))
-  ;; interface to rest of the system
+  ; interface to rest of the system
   (define (tag z) (attach-tag 'complex z))
   (put 'make-from-real-imag 'complex
        (lambda (x y) (tag (make-from-real-imag x y))))
@@ -181,10 +183,10 @@
        (lambda (z1 z2) (tag (mul-complex z1 z2))))
   (put 'div '(complex complex)
        (lambda (z1 z2) (tag (div-complex z1 z2))))
-  ;; call implementations for underlying types (see 2.77)
+  ; call implementations for underlying types (see 2.77)
   (put 'equ? '(complex complex) equ?)
   (put '=zero? '(complex) =zero?)
-  ;; tower of types functions
+  ; tower of types functions
   (put 'project '(complex)
        (lambda (z) (make-real (real-part z))))
   'done)

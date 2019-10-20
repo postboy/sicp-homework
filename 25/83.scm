@@ -5,13 +5,13 @@
 (define (raise z) (apply-generic 'raise z))
 
 (define (install-integer-package)
-  ;; interface to rest of the system
+  ; interface to rest of the system
   (define (tag x)
     (attach-tag 'integer x))
   (put 'make 'integer
        (lambda (x) (tag x)))
   (put 'equ? '(integer integer) =)
-  ;; tower of types functions
+  ; tower of types functions
   (put 'raise '(integer)
      (lambda (x) (make-rational x 1)))
   'done)
@@ -20,16 +20,16 @@
   ((get 'make 'integer) n))
 
 (define (install-real-package)
-  ;; internal procedures
+  ; internal for package
   (define (make-real x)
     (+ x 0.0))
-  ;; interface to rest of the system
+  ; interface to rest of the system
   (define (tag x)
     (attach-tag 'real x))
   (put 'make 'real
        (lambda (x) (tag (make-real x))))
   (put 'equ? '(real real) =)
-  ;; tower of types functions
+  ; tower of types functions
   (put 'raise '(real)
        (lambda (x) (make-complex-from-real-imag x 0.0)))
   (put 'project '(real)
