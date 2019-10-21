@@ -354,7 +354,9 @@
 (define comp10 (make-complex-from-real-imag 1 0))
 
 (define empty-poly (make-polynomial 'x (the-empty-termlist)))
-(define sample-term-list (adjoin-term (make-term 1 1) (the-empty-termlist)))
+(define empty-term (make-term 0 empty-poly))
+(define term-01 (make-term 0 1))
+(define sample-term-list (adjoin-term term-01 (the-empty-termlist)))
 (define sample-poly (make-polynomial 'x sample-term-list))
 
 (define *coercion-table* (make-hash-table))

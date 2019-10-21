@@ -6,6 +6,6 @@
 (assert (=zero? empty-poly) #t)
 (assert (=zero? sample-poly) #f)
 
-(define empty-poly-term-list (adjoin-term (make-term 1 empty-poly) (the-empty-termlist)))
+(define empty-poly-term-list (adjoin-term empty-term (the-empty-termlist)))
 (define empty-poly-inside-poly (make-polynomial 'y empty-poly-term-list))
 (assert (=zero? empty-poly-inside-poly) #t)
