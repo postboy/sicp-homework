@@ -5,6 +5,10 @@
 
 ; If we'll define a generic negation operation then we can trivially implement subtraction via addition, which is great!
 
-(assert (sub sample-poly empty-poly) sample-poly)
+(assert (sub sn1 sn1) sn0)
+(assert (sub rat1 rat1) rat0)
+(assert (sub comp11 comp11) comp00)
+
 (assert (sub sample-poly sample-poly) empty-poly)
 (assert (sub empty-poly empty-poly) empty-poly)
+(assert (sub sample-poly empty-poly) sample-poly)

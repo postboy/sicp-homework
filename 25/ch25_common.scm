@@ -166,7 +166,8 @@
   (define (imag-part z) (cdr z))
   (define (make-from-real-imag x y) (cons x y))
   (define (minus-rect z)
-    (make-from-real-imag (minus (real-part z)) (imag-part z)))
+    (make-from-real-imag (minus (real-part z))
+			 (minus (imag-part z))))
   (define (magnitude z)
     (sqroot (add (squar (real-part z))
 		 (squar (imag-part z)))))
@@ -352,6 +353,7 @@
 (define comp00 (make-complex-from-real-imag 0 0))
 (define comp01 (make-complex-from-real-imag 0 1))
 (define comp10 (make-complex-from-real-imag 1 0))
+(define comp11 (make-complex-from-real-imag 1 1))
 
 (define empty-poly (make-polynomial 'x (the-empty-termlist)))
 (define empty-term (make-term 0 empty-poly))
