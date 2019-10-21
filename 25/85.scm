@@ -2,8 +2,6 @@
 
 (load "84.scm")
 
-(define (project z) (apply-generic 'project z))
-
 (assert (project complex0-from-real) real0)
 (assert (project real0) rat0)
 (assert (project rat0) integer0)
@@ -13,13 +11,13 @@
 ; (project integer0)
 
 (define (drop z)
-  (let ((projectfunc (get 'project (list (type-tag z)))))
-    (if (not projectfunc)
-	z
-	(let ((projected (project z)))
-	  (if (equ? z (raise projected))
-	      (drop projected)
-	      z)))))
+  (define projectfunc (get 'project (list (type-tag z))))
+  (if (not projectfunc)
+      z
+      (let ((projected (project z)))
+	(if (equ? z (raise projected))
+	    (drop projected)
+	    z))))
 
 (assert (drop integer0) integer0)
 (assert (drop rat0) integer0)

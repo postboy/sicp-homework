@@ -2,8 +2,6 @@
 
 (load "ch25_common.scm")
 
-(define (raise z) (apply-generic 'raise z))
-
 (define (install-integer-package)
   ; interface to rest of the system
   (define (tag x)

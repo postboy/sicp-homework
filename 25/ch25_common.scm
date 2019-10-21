@@ -39,6 +39,9 @@
 (define (equ? x y) (apply-generic 'equ? x y))
 (define (=zero? x) (apply-generic '=zero? x))
 
+(define (raise z) (apply-generic 'raise z))
+(define (project z) (apply-generic 'project z))
+
 (define (install-scheme-number-package)
   ; internal for package
   (define (equ-sn? x y) (= x y))
@@ -154,8 +157,9 @@
   ; imported procedures from rectangular and polar packages
   (define (make-from-real-imag x y)
     ((get 'make-from-real-imag 'rectangular) x y))
+  ; it would be better to use polar package here, but now it's not implemented
   (define (make-from-mag-ang r a)
-    ((get 'make-from-mag-ang 'polar) r a))
+    ((get 'make-from-mag-ang 'rectangular) r a))
   ; internal for package
   (define (add-complex z1 z2)
     (make-from-real-imag (+ (real-part z1) (real-part z2))
