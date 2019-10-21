@@ -65,4 +65,6 @@
 (assert (equ? comp10 sn1) #t)
 (assert (equ? sn1 comp10) #t)
 
-; Let's suppose that we have an operation defined for types (complex rational). What if we want to apply it to numbers with types (complex scheme-number)? In principle we could perform raising scheme-number to rational and then apply a defined function to numbers with types (complex rational), but current apply-generic implementation won't do that. It will try to find function for types (complex scheme-number), then for types (complex complex), where second complex number is made from scheme-number.
+; Let's suppose that we have an operation defined for types (complex rational). What if we want to apply it to numbers with types (complex scheme-number)? In principle we could perform raising scheme-number to rational and then apply a defined function to numbers with types (complex rational), but current apply-generic implementation won't do that. It will only try to find function for types (complex scheme-number), then for types (complex complex), where second complex number is made from scheme-number.
+
+; Another interesting case is calling a function for a high-level type with an argument of low-level type, ex. (real-part 0). In principle we could perform raising scheme-number to complex and then apply a defined function, but current apply-generic implementation won't do that. It will only try to find function for types (scheme-number), then again for types (scheme-number).

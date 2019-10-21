@@ -3,6 +3,8 @@
 ; Solution is there:
 (load "ch25_common.scm")
 
+; In principle, this operation (along with many others) could be greatly simplified if apply-generic could raise types (see 2.82-2.84). In this case it would be sufficient to define equ? only for the highest type and define zero as the lowest type constant.
+
 (assert (=zero? sn0) #t)
 (assert (=zero? sn1) #f)
 
