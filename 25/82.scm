@@ -4,8 +4,13 @@
 
 (define (scheme-number->complex n)
   (make-complex-from-real-imag (contents n) 0))
+(define (scheme-number->rational n)
+  (make-rational (contents n) 1))
 
+; tests are located below
 (put-coercion 'scheme-number 'complex scheme-number->complex)
+; tests are located in 2.86
+(put-coercion 'scheme-number 'rational scheme-number->rational)
 
 ; we don't have to coerce arguments of same types
 (define (get-coercion-or-identity from to)
