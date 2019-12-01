@@ -52,6 +52,12 @@
 (define (raise z) (apply-generic 'raise z))
 (define (project z) (apply-generic 'project z))
 
+; neat hack: add a tag to term for proper work of apply-generic
+(define (adjoin-term t tl) (apply-generic 'adjoin-term (attach-tag 'term t) tl))
+(define (first-term tl) (apply-generic 'first-term tl))
+(define (rest-terms tl) (apply-generic 'rest-terms tl))
+(define (empty-termlist? tl) (apply-generic 'empty-termlist? tl))
+
 (define (install-scheme-number-package)
   ; internal for package
   (define (equ-sn? x y) (= x y))
@@ -244,15 +250,37 @@
 (define (make-term order coeff) (list order coeff))
 (define (order term) (car term))
 (define (coeff term) (cadr term))
+
 ; representation of term list
-(define (adjoin-term term term-list)
-  (if (=zero? (coeff term))
-      term-list
-      (cons term term-list)))
-(define (the-empty-termlist) '())
-(define (first-term term-list) (car term-list))
-(define (rest-terms term-list) (cdr term-list))
-(define (empty-termlist? term-list) (null? term-list))
+(define (install-sparse-package)
+  ; internal procedures
+  (define (the-empty-termlist) '())
+  (define (adjoin-term term term-list)
+    (if (=zero? (coeff term))
+	term-list
+	(cons term term-list)))
+  (define (first-term term-list) (car term-list))
+  (define (rest-terms term-list) (cdr term-list))
+  (define (empty-termlist? term-list) (null? term-list))
+  ; interface to rest of the system
+  (define (tag p) (attach-tag 'sparse p))
+  (put 'the-empty-termlist 'sparse
+       (lambda () (tag (the-empty-termlist))))
+  (put 'adjoin-term '(term sparse)
+       (lambda (t tl) (tag (adjoin-term t tl))))
+  (put 'first-term '(sparse)
+       (lambda (tl) (first-term tl)))
+  (put 'rest-terms '(sparse)
+       (lambda (tl) (tag (rest-terms tl))))
+  (put 'empty-termlist? '(sparse)
+       (lambda (tl) (empty-termlist? tl)))
+  'done)
+
+(define (the-empty-sparse-termlist)
+  ((get 'the-empty-termlist 'sparse)))
+; default representation of term lists is sparse
+(define (the-empty-termlist)
+  (the-empty-sparse-termlist))
 
 (define (install-polynomial-package)
   ; internal procedures
@@ -341,6 +369,7 @@
 (install-rational-package)
 (install-rectangular-package)
 (install-complex-package)
+(install-sparse-package)
 (install-polynomial-package)
 
 (define sn0 (make-scheme-number 0))
