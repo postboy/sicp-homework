@@ -309,6 +309,8 @@
 				(add (coeff t1) (coeff t2)))
 		     (add-terms (rest-terms L1)
 				(rest-terms L2)))))))))
+  (define (sub-terms L1 L2)
+    (add-terms L1 (minus-termlist L2)))
   (define (mul-term-by-all-terms t1 L)
     (if (empty-termlist? L)
 	(the-empty-termlist)
@@ -322,6 +324,25 @@
 	(the-empty-termlist)
 	(add-terms (mul-term-by-all-terms (first-term L1) L2)
 		   (mul-terms (rest-terms L1) L2))))
+  (define (div-terms L1 L2)
+    (if (empty-termlist? L1)
+	(list (the-empty-termlist) (the-empty-termlist))
+	(let ((t1 (first-term L1))
+	      (t2 (first-term L2)))
+	  (if (> (order t2) (order t1))
+	      (list (the-empty-termlist) L1)
+	      (let ((new-c (div (coeff t1) (coeff t2)))
+		    (new-o (- (order t1) (order t2))))
+		(let ((rest-of-result
+		       ; compute rest of result recursively
+		       (div-terms (sub-terms L1
+					     (mul-terms L2
+							(adjoin-term (make-term new-o new-c)
+								     (the-empty-termlist))))
+				  L2)))
+		  ; form complete result
+		  (list (adjoin-term (make-term new-o new-c) (car rest-of-result))
+			(cadr rest-of-result))))))))
   ; representation of poly
   (define (make-poly variable term-list)
     (cons variable term-list))
@@ -348,6 +369,14 @@
 			      (term-list p2)))
 	(error "Polys not in same var -- MUL-POLY"
 	       (list p1 p2))))
+  (define (div-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+	(let ((res-terms (div-terms (term-list p1)
+				    (term-list p2))))
+	  (list (make-poly (variable p1) (car res-terms))
+		(make-poly (variable p1) (cadr res-terms))))
+	(error "Polys not in same var -- DIV-POLY"
+	       (list p1 p2))))
   ; interface to rest of the system
   (define (tag p) (attach-tag 'polynomial p))
   (put 'make 'polynomial
@@ -358,6 +387,11 @@
        (lambda (p1 p2) (tag (add-poly p1 p2))))
   (put 'mul '(polynomial polynomial)
        (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put 'div '(polynomial polynomial)
+       (lambda (L1 L2)
+	 (let ((res (div-poly L1 L2)))
+	   (list (tag (car res))
+		 (tag (cadr res))))))
   (put '=zero? '(polynomial)
        (lambda (p) (empty-termlist? (term-list p))))
   'done)
