@@ -36,6 +36,7 @@
 (define (sub x y) (apply-generic 'add x (minus y)))
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
+(define (greatest-common-divisor x y) (apply-generic 'greatest-common-divisor x y))
 
 (define (exp x y) (apply-generic 'exp x y))
 ; maybe ineffective, but simplest for sure
@@ -75,6 +76,8 @@
        (lambda (x y) (tag (* x y))))
   (put 'div '(scheme-number scheme-number)
        (lambda (x y) (tag (/ x y))))
+  (put 'greatest-common-divisor '(scheme-number scheme-number)
+       (lambda (x y) (tag (gcd x y)))) ; implemented in common.scm
   (put 'exp '(scheme-number scheme-number)
        (lambda (x y) (tag (expt x y)))) ; using primitive expt
   (put 'sqroot '(scheme-number)
@@ -344,6 +347,12 @@
 		  ; form complete result
 		  (list (adjoin-term (make-term new-o new-c) (car rest-of-result))
 			(cadr rest-of-result))))))))
+  (define (quotient-terms L1 L2) (car (div-terms L1 L2)))
+  (define (remainder-terms L1 L2) (cadr (div-terms L1 L2)))
+  (define (gcd-terms a b)
+    (if (empty-termlist? b)
+	a
+	(gcd-terms b (remainder-terms a b))))
   ; representation of poly
   (define (make-poly variable term-list)
     (cons variable term-list))
@@ -361,23 +370,26 @@
 	(make-poly (variable p1)
 		   (add-terms (term-list p1)
 			      (term-list p2)))
-	(error "Polys not in same var -- ADD-POLY"
-	       (list p1 p2))))
+	(error "Polys not in same var -- ADD-POLY" (list p1 p2))))
   (define (mul-poly p1 p2)
     (if (same-variable? (variable p1) (variable p2))
 	(make-poly (variable p1)
 		   (mul-terms (term-list p1)
 			      (term-list p2)))
-	(error "Polys not in same var -- MUL-POLY"
-	       (list p1 p2))))
+	(error "Polys not in same var -- MUL-POLY" (list p1 p2))))
   (define (div-poly p1 p2)
     (if (same-variable? (variable p1) (variable p2))
 	(let ((res-terms (div-terms (term-list p1)
 				    (term-list p2))))
 	  (list (make-poly (variable p1) (car res-terms))
 		(make-poly (variable p1) (cadr res-terms))))
-	(error "Polys not in same var -- DIV-POLY"
-	       (list p1 p2))))
+	(error "Polys not in same var -- DIV-POLY" (list p1 p2))))
+  (define (gcd-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+	(make-poly (variable p1)
+		   (gcd-terms (term-list p1)
+			      (term-list p2)))
+	(error "Polys not in same var -- GCD-POLY" (list p1 p2))))
   ; interface to rest of the system
   (define (tag p) (attach-tag 'polynomial p))
   (put 'make 'polynomial
@@ -393,6 +405,8 @@
 	 (let ((res (div-poly L1 L2)))
 	   (list (tag (car res))
 		 (tag (cadr res))))))
+  (put 'greatest-common-divisor '(polynomial polynomial)
+       (lambda (p1 p2) (tag (gcd-poly p1 p2))))
   (put '=zero? '(polynomial)
        (lambda (p) (empty-termlist? (term-list p))))
   'done)
