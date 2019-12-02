@@ -13,18 +13,15 @@
 (define p3-terms (adjoin-term (make-term 1 13)
 			      (adjoin-term (make-term 0 5)
 					   (the-empty-termlist))))
-(define result-terms (adjoin-term (make-term 2 (/ 444 169))
-				  (adjoin-term (make-term 1 (- (/ 888 169)))
-					       (adjoin-term (make-term 0 (/ 444 169))
-							    (the-empty-termlist)))))
 (define p1 (make-polynomial 'x p1-terms))
 (define p2 (make-polynomial 'x p2-terms))
 (define p3 (make-polynomial 'x p3-terms))
 (define q1 (mul p1 p2))
 (define q2 (mul p1 p3))
-(define result (make-polynomial 'x result-terms))
 
-(assert (greatest-common-divisor q1 q2) result)
+; we can't use assert here because 2.96 will change the result
+; (polynomial x sparse (2 444/169) (1 -888/169) (0 444/169))
+(greatest-common-divisor q1 q2)
 
 ; [Entering #[compound-procedure 14 mul-terms]
 ;     Args: (sparse (3 13) (2 -21) (1 3) (0 5))

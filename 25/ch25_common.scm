@@ -349,10 +349,18 @@
 			(cadr rest-of-result))))))))
   (define (quotient-terms L1 L2) (car (div-terms L1 L2)))
   (define (remainder-terms L1 L2) (cadr (div-terms L1 L2)))
+  (define (pseudoremainder-terms L1 L2)
+    (define factor
+      (if (or (empty-termlist? L1) (empty-termlist? L2))
+	  1
+	  (exp (coeff (first-term L2))
+	       (inc (- (order (first-term L1)) (order (first-term L2)))))))
+    (define factor-tl (adjoin-term (make-term 0 factor) (the-empty-termlist)))
+    (cadr (div-terms (mul-terms factor-tl L1) L2)))
   (define (gcd-terms a b)
     (if (empty-termlist? b)
 	a
-	(gcd-terms b (remainder-terms a b))))
+	(gcd-terms b (pseudoremainder-terms a b))))
   ;(trace mul-terms)
   ;(untrace)
   ; representation of poly
