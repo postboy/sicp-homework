@@ -353,6 +353,8 @@
     (if (empty-termlist? b)
 	a
 	(gcd-terms b (remainder-terms a b))))
+  ;(trace mul-terms)
+  ;(untrace)
   ; representation of poly
   (define (make-poly variable term-list)
     (cons variable term-list))
