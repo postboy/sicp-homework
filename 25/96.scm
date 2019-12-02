@@ -11,3 +11,5 @@
 (assert (greatest-common-divisor empty-poly empty-poly) empty-poly)
 
 ; b.    The GCD now has integer coefficients, but they are larger than those of P1. Modify gcd-terms so that it removes common factors from the coefficients of the answer by dividing all the coefficients by their (integer) greatest common divisor.
+
+(assert (greatest-common-divisor q1 q2) p1)

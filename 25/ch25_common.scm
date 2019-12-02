@@ -358,9 +358,22 @@
     (define factor-tl (adjoin-term (make-term 0 factor) (the-empty-termlist)))
     (cadr (div-terms (mul-terms factor-tl L1) L2)))
   (define (gcd-terms a b)
+    (define (coeff-gcd tl cur)
+      (if (or (empty-termlist? tl) (= cur 1))
+	  cur
+	  (coeff-gcd (rest-terms tl) (gcd (coeff (first-term tl)) cur))))
+    (define (simplify-internal tl c)
+      (if (or (empty-termlist? tl) (= c 1))
+	  tl
+	  (adjoin-term (make-term (order (first-term tl)) (/ (coeff (first-term tl)) c))
+		       (simplify-internal (rest-terms tl) c))))
+    (define (simplify tl)
+      (if (empty-termlist? tl)
+	  tl
+	  (simplify-internal tl (coeff-gcd (rest-terms tl) (coeff (first-term tl))))))
     (if (empty-termlist? b)
 	a
-	(gcd-terms b (pseudoremainder-terms a b))))
+	(simplify (gcd-terms b (pseudoremainder-terms a b)))))
   ;(trace mul-terms)
   ;(untrace)
   ; representation of poly
