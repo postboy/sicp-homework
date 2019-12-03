@@ -36,7 +36,9 @@
 (define (sub x y) (apply-generic 'add x (minus y)))
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
+
 (define (greatest-common-divisor x y) (apply-generic 'greatest-common-divisor x y))
+(define (reduce x y) (apply-generic 'reduce x y))
 
 (define (exp x y) (apply-generic 'exp x y))
 ; maybe ineffective, but simplest for sure
@@ -63,11 +65,14 @@
   ; internal for package
   (define (equ-sn? x y) (= x y))
   (define zero 0)
+  (define (reduce-sn n d)
+    (let ((g (gcd n d)))
+      (list (/ n g) (/ d g))))
   ; interface to rest of the system
   (define (tag x)
     (attach-tag 'scheme-number x))
   (put 'make 'scheme-number
-       (lambda (x) (tag x)))
+       (lambda (x) x))
   (put 'minus '(scheme-number)
        (lambda (x) (tag (- x))))
   (put 'add '(scheme-number scheme-number)
@@ -77,7 +82,12 @@
   (put 'div '(scheme-number scheme-number)
        (lambda (x y) (tag (/ x y))))
   (put 'greatest-common-divisor '(scheme-number scheme-number)
-       (lambda (x y) (tag (gcd x y)))) ; implemented in common.scm
+       (lambda (x y) (tag (gcd x y))))
+  (put 'reduce '(scheme-number scheme-number)
+       (lambda (x y)
+	 (let ((res (reduce-sn x y)))
+	   (list (tag (car res))
+		 (tag (cadr res))))))
   (put 'exp '(scheme-number scheme-number)
        (lambda (x y) (tag (expt x y)))) ; using primitive expt
   (put 'sqroot '(scheme-number)
@@ -99,13 +109,9 @@
 (define (install-rational-package)
   ; internal for package
   (define (numer x) (car x))
-  (define (denom x) (cdr x))
+  (define (denom x) (cadr x))
   (define (make-rat n d)
-    (cons n d))
-    ;(if (or (inexact? n) (inexact? d))
-	;(cons n d)
-	;(let ((g (gcd n d)))
-	  ;(cons (/ n g) (/ d g)))))
+    (reduce n d))
   (define (minus-rat x)
     (make-rat (minus (numer x)) (denom x)))
   (define (rat-to-number x)
@@ -173,8 +179,8 @@
 (define (install-rectangular-package)
   ; internal for package
   (define (real-part z) (car z))
-  (define (imag-part z) (cdr z))
-  (define (make-from-real-imag x y) (cons x y))
+  (define (imag-part z) (cadr z))
+  (define (make-from-real-imag x y) (list x y))
   (define (minus-rect z)
     (make-from-real-imag (minus (real-part z))
 			 (minus (imag-part z))))
@@ -184,7 +190,7 @@
   (define (angle z)
     (arctan (imag-part z) (real-part z)))
   (define (make-from-mag-ang r a) 
-    (cons (mul r (cosine a)) (mul r (sine a))))
+    (list (mul r (cosine a)) (mul r (sine a))))
   (define (equ-rect? x y)
     (and (equ? (real-part x) (real-part y))
 	 (equ? (imag-part x) (imag-part y))))
@@ -349,15 +355,15 @@
 			(cadr rest-of-result))))))))
   (define (quotient-terms L1 L2) (car (div-terms L1 L2)))
   (define (remainder-terms L1 L2) (cadr (div-terms L1 L2)))
+  (define (factor-tl factor) (adjoin-term (make-term 0 factor) (the-empty-termlist)))
   (define (pseudoremainder-terms L1 L2)
     (define factor
       (if (or (empty-termlist? L1) (empty-termlist? L2))
 	  1
 	  (exp (coeff (first-term L2))
 	       (inc (- (order (first-term L1)) (order (first-term L2)))))))
-    (define factor-tl (adjoin-term (make-term 0 factor) (the-empty-termlist)))
-    (cadr (div-terms (mul-terms factor-tl L1) L2)))
-  (define (gcd-terms a b)
+    (remainder-terms (mul-terms (factor-tl factor) L1) L2))
+  (define (gcd-terms L1 L2)
     (define (coeff-gcd tl cur)
       (if (or (empty-termlist? tl) (= cur 1))
 	  cur
@@ -371,11 +377,13 @@
       (if (empty-termlist? tl)
 	  tl
 	  (simplify-internal tl (coeff-gcd (rest-terms tl) (coeff (first-term tl))))))
-    (if (empty-termlist? b)
-	a
-	(simplify (gcd-terms b (pseudoremainder-terms a b)))))
+    (if (empty-termlist? L2)
+	L1
+	(simplify (gcd-terms L2 (pseudoremainder-terms L1 L2)))))
   ;(trace mul-terms)
   ;(untrace)
+  (define (reduce-terms n d)
+    (list n d))
   ; representation of poly
   (define (make-poly variable term-list)
     (cons variable term-list))
@@ -413,6 +421,13 @@
 		   (gcd-terms (term-list p1)
 			      (term-list p2)))
 	(error "Polys not in same var -- GCD-POLY" (list p1 p2))))
+  (define (reduce-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+	(let ((res-terms (reduce-terms (term-list p1)
+				       (term-list p2))))
+	  (list (make-poly (variable p1) (car res-terms))
+		(make-poly (variable p1) (cadr res-terms))))
+	(error "Polys not in same var -- REDUCE-POLY" (list p1 p2))))
   ; interface to rest of the system
   (define (tag p) (attach-tag 'polynomial p))
   (put 'make 'polynomial
@@ -430,6 +445,11 @@
 		 (tag (cadr res))))))
   (put 'greatest-common-divisor '(polynomial polynomial)
        (lambda (p1 p2) (tag (gcd-poly p1 p2))))
+  (put 'reduce '(polynomial polynomial)
+       (lambda (x y)
+	 (let ((res (reduce-poly x y)))
+	   (list (tag (car res))
+		 (tag (cadr res))))))
   (put '=zero? '(polynomial)
        (lambda (p) (empty-termlist? (term-list p))))
   'done)

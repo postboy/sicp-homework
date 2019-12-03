@@ -2,7 +2,7 @@
 
 ; Solution is there:
 (load "ch25_common.scm")
-; Unfortunately, it will (at least temporarily) break old tests due to disabled simplification.
+; Unfortunately, it will temporarily (until 2.97) break old tests due to disabled simplification.
 
 ; After 2.90 we have to use constructors.
 (define p1 (make-polynomial 'x (adjoin-term (make-term 2 1)

@@ -1,10 +1,9 @@
 (define (display-all . vs)
   (for-each display vs))
 
-; display-all can be changed to error for debugging convenience
 (define (assert a b)
-  (cond ((equal? a b) #t)
-	(else (display-all "assert failed: " a " != " b) #f)))
+  (cond ((equal? a b) #t) ; return #t for output brevity
+	(else (display-all "test failed: " a " != " b) (error ""))))
 
 (define (identity x) x)
 
