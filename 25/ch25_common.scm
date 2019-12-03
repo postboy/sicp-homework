@@ -72,7 +72,7 @@
   (define (tag x)
     (attach-tag 'scheme-number x))
   (put 'make 'scheme-number
-       (lambda (x) x))
+       (lambda (x) (tag x)))
   (put 'minus '(scheme-number)
        (lambda (x) (tag (- x))))
   (put 'add '(scheme-number scheme-number)
