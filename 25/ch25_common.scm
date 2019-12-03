@@ -195,7 +195,7 @@
     (and (equ? (real-part x) (real-part y))
 	 (equ? (imag-part x) (imag-part y))))
   (define zero (make-from-real-imag 0 0))
-  ; interface to the rest of the system
+  ; interface to rest of the system
   (define (tag x) (attach-tag 'rectangular x))
   (put 'make-from-real-imag 'rectangular 
        (lambda (x y) (tag (make-from-real-imag x y))))
@@ -291,6 +291,8 @@
 ; default representation of term lists is sparse
 (define (the-empty-termlist)
   (the-empty-sparse-termlist))
+(define (make-termlist-from-int int)
+  (adjoin-term (make-term 0 int) (the-empty-termlist)))
 
 (define (install-polynomial-package)
   ; internal procedures
@@ -355,35 +357,48 @@
 			(cadr rest-of-result))))))))
   (define (quotient-terms L1 L2) (car (div-terms L1 L2)))
   (define (remainder-terms L1 L2) (cadr (div-terms L1 L2)))
-  (define (factor-tl factor) (adjoin-term (make-term 0 factor) (the-empty-termlist)))
   (define (pseudoremainder-terms L1 L2)
     (define factor
       (if (or (empty-termlist? L1) (empty-termlist? L2))
 	  1
 	  (exp (coeff (first-term L2))
 	       (inc (- (order (first-term L1)) (order (first-term L2)))))))
-    (remainder-terms (mul-terms (factor-tl factor) L1) L2))
+    (remainder-terms (mul-terms (make-termlist-from-int factor) L1) L2))
+  (define (coeff-gcd tl cur)
+    (if (or (empty-termlist? tl) (= cur 1))
+	cur
+	(coeff-gcd (rest-terms tl) (gcd (coeff (first-term tl)) cur))))
+  (define (simplify-terms tl c)
+    (if (or (empty-termlist? tl) (= c 1))
+	tl
+	(adjoin-term (make-term (order (first-term tl)) (/ (coeff (first-term tl)) c))
+		     (simplify-terms (rest-terms tl) c))))
   (define (gcd-terms L1 L2)
-    (define (coeff-gcd tl cur)
-      (if (or (empty-termlist? tl) (= cur 1))
-	  cur
-	  (coeff-gcd (rest-terms tl) (gcd (coeff (first-term tl)) cur))))
-    (define (simplify-internal tl c)
-      (if (or (empty-termlist? tl) (= c 1))
-	  tl
-	  (adjoin-term (make-term (order (first-term tl)) (/ (coeff (first-term tl)) c))
-		       (simplify-internal (rest-terms tl) c))))
     (define (simplify tl)
       (if (empty-termlist? tl)
 	  tl
-	  (simplify-internal tl (coeff-gcd (rest-terms tl) (coeff (first-term tl))))))
+	  (simplify-terms tl (coeff-gcd (rest-terms tl) (coeff (first-term tl))))))
     (if (empty-termlist? L2)
 	L1
 	(simplify (gcd-terms L2 (pseudoremainder-terms L1 L2)))))
   ;(trace mul-terms)
   ;(untrace)
   (define (reduce-terms n d)
-    (list n d))
+    (define gcd-n-d (gcd-terms n d))
+    (define factor
+      (if (or (empty-termlist? n) (empty-termlist? d) (empty-termlist? gcd-n-d))
+	  1
+	  (exp (coeff (first-term gcd-n-d))
+	       (inc (- (max (order (first-term n)) (order (first-term d)))
+		       (order (first-term gcd-n-d)))))))
+    (define nn (quotient-terms (mul-terms (make-termlist-from-int factor) n) gcd-n-d))
+    (define dd (quotient-terms (mul-terms (make-termlist-from-int factor) d) gcd-n-d))
+    (define int-gcd
+      (cond ((and (empty-termlist? nn) (empty-termlist? dd)) 1)
+	    ((empty-termlist? dd) (coeff-gcd (rest-terms nn) (coeff (first-term nn))))
+	    (else (coeff-gcd nn (coeff-gcd (rest-terms dd) (coeff (first-term dd)))))))
+    (list (simplify-terms nn int-gcd)
+	  (simplify-terms dd int-gcd)))
   ; representation of poly
   (define (make-poly variable term-list)
     (cons variable term-list))
