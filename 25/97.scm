@@ -30,10 +30,10 @@
 							     (adjoin-term (make-term 0 -1)
 									  (the-empty-termlist))))))
 
-(define p1-mul (mul p1 (make-polynomial 'x (make-termlist-from-int 10))))
-(define p2-mul (mul p2 (make-polynomial 'x (make-termlist-from-int 10))))
-(define p3-mul (mul p3 (make-polynomial 'x (make-termlist-from-int 9))))
-(define p4-mul (mul p4 (make-polynomial 'x (make-termlist-from-int 9))))
+(define p1-mul (mul p1 (make-polynomial 'x (make-termlist-from-coeff 10))))
+(define p2-mul (mul p2 (make-polynomial 'x (make-termlist-from-coeff 10))))
+(define p3-mul (mul p3 (make-polynomial 'x (make-termlist-from-coeff 9))))
+(define p4-mul (mul p4 (make-polynomial 'x (make-termlist-from-coeff 9))))
 
 (define rf1 (make-rational p1 p2))
 (define rf2 (make-rational p3 p4))

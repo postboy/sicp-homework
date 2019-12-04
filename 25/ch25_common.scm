@@ -291,8 +291,9 @@
 ; default representation of term lists is sparse
 (define (the-empty-termlist)
   (the-empty-sparse-termlist))
-(define (make-termlist-from-int int)
-  (adjoin-term (make-term 0 int) (the-empty-termlist)))
+(define (make-termlist-from-coeff coeff)
+  (adjoin-term (make-term 0 coeff) (the-empty-termlist)))
+(define unspecified-variable '***SPECIAL-VALUE-UNSPECIFIED-VARIABLE***)
 
 (define (install-polynomial-package)
   ; internal procedures
@@ -363,7 +364,7 @@
 	  1
 	  (exp (coeff (first-term L2))
 	       (inc (- (order (first-term L1)) (order (first-term L2)))))))
-    (remainder-terms (mul-terms (make-termlist-from-int factor) L1) L2))
+    (remainder-terms (mul-terms (make-termlist-from-coeff factor) L1) L2))
   (define (coeff-gcd tl cur)
     (if (or (empty-termlist? tl) (= cur 1))
 	cur
@@ -391,8 +392,8 @@
 	  (exp (coeff (first-term gcd-n-d))
 	       (inc (- (max (order (first-term n)) (order (first-term d)))
 		       (order (first-term gcd-n-d)))))))
-    (define nn (quotient-terms (mul-terms (make-termlist-from-int factor) n) gcd-n-d))
-    (define dd (quotient-terms (mul-terms (make-termlist-from-int factor) d) gcd-n-d))
+    (define nn (quotient-terms (mul-terms (make-termlist-from-coeff factor) n) gcd-n-d))
+    (define dd (quotient-terms (mul-terms (make-termlist-from-coeff factor) d) gcd-n-d))
     (define int-gcd
       (cond ((and (empty-termlist? nn) (empty-termlist? dd)) 1)
 	    ((empty-termlist? dd) (coeff-gcd (rest-terms nn) (coeff (first-term nn))))
@@ -412,9 +413,22 @@
     (make-poly (variable p)
 	       (minus-termlist (term-list p))))
   (define (same-var-poly p1 p2)
-    (if (same-variable? (variable p1) (variable p2))
-	(list p1 p2)
-	(error "Polys not in same var" (list p1 p2))))
+    (define v1 (variable p1))
+    (define v2 (variable p2))
+    (cond ((and (same-variable? unspecified-variable v1) (same-variable? unspecified-variable v2))
+	   (error "Unexpected polys: " (list p1 p2)))
+	  ((same-variable? unspecified-variable v1)
+	   (list (make-poly v2 (term-list p1))
+		 p2))
+	  ((same-variable? unspecified-variable v2)
+	   (list p1
+		 (make-poly v1 (term-list p2))))
+	  ((same-variable? v1 v2) (list p1 p2))
+	  ((string>? (symbol->string v1) (symbol->string v2))
+	   (list (make-poly v2 (make-termlist-from-coeff (tag p1)))
+		 p2))
+	  (else (list p1
+		      (make-poly v1 (make-termlist-from-coeff (tag p2)))))))
   (define (poly-wrapper-2to1 f p1 p2)
     (define prepared (same-var-poly p1 p2))
     (define res-var (variable (car prepared)))
