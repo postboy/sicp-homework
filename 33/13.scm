@@ -8,13 +8,13 @@
 
 ; Draw a box-and-pointer diagram that shows the structure z created by
 
-(define z (make-cycle (list 'a 'b 'c)))
-;     +----------------------+
-;     |                      |
-; z->[|][-]->[|][-]->[|][-]->+
-;     a       b       c
+(define z4 (make-cycle (list 'a 'b 'c)))
+;      +------------------+
+;      |                  |
+; z4->[|][-]->[|][-]->[|][|]
+;      a       b       c
 
 ; What happens if we try to compute (last-pair z)?
 
 ; Infinite cycle.
-; (last-pair z)
+; (last-pair z4)

@@ -1,6 +1,6 @@
 ; Exercise 3.16.  Ben Bitdiddle decides to write a procedure to count the number of pairs in any list structure. ``It's easy,'' he reasons. ``The number of pairs in any structure is the number in the car plus the number in the cdr plus one more to count the current pair.'' So Ben writes the following procedure:
 
-(load "ch33_common.scm")
+(load "13.scm")
 
 (define (count-pairs x)
   (if (not (pair? x))
@@ -38,12 +38,6 @@
 ;  x->[|][/]
 ;      a
 
-(define z4 (list 'a 'b 'c))
-(set-cdr! (cddr z4) z4)
+; See 3.13 for definition and diagram.
 ; (count-pairs z4)
 ; Aborting!: maximum recursion depth exceeded
-
-;      +------------------+
-;      |                  |
-; z4->[|][-]->[|][-]->[|][|]
-;      a       b       c
