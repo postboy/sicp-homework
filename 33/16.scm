@@ -11,13 +11,15 @@
 
 ; Show that this procedure is not correct. In particular, draw box-and-pointer diagrams representing list structures made up of exactly three pairs for which Ben's procedure would return 3; return 4; return 7; never return at all.
 
-(assert (count-pairs '(a b c)) 3)
+(define z1 (list 'a 'b 'c))
+(assert (count-pairs z1) 3)
 
 ; z1->[|][-]->[|][-]->[|][/]
 ;      a       b       c
 
 (define x (list 'a))
-(assert (count-pairs (list x x)) 4)
+(define z2 (list x x))
+(assert (count-pairs z2) 4)
 
 ; z2->[|][-]->[|][/]
 ;      |       |
@@ -25,9 +27,9 @@
 ;  x->[|][/]
 ;      a
 
-(define x (list 'a))
 (define y (cons x x))
-(assert (count-pairs (cons y y)) 7)
+(define z3 (cons y y))
+(assert (count-pairs z3) 7)
 
 ; z3->[|][|]
 ;      |  |
@@ -36,9 +38,9 @@
 ;  x->[|][/]
 ;      a
 
-(define x (list 'a 'b 'c))
-(set-cdr! (cddr x) x)
-; (count-pairs x)
+(define z4 (list 'a 'b 'c))
+(set-cdr! (cddr z4) z4)
+; (count-pairs z4)
 ; Aborting!: maximum recursion depth exceeded
 
 ;      +------------------+
