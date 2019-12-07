@@ -1,0 +1,30 @@
+; Exercise 3.19.  Redo exercise 3.18 using an algorithm that takes only a constant amount of space. (This requires a very clever idea.)
+
+(load "16.scm")
+
+(define (is-cyclic? x)
+  (define pair-fast x)
+  (define pair-slow x)
+  (define (make-fast-step)
+    (set! pair-fast (cdr pair-fast))
+    (cond ((null? pair-fast) #f)
+	  ((eq? pair-fast pair-slow) #t)
+	  (else
+	   (set! pair-fast (cdr pair-fast))
+	   (cond ((null? pair-fast) #f)
+		 ((eq? pair-fast pair-slow) #t)
+		 (else (make-slow-step))))))
+  (define (make-slow-step)
+    (set! pair-slow (cdr pair-slow))
+    (cond ((null? pair-slow) #f)
+	  ((eq? pair-fast pair-slow) #t)
+	  (else (make-fast-step))))
+  (if (null? x)
+      #f
+      (make-fast-step)))
+
+(assert (is-cyclic? nil) #f)
+(assert (is-cyclic? z1) #f)
+(assert (is-cyclic? z2) #f)
+(assert (is-cyclic? z3) #f)
+(assert (is-cyclic? z4) #t)

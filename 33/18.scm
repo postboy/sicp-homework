@@ -11,6 +11,7 @@
 	  (else (is-cyclic-internal (cdr x) (cons x seen)))))
   (is-cyclic-internal x nil))
 
+(assert (is-cyclic? nil) #f)
 (assert (is-cyclic? z1) #f)
 (assert (is-cyclic? z2) #f)
 (assert (is-cyclic? z3) #f)
