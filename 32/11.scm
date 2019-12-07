@@ -17,7 +17,7 @@
           (else (error "Unknown request -- MAKE-ACCOUNT" m))))
   dispatch)
 
-; GLOBAL: make-account acc
+; GLOBAL: make-account
 ; make-account -- parameters: balance; body: (define (withdraw amount)..., link: GLOBAL
 
 (define acc (make-account 50))
