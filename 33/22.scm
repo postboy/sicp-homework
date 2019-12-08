@@ -33,13 +33,10 @@
 
 (define (empty-queue? queue)
   (queue 'empty-queue?))
-
 (define (front-queue queue)
   (queue 'front-queue))
-
 (define (insert-queue! queue item)
   ((queue 'insert-queue!) item))
-
 (define (delete-queue! queue)
   (queue 'delete-queue!))
 
