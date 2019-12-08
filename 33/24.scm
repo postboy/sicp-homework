@@ -27,10 +27,16 @@
             (else (error "Unknown operation -- TABLE" m))))
     dispatch))
 
+(define (lookup table key)
+  ((table 'lookup-proc) key))
+
+(define (insert! table key value)
+  ((table 'insert-proc!) key value))
+
 (define table (make-table eq?))
-(assert ((table 'lookup-proc) 'a) #f)
-(assert ((table 'insert-proc!) 'a 5) #t)
-(assert ((table 'lookup-proc) 'a) 5)
-(assert ((table 'insert-proc!) 'a 6) #t)
-(assert ((table 'lookup-proc) 'a) 6)
-(assert ((table 'lookup-proc) 'b) #f)
+(assert (lookup table 'a) #f)
+(assert (insert! table 'a 5) #t)
+(assert (lookup table 'a) 5)
+(assert (insert! table 'a 6) #t)
+(assert (lookup table 'a) 6)
+(assert (lookup table 'b) #f)
