@@ -2,6 +2,8 @@
 
 (load "ch34_common.scm")
 
+(define or-gate-delay 5)
+
 (define (logical-or a1 a2)
   (cond ((and (= a1 0) (= a2 0)) 0)
 	((and (= a1 0) (= a2 1)) 1)
