@@ -119,8 +119,8 @@
   (add-action! wire
                (lambda ()
 		 (set! past-events
-		       (cons (list (current-time the-agenda) name (get-signal wire)) past-events))
-		 'ok)))
+		       (cons (list (current-time the-agenda) name (get-signal wire)) past-events))))
+  'ok)
 
 ; inverter
 
