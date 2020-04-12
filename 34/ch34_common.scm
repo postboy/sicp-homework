@@ -100,8 +100,6 @@
 
 ; agenda instance
 
-(define the-agenda (make-agenda))
-
 (define (after-delay delay action)
   (add-to-agenda! (+ delay (current-time the-agenda))
                   action
@@ -115,15 +113,13 @@
         (remove-first-agenda-item! the-agenda)
         (propagate))))
 
+(define past-events nil)
+
 (define (probe name wire)
   (add-action! wire
-               (lambda ()        
-                 (newline)
-                 (display name)
-                 (display " ")
-                 (display (current-time the-agenda))
-                 (display "  New-value = ")
-                 (display (get-signal wire))
+               (lambda ()
+		 (set! past-events
+		       (cons (list (current-time the-agenda) name (get-signal wire)) past-events))
 		 'ok)))
 
 ; inverter
