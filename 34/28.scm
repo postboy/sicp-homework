@@ -28,30 +28,30 @@
 (define output (make-wire))
 
 (probe 'output output)
-; 0 * or-gate-delay
+(assert (current-time the-agenda) 0)
 (assert (set! past-events nil) '((0 output 0)))
 
 (or-gate input-1 input-2 output)
 (propagate)
-; 1 * or-gate-delay
+(assert (current-time the-agenda) (* or-gate-delay 1))
 (assert (set! past-events nil) nil)
 
 (set-signal! input-1 1)
 (propagate)
-; 2 * or-gate-delay
+(assert (current-time the-agenda) (* or-gate-delay 2))
 (assert (set! past-events nil) '((10 output 1)))
 
 (set-signal! input-2 1)
 (propagate)
-; 3 * or-gate-delay
+(assert (current-time the-agenda) (* or-gate-delay 3))
 (assert (set! past-events nil) nil)
 
 (set-signal! input-1 0)
 (propagate)
-; 4 * or-gate-delay
+(assert (current-time the-agenda) (* or-gate-delay 4))
 (assert (set! past-events nil) nil)
 
 (set-signal! input-2 0)
 (propagate)
-; 5 * or-gate-delay
+(assert (current-time the-agenda) (* or-gate-delay 5))
 (assert (set! past-events nil) '((25 output 0)))
