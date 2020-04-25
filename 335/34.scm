@@ -7,21 +7,21 @@
 
 (define root (make-connector))
 (probe 'root root)
-(define square (make-connector))
-(probe 'square square)
+(define square-value (make-connector))
+(probe 'square-value square-value)
 
-(squarer root square)
+(squarer root square-value)
 (assert (set! past-events nil) nil)
 
 ; This implementation is hilarious. It works in one direction:
 (set-value! root 10 'user)
-(assert (set! past-events nil) '((root 10) (square 100)))
+(assert (set! past-events nil) '((root 10) (square-value 100)))
 
 (forget-value! root 'user)
-(assert (set! past-events nil) '((root "?") (square "?")))
+(assert (set! past-events nil) '((root "?") (square-value "?")))
 
 ; But not in another:
-(set-value! square 100 'user)
-(assert (set! past-events nil) '((square 100)))
+(set-value! square-value 100 'user)
+(assert (set! past-events nil) '((square-value 100)))
 
 ; The reason is interesting: multiplier doesn't know that first and second inputs are connected to the same connector and must have the same value. If squarer gets a then multiplier gets a and b, so it can compute c. If squarer gets b then multiplier gets c, so it can't compute a and b: multiplier is programmed to compute one value from the other two values.
