@@ -1,6 +1,6 @@
 ; Exercise 3.28.  Define an or-gate as a primitive function box. Your or-gate constructor should be similar to and-gate.
 
-(load "ch34_common.scm")
+(load "ch334_common.scm")
 
 (define or-gate-delay 5)
 

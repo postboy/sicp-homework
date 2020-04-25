@@ -1,6 +1,6 @@
 ; Exercise 3.29.  Another way to construct an or-gate is as a compound digital logic device, built from and-gates and inverters. Define a procedure or-gate that accomplishes this. What is the delay time of the or-gate in terms of and-gate-delay and inverter-delay?
 
-(load "ch34_common.scm")
+(load "ch334_common.scm")
 
 (define (or-gate a1 a2 output)
   (let ((a1i (make-wire)) (a2i (make-wire)) (resi (make-wire)))
