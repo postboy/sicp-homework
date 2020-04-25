@@ -2,6 +2,6 @@
 
 Solved chapters: 1, 2, 3 (partly)
 
-TODO: 3: 26 32
+TODO: 3: 26 32 36
 
 Licence: public domain
