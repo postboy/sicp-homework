@@ -18,11 +18,13 @@
 (probe 'average average)
 
 (averager first second average)
-
 (assert (set! past-events nil) nil)
+
 (set-value! first 10 'user)
+(assert (set! past-events nil) '((first 10)))
+
 (set-value! second 20 'user)
-(assert (set! past-events nil) '((second 20) (average 15.) (first 10)))
+(assert (set! past-events nil) '((second 20) (average 15.)))
 
 (forget-value! second 'user)
 (assert (set! past-events nil) '((second "?") (average "?")))
