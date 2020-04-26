@@ -71,8 +71,10 @@
 (define (entry tree) (car tree))
 
 (define (left-branch tree) (cadr tree))
+(define (set-left-branch! tree value) (set-car! (cdr tree) value))
 
 (define (right-branch tree) (caddr tree))
+(define (set-right-branch! tree value) (set-car! (cddr tree) value))
 
 (define (make-tree entry left right)
   (list entry left right))

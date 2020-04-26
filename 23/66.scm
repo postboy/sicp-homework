@@ -3,7 +3,10 @@
 (load "ch23_common.scm")
 
 ; Let's represent record as a list. Let's suppose that key is first element of the list.
+(define (make-record key value) (list key value))
 (define (key record) (car record))
+(define (value record) (cadr record))
+(define (set-value! record value) (set-car! (cdr record) value))
 
 (define (lookup given-key set)
   (cond ((null? set) false)
