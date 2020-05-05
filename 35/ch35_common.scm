@@ -1,5 +1,7 @@
 (load "../common.scm")
 
+; stream constructors
+
 (define (stream-enumerate-interval low high)
   (if (> low high)
       the-empty-stream
@@ -7,7 +9,12 @@
        low
        (stream-enumerate-interval (+ low 1) high))))
 
-; for testing
+; stream operations
+
+(define (add-streams s1 s2)
+  (stream-map + s1 s2))
+
+; stream operations for testing
 
 (define (stream-to-list s)
   (define reversed-list nil)
