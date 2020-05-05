@@ -9,6 +9,13 @@
        low
        (stream-enumerate-interval (+ low 1) high))))
 
+; specific streams
+
+(define (integers-starting-from n)
+  (cons-stream n (integers-starting-from (+ n 1))))
+
+(define integers (integers-starting-from 1))
+
 ; stream operations
 
 (define (add-streams s1 s2)
