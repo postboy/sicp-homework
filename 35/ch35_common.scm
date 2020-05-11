@@ -46,6 +46,12 @@
   (stream-part-for-each append-to-list s n)
   (reverse reversed-list))
 
+(define (list-to-stream list)
+  (if (null? list)
+      the-empty-stream
+      (cons-stream (car list)
+		   (list-to-stream (cdr list)))))
+
 (define (display-line x)
   (newline)
   (display x))
