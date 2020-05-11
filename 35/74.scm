@@ -4,18 +4,11 @@
 
 (load "ch35_common.scm")
 
-(define (sign-change-detector cur prev)
-  (cond ((and (>= prev 0) (< cur 0)) -1)
-	((and (>= cur 0) (< prev 0)) 1)
-	(else 0)))
-
 (define (make-zero-crossings input-stream last-value)
   (cons-stream
    (sign-change-detector (stream-car input-stream) last-value)
    (make-zero-crossings (stream-cdr input-stream)
                         (stream-car input-stream))))
-
-(define sense-data (list-to-stream '(1 2 1.5 1 0.5 -0.1 -2 -3 -2 -0.5 0.2 3 4 -1)))
 
 (define zero-crossings (make-zero-crossings sense-data 0))
 (assert (stream-part-to-list zero-crossings 13) '(0 0 0 0 0 -1 0 0 0 0 1 0 0))

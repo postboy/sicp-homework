@@ -58,3 +58,12 @@
 
 (define (display-stream s)
   (stream-for-each display-line s))
+
+(define (sign-change-detector cur prev)
+  (cond ((and (>= prev 0) (< cur 0)) -1)
+	((and (>= cur 0) (< prev 0)) 1)
+	(else 0)))
+
+; test data
+
+(define sense-data (list-to-stream '(1 2 1.5 1 0.5 -0.1 -2 -3 -2 -0.5 0.2 3 4 -1)))
