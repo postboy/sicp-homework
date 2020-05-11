@@ -24,12 +24,6 @@
 (define (scale-stream stream factor)
   (stream-map (lambda (x) (* x factor)) stream))
 
-(define (stream-part-for-each proc s n)
-  (if (or (stream-null? s) (= n 0))
-      'done
-      (begin (proc (stream-car s))
-             (stream-part-for-each proc (stream-cdr s) (- n 1)))))
-
 ; stream operations for testing
 
 (define (stream-to-list s)
@@ -38,6 +32,12 @@
     (set! reversed-list (cons elt reversed-list)))
   (stream-for-each append-to-list s)
   (reverse reversed-list))
+
+(define (stream-part-for-each proc s n)
+  (if (or (stream-null? s) (= n 0))
+      'done
+      (begin (proc (stream-car s))
+             (stream-part-for-each proc (stream-cdr s) (- n 1)))))
 
 (define (stream-part-to-list s n)
   (define reversed-list nil)
