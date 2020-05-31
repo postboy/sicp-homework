@@ -16,5 +16,5 @@
 (define cosine-square-series (mul-series cosine-series cosine-series))
 (define result-stream (add-streams sine-square-series cosine-square-series))
 (define res-first-5 '(1 0 0 0 0))
-(assert (stream-part-to-list result-stream 5) res-first-5)
+(assert (stream-head result-stream 5) res-first-5)
 (assert (apply + res-first-5) 1)

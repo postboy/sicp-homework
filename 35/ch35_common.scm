@@ -39,13 +39,6 @@
       (begin (proc (stream-car s))
              (stream-part-for-each proc (stream-cdr s) (- n 1)))))
 
-(define (stream-part-to-list s n)
-  (define reversed-list nil)
-  (define (append-to-list elt)
-    (set! reversed-list (cons elt reversed-list)))
-  (stream-part-for-each append-to-list s n)
-  (reverse reversed-list))
-
 (define (list-to-stream list)
   (if (null? list)
       the-empty-stream

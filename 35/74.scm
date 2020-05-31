@@ -11,10 +11,10 @@
                         (stream-car input-stream))))
 
 (define zero-crossings (make-zero-crossings sense-data 0))
-(assert (stream-part-to-list zero-crossings 13) '(0 0 0 0 0 -1 0 0 0 0 1 0 0))
+(assert (stream-head zero-crossings 13) '(0 0 0 0 0 -1 0 0 0 0 1 0 0))
 
 ; Alyssa's boss, Eva Lu Ator, walks by and suggests that this program is approximately equivalent to the following one, which uses the generalized version of stream-map from exercise 3.50: <...>. Complete the program by supplying the indicated <expression>.
 
 (define zero-crossings
   (stream-map sign-change-detector sense-data (cons-stream 0 sense-data)))
-(assert (stream-part-to-list zero-crossings 13) '(0 0 0 0 0 -1 0 0 0 0 1 0 0))
+(assert (stream-head zero-crossings 13) '(0 0 0 0 0 -1 0 0 0 0 1 0 0))

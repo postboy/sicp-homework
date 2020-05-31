@@ -7,7 +7,7 @@
 (define (integrate-series s)
   (stream-map / s integers))
 
-(assert (stream-part-to-list (integrate-series integers) 5) '(1 1 1 1 1))
+(assert (stream-head (integrate-series integers) 5) '(1 1 1 1 1))
 
 ; b. The function x -> e^x is its own derivative. This implies that ex and the integral of e^x are the same series, except for the constant term, which is e^0 = 1. Accordingly, we can generate the series for e^x as
 
@@ -15,7 +15,7 @@
   (cons-stream 1 (integrate-series exp-series)))
 
 (define exp-first-10 '(1 1 1/2 1/6 1/24 1/120 1/720 1/5040 1/40320 1/362880))
-(assert (stream-part-to-list exp-series 10) exp-first-10)
+(assert (stream-head exp-series 10) exp-first-10)
 (assert (+ (apply + exp-first-10) 0.0) 2.7182815255731922)
 
 ; Show how to generate the series for sine and cosine, starting from the facts that the derivative of sine is cosine and the derivative of cosine is the negative of sine:
@@ -25,5 +25,5 @@
 (define sine-series
   (cons-stream 0 (integrate-series cosine-series)))
 
-(assert (stream-part-to-list cosine-series 10) '(1 0 -1/2 0 1/24 0 -1/720 0 1/40320 0))
-(assert (stream-part-to-list sine-series 10) '(0 1 0 -1/6 0 1/120 0 -1/5040 0 1/362880))
+(assert (stream-head cosine-series 10) '(1 0 -1/2 0 1/24 0 -1/720 0 1/40320 0))
+(assert (stream-head sine-series 10) '(0 1 0 -1/6 0 1/120 0 -1/5040 0 1/362880))

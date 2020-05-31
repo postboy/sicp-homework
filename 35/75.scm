@@ -19,4 +19,4 @@
 					avpt)))))
 
 (define zero-crossings (make-zero-crossings sense-data 0 0))
-(assert (stream-part-to-list zero-crossings 13) '(0 0 0 0 0 0 -1 0 0 0 0 1 0))
+(assert (stream-head zero-crossings 13) '(0 0 0 0 0 0 -1 0 0 0 0 1 0))
