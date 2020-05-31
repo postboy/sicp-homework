@@ -31,8 +31,8 @@
 ; y: 6 10 28 36 66 78 120 136
 (assert sum 136)
 
-; display-stream is sort of equivalent to stream-to-list
-(assert (stream-to-list z) '(10 15 45 55 105 120 190 210))
+; display-stream is sort of equivalent to stream->list
+(assert (stream->list z) '(10 15 45 55 105 120 190 210))
 ; enum: 1 2 3  4  5  6  7  8  9 10 11 12 13  14  15  16  17  18  19  20
 ; seq:  1 3 6 10 15 21 28 36 45 55 66 78 91 105 120 136 153 171 190 210
 ; z: see above

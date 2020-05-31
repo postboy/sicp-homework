@@ -13,4 +13,4 @@
 (define 0to2 (stream-enumerate-interval 0 2))
 (define 1to3 (stream-enumerate-interval 1 3))
 (define result (stream-map * 0to2 1to3))
-(assert (stream-to-list result) '(0 2 6))
+(assert (stream->list result) '(0 2 6))

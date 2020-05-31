@@ -26,13 +26,6 @@
 
 ; stream operations for testing
 
-(define (stream-to-list s)
-  (define reversed-list nil)
-  (define (append-to-list elt)
-    (set! reversed-list (cons elt reversed-list)))
-  (stream-for-each append-to-list s)
-  (reverse reversed-list))
-
 (define (stream-part-for-each proc s n)
   (if (or (stream-null? s) (= n 0))
       'done
