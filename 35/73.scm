@@ -17,6 +17,6 @@
 		 (integral (scale-stream i (/ 1 C)) v0 dt))))
 
 (define RC1 (RC 5 1 0.5))
-(define i (list-to-stream '(1 1 1 0.5 0 0 0 0.5 1 1 1)))
+(define i (list->stream '(1 1 1 0.5 0 0 0 0.5 1 1 1)))
 (define u (RC1 i 1))
 (assert (stream-head u 11) '(6 6.5 7. 5. 2.75 2.75 2.75 5.25 8. 8.5 9.))

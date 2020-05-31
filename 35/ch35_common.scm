@@ -32,12 +32,6 @@
       (begin (proc (stream-car s))
              (stream-part-for-each proc (stream-cdr s) (- n 1)))))
 
-(define (list-to-stream list)
-  (if (null? list)
-      the-empty-stream
-      (cons-stream (car list)
-		   (list-to-stream (cdr list)))))
-
 (define (display-line x)
   (newline)
   (display x))
@@ -52,4 +46,4 @@
 
 ; test data
 
-(define sense-data (list-to-stream '(1 2 1.5 1 0.5 -0.1 -2 -3 -2 -0.5 0.2 3 4 -1)))
+(define sense-data (list->stream '(1 2 1.5 1 0.5 -0.1 -2 -3 -2 -0.5 0.2 3 4 -1)))
