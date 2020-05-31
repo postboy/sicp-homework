@@ -21,7 +21,7 @@
 ; Show how to generate the series for sine and cosine, starting from the facts that the derivative of sine is cosine and the derivative of cosine is the negative of sine:
 
 (define cosine-series
-  (cons-stream 1 (stream-map - (integrate-series sine-series))))
+  (cons-stream 1 (scale-stream (integrate-series sine-series) -1)))
 (define sine-series
   (cons-stream 0 (integrate-series cosine-series)))
 
