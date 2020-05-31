@@ -26,19 +26,6 @@
 
 ; stream operations for testing
 
-(define (stream-part-for-each proc s n)
-  (if (or (stream-null? s) (= n 0))
-      'done
-      (begin (proc (stream-car s))
-             (stream-part-for-each proc (stream-cdr s) (- n 1)))))
-
-(define (display-line x)
-  (newline)
-  (display x))
-
-(define (display-stream s)
-  (stream-for-each display-line s))
-
 (define (sign-change-detector cur prev)
   (cond ((and (>= prev 0) (< cur 0)) -1)
 	((and (>= cur 0) (< prev 0)) 1)
