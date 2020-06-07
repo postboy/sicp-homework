@@ -16,17 +16,23 @@
                              guesses)))
   guesses)
 
-(define (stream-limit s tolerance)
-  (define (stream-limit-internal prev rest)
+(define (stream-limit-w-iters s tolerance)
+  (define (internal prev rest i)
     (if (stream-null? rest)
       (error "stream ended before required criterion was met")
-    (let ((cur (stream-car rest)))
-      (if (< (abs (- cur prev)) tolerance)
-	  cur
-	  (stream-limit-internal cur (stream-cdr rest))))))
+      (let ((cur (stream-car rest))
+	    (cur-num (+ i 1)))
+	(if (< (abs (- cur prev)) tolerance)
+	    (list cur cur-num)
+	    (internal cur (stream-cdr rest) cur-num)))))
   (if (stream-null? s)
       (error "stream is empty")
-      (stream-limit-internal (stream-car s) (stream-cdr s))))
+      (internal (stream-car s) (stream-cdr s) 1)))
+
+(define (stream-limit s tolerance)
+  (car (stream-limit-w-iters s tolerance)))
+(define (stream-iters s tolerance)
+  (cadr (stream-limit-w-iters s tolerance)))
 
 (assert (sqrt 2 0.0001) 1.4142135623746899)
 
