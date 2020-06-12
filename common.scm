@@ -15,6 +15,8 @@
       a
       (gcd b (remainder a b))))
 
+(define (cube x) (* x x x))
+
 (define (inc n) (+ n 1))
 
 (define (dec n) (- n 1))

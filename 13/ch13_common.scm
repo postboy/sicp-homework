@@ -2,8 +2,6 @@
 
 ; s-integral
 
-(define (cube x) (* x x x))
-
 (define (sum term a next b)
   (accumulate + 0 term a next b))
 
