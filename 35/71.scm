@@ -6,23 +6,32 @@
   (+ (cube (car p)) (cube (cadr p))))
 
 ; if stream has two equal consecutive elements then stream-repeats does cons-stream on this element
-(define (stream-repeats s)
-  (cond ((stream-null? s) the-empty-stream)
-	((stream-null? (stream-cdr s)) the-empty-stream)
-	((= (stream-car s) (stream-car (stream-cdr s)))
-	 (cons-stream (stream-car s)
-		      (stream-repeats (stream-cdr s))))
-	(else (stream-repeats (stream-cdr s)))))
+(define (stream-repeats stream)
+  (define (internal s i)
+    (cond ((stream-null? s) the-empty-stream)
+	  ((stream-null? (stream-cdr s)) the-empty-stream)
+	  ((= (stream-car s) (stream-car (stream-cdr s)))
+	   (cons-stream (list (stream-car s) i)
+			(internal (stream-cdr s) (+ i 1))))
+	  (else (internal (stream-cdr s) (+ i 1)))))
+  (internal stream 0))
+
+(define (numbers s)
+    (stream-map car s))
+
+(define (indexes s)
+    (stream-map cadr s))
 
 (define ramanujan-numbers
-  (stream-repeats (stream-map (weighted-pairs integers integers sum-of-cubes)
-			      sum-of-cubes)))
+  (numbers (stream-repeats
+	    (stream-map (weighted-pairs integers integers sum-of-cubes)
+			sum-of-cubes))))
 
 (assert (stream-head (weighted-pairs integers integers sum-of-cubes) 10)
 	'((1 1) (1 2) (2 2) (1 3) (2 3) (3 3) (1 4) (2 4) (3 4) (1 5)))
 (assert (stream-head (stream-map (weighted-pairs integers integers sum-of-cubes) sum-of-cubes) 10)
 	'(2 9 16 28 35 54 65 72 91 126))
 (assert (stream->list (stream-repeats (list->stream '(0 1 1 2 3 3 3))))
-	'(1 3 3))
+	'((1 1) (3 4) (3 5)))
 (assert (stream-head ramanujan-numbers 6)
 	'(1729 4104 13832 20683 32832 39312))
