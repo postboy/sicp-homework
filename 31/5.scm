@@ -7,8 +7,8 @@
 (load "ch31_common.scm")
 
 (define (random-in-range low high)
-  (let ((range (- high low)))
-    (+ low (random range))))
+  (define range (- high low))
+  (+ low (random range)))
 
 (define (monte-carlo trials experiment)
   (define (iter trials-remaining trials-passed)
@@ -21,16 +21,19 @@
   (iter trials 0))
 
 (define (estimate-integral P x1 x2 y1 y2 trials)
-  (define rect-square
-    (* (- x2 x1) (- y2 y1)))
-  (define (experiment)
-    (P (random-in-range x1 x2) (random-in-range y1 y2)))
+  (define rect-square (* (- x2 x1) (- y2 y1)))
+  (define (experiment) (P (random-in-range x1 x2) (random-in-range y1 y2)))
   (* (monte-carlo trials experiment) rect-square))
 
 (define (always-true x y) #t)
 (define (always-false x y) #f)
-(define (in-unit-circle? x y)
-  (<= (+ (square x) (square y)) 1))
+(define (in-unit-circle? x y) (<= (+ (square x) (square y)) 1))
+
+(assert (in-unit-circle? -1.0 -1.0) #f)
+(assert (in-unit-circle? -1.0 0.0) #t)
+(assert (in-unit-circle? 0.0 0.0) #t)
+(assert (in-unit-circle? 0.0 1.0) #t)
+(assert (in-unit-circle? 1.0 1.0) #f)
 
 (assert (estimate-integral always-true -1 2 -2 3 10) 15)
 (assert (estimate-integral always-false -1 2 -2 3 10) 0)
