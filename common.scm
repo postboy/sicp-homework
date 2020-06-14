@@ -5,6 +5,8 @@
   (cond ((equal? a b) #t) ; return #t for output brevity
 	(else (display-all "test failed: " a " != " b) (error ""))))
 
+(define (A a b) (assert a b))
+
 (define (identity x) x)
 
 (define (average x y)
