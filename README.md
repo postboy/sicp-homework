@@ -1,6 +1,6 @@
 ## Structure and Interpretation of Computer Programs, everyone!
 
-Solved chapters: 1, 2, 3, 4 (partly)
+Solved chapters: 1, 2, 3, 4 (partly), 5 (partly)
 
 TODO: -
 
