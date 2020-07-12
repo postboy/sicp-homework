@@ -4,6 +4,6 @@ Solved chapters: 1, 2, 3, 4 (partly), 5 (partly)
 
 TODO: -
 
-[Мой пост о СИКП на русском языке](https://medium.com/@posthedgehog/%D1%8D%D1%82%D0%BE-%D0%B1%D0%B5%D0%B7%D1%83%D0%BC%D0%B8%D0%B5-%D1%8D%D1%82%D0%BE-mit-ab7b57041336)
+[Мой пост о СИКП на русском языке](https://medium.com/@posthedgehog/sicp-aka-sink-or-swim-28d5890ef222)
 
 Licence: public domain
