@@ -42,7 +42,7 @@ void prompt_for_input(const char *str) {
 }
 
 // return value -- does it need space after itself in general?
-bool user_print_internal(lisp_elt_t *e, bool needs_separator) {
+bool user_print_internal(lisp_elt_t *e, bool needs_parens, bool needs_separator) {
     // for printing lists
     if (!e)
 	return false;
@@ -60,10 +60,10 @@ bool user_print_internal(lisp_elt_t *e, bool needs_separator) {
 	printf("%i", e->num);
     }
     else if (e->type == pair) {
-	printf("(");
-	needs_separator = user_print_internal(car(e), false);
-	user_print_internal(cdr(e), needs_separator);
-	printf(")");
+	if (needs_parens) printf("(");
+	needs_separator = user_print_internal(car(e), true, false);
+	user_print_internal(cdr(e), false, needs_separator);
+	if (needs_parens) printf(")");
     }
     else {
 	ensure(0); //error
@@ -73,13 +73,27 @@ bool user_print_internal(lisp_elt_t *e, bool needs_separator) {
 
 lisp_elt_t *user_print(lisp_elt_t *e) {
     ensure(e); //?
-    user_print_internal(e, false);
+    user_print_internal(e, true, false);
     printf("\n");
     return e;
 }
 
+// forward decl
+lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list);
+
+lisp_elt_t *elt_or_sublist(lisp_elt_t *elt, char *str, char **next, bool in_list)
+{
+    if (in_list) {
+	ensure(next);
+	return cons(elt, string_to_lisp(*next, next, true));
+    }
+    else {
+	return elt;
+    }
+}
+
 // beware of stack overflow!
-lisp_elt_t *string_to_lisp(char *str, char **next)
+lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
 {
     ensure(str);
     //lisp_elt_t *result = NULL;
@@ -94,28 +108,31 @@ lisp_elt_t *string_to_lisp(char *str, char **next)
 	    elt->num = strtol(str, next, 0);
 	    //str = str_end;
 	    //result = elt; // todo
-	    return elt;
+	    return elt_or_sublist(elt, str, next, in_list);
 	}
 	else if (str[0] == '\'') {
 	    str++;
-	    lisp_elt_t *elt = string_to_lisp(str, &str);
+	    lisp_elt_t *elt = string_to_lisp(str, &str, in_list);
 	    ensure(elt);
 	    return make_quoted(elt);
 	}
 	else if (str[0] == '(') {
 	    str++;
-	    lisp_elt_t *car_elt = string_to_lisp(str, &str);
+	    lisp_elt_t *elt = string_to_lisp(str, &str, true);
 	    //ensure(car_elt);
-	    lisp_elt_t *cdr_elt = string_to_lisp(str, &str);
+	    //lisp_elt_t *cdr_elt = string_to_lisp(str, &str, true);
 	    //ensure(cdr_elt); // no, end of list!
-       	    lisp_elt_t *elt = cons(car_elt, cdr_elt);
-	    ensure(elt);
+       	    //lisp_elt_t *elt = cons(car_elt, cdr_elt);
+	    //ensure(elt);
 	    //result = elt; // todo
+	    // empty list
+	    if (!elt)
+		return cons(nil, nil);
 	    return elt;
 	}
 	else if (str[0] == ')') {
 	    ensure(next);
-	    *next = str++;
+	    *next = ++str;
 	    return nil;
 	}
 	else if (str[0] == '"') {
@@ -124,9 +141,9 @@ lisp_elt_t *string_to_lisp(char *str, char **next)
 		ensure(str[0]);
 		// skip next symbol
 		/*if (str[0] == "\\") {
-		    str++;
-		    ensure(str[0]);
-		}*/ // todo
+		  str++;
+		  ensure(str[0]);
+		  }*/ // todo
 		str++;
 	    } while (str[0] != '"');
 	    str[0] = '\0'; // end
@@ -144,9 +161,9 @@ lisp_elt_t *string_to_lisp(char *str, char **next)
 		ensure(str[0]);
 		// skip next symbol
 		/*if (str[0] == "\\") {
-		    str++;
-		    ensure(str[0]);
-		}*/ // todo
+		  str++;
+		  ensure(str[0]);
+		  }*/ // todo
 		str++;
 	    } while (isalnum(str[0]));
 	    str[0] = '\0'; // end
@@ -185,7 +202,7 @@ lisp_elt_t *read_stdin(void) {
 	global_argv++;
     }
     //return user_print(string_to_lisp(line, NULL)); // debug
-    return string_to_lisp(line, NULL);
+    return string_to_lisp(line, NULL, false);
 }
 
 // automatic memory?
