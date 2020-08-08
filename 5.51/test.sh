@@ -30,6 +30,7 @@ assert "'''a" "(quote (quote a))"
 assert "'(1 2)" "(1 2)"
 assert "'(1 2 3)" "(1 2 3)"
 assert "'(car cdr cons)" "(car cdr cons)"
+assert "'(\"a\" \"b\" \"c\")" '("a" "b" "c")'
 
 # tests that don't pass yet. provide extra arguments to this script to run them
 if [ "$#" -ne 0 ]; then
@@ -37,7 +38,6 @@ if [ "$#" -ne 0 ]; then
 assert "'(1 '\"aaa\")" "(1 (quote \"aaa\"))"
 assert "(quote a)" "a"
 assert "(quote (quote a))" "(quote a)"
-assert "'(\"a\" \"b\" \"c\")" '("a" "b" "c")'
 
 assert "1 1" "multiline"
 assert '"aa" "aa"' "multiline"

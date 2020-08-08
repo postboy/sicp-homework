@@ -154,15 +154,18 @@ lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
 		  }*/ // todo
 		str++;
 	    } while (str[0] != '"');
-	    str[0] = '\0'; // end
-	    str++;
+	    str[0] = '\0';
+	    //char *copy = gc_strdup(start);
+	    // ensure?
+	    *next = ++str;
 
 	    lisp_elt_t *elt = gc_alloc(sizeof(lisp_elt_t));
 	    // ensure?
 	    elt->type = string;
 	    elt->str = start;
 	    //result = elt; // todo
-	    return elt;
+	    //return elt;
+	    return elt_or_sublist(elt, str, next, in_list);
 	} else {
 	    char *start = str;
 	    do {
@@ -213,8 +216,9 @@ lisp_elt_t *read_stdin(void) {
 	    exit(0);
 	global_argv++;
     }
+    char *next = line;
     //return user_print(string_to_lisp(line, NULL)); // debug
-    return string_to_lisp(line, NULL, false);
+    return string_to_lisp(line, &next, false);
 }
 
 // automatic memory?
