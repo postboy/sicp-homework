@@ -16,6 +16,14 @@ void *gc_alloc(size_t size) {
     return result;
 }
 
+char *gc_strdup(const char *str) {
+    size_t len = strlen(str); // useless?
+    char *result = malloc(len + 1);
+    ensure(result);
+    memcpy(result, str, len + 1);
+    return result;
+}
+
 // call this less often? better error handling
 lisp_elt_t *fatal(const char *file, int line, const char *inv) {
     fprintf(stderr, "fatal error: check \"%s\" failed at %s:%i\n", inv, file, line);
@@ -166,15 +174,19 @@ lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
 		  }*/ // todo
 		str++;
 	    } while (isalnum(str[0]));
+	    char tmp = str[0];
 	    str[0] = '\0'; // end
-	    str++;
+	    char *copy = gc_strdup(start);
+	    // ensure?
+	    str[0] = tmp;
+	    *next = str;
 
 	    lisp_elt_t *elt = gc_alloc(sizeof(lisp_elt_t));
 	    // ensure?
 	    elt->type = symbol;
-	    elt->sym = start;
+	    elt->sym = copy;
 	    //result = elt; // todo
-	    return elt;
+	    return elt_or_sublist(elt, str, next, in_list);
 	}
     }
     ensure(0); // ?

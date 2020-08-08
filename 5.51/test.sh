@@ -29,6 +29,7 @@ assert "''a" "(quote a)"
 assert "'''a" "(quote (quote a))"
 assert "'(1 2)" "(1 2)"
 assert "'(1 2 3)" "(1 2 3)"
+assert "'(car cdr cons)" "(car cdr cons)"
 
 # tests that don't pass yet. provide extra arguments to this script to run them
 if [ "$#" -ne 0 ]; then
@@ -43,6 +44,7 @@ assert '"aa" "aa"' "multiline"
 
 assert "(cons 1 (cons 2 '()))" "(1 2)"
 
+# space at the end of the string
 # unpaired brackets, other incomplete and incorrect constructions
 
 assert if error
