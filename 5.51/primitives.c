@@ -1,4 +1,5 @@
 #include "common.h"
+#include <string.h>
 
 // modify to optimize non-lisp usages like stack
 
@@ -49,10 +50,12 @@ lisp_elt_t *cadddr(lisp_elt_t *e) { return car(cdr(cdr(cdr(e)))); }
 bool is_eq(lisp_elt_t *a, lisp_elt_t *b) {
     if (a->type != b->type)
 	return false; // error?
-    if (a->type == string) // ?
-	return (a->str == b->str);
-    if (a->type == symbol) // ?
-	return (a->sym == b->sym);
+    if (a->type == string) // todo obarray
+	//return (a->str == b->str);
+	return !strcmp(a->str, b->str);
+    if (a->type == symbol) // todo obarray
+	//return (a->sym == b->sym);
+	return !strcmp(a->sym, b->sym);
     if (a->type == number)
 	return (a->num == b->num);
     if (a->type == pair) // ?
