@@ -89,7 +89,7 @@ lisp_elt_t *user_print(lisp_elt_t *e) {
 // forward decl
 lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list);
 
-lisp_elt_t *elt_or_sublist(lisp_elt_t *elt, char *str, char **next, bool in_list)
+lisp_elt_t *elt_or_sublist(lisp_elt_t *elt, char **next, bool in_list)
 {
     if (in_list) {
 	ensure(next);
@@ -116,7 +116,7 @@ lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
 	    elt->num = strtol(str, next, 0);
 	    //str = str_end;
 	    //result = elt; // todo
-	    return elt_or_sublist(elt, str, next, in_list);
+	    return elt_or_sublist(elt, next, in_list);
 	}
 	else if (str[0] == '\'') {
 	    str++;
@@ -126,7 +126,7 @@ lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
 	}
 	else if (str[0] == '(') {
 	    str++;
-	    lisp_elt_t *elt = string_to_lisp(str, &str, true);
+	    lisp_elt_t *elt = string_to_lisp(str, next, true);
 	    //ensure(car_elt);
 	    //lisp_elt_t *cdr_elt = string_to_lisp(str, &str, true);
 	    //ensure(cdr_elt); // no, end of list!
@@ -136,7 +136,8 @@ lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
 	    // empty list
 	    if (!elt)
 		return cons(nil, nil);
-	    return elt;
+	    //return elt;
+	    return elt_or_sublist(elt, next, in_list);
 	}
 	else if (str[0] == ')') {
 	    ensure(next);
@@ -165,7 +166,7 @@ lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
 	    elt->str = start;
 	    //result = elt; // todo
 	    //return elt;
-	    return elt_or_sublist(elt, str, next, in_list);
+	    return elt_or_sublist(elt, next, in_list);
 	} else {
 	    char *start = str;
 	    do {
@@ -189,7 +190,7 @@ lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
 	    elt->type = symbol;
 	    elt->sym = copy;
 	    //result = elt; // todo
-	    return elt_or_sublist(elt, str, next, in_list);
+	    return elt_or_sublist(elt, next, in_list);
 	}
     }
     ensure(0); // ?
