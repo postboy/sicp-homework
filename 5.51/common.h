@@ -30,8 +30,8 @@ typedef struct {
 
 // interpreter.c
 
-char **global_argv;
-bool interactive;
+extern char **global_argv;
+extern bool interactive;
 
 // primitives.c
 
