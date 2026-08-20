@@ -1,5 +1,8 @@
 (load "../common.scm")
 
+; Do not load this file several times or this hack will break!
+(define apply-in-underlying-scheme apply)
+
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
@@ -19,9 +22,6 @@
                 (list-of-values (operands exp) env)))
         (else
          (error "Unknown expression type -- EVAL" exp))))
-
-; Do not load this file several times or this hack will break!
-(define apply-in-underlying-scheme apply)
 
 (define (apply procedure arguments)
   (cond ((primitive-procedure? procedure)
