@@ -30,20 +30,22 @@
 (define (and? exp) (tagged-list? exp 'and))
 (define (or? exp) (tagged-list? exp 'or))
 
-; Strictly speaking, most of the time we should return "value of some expression" instead of "true" in functions below. In case of special forms, it's not hard but still adds some complexity. In case of derived expressions, it looks pretty hard because we don't want to re-evaluate "value of some expression". I don't want to do this now.
-
 (define (eval-and exp env)
   (define (loop exps)
     (cond ((null? exps) true)
+	  ((null? (cdr exps)) (eval (car exps) env))
 	  ((eval (car exps) env) (loop (cdr exps)))
 	  (else false)))
   (loop (cdr exp)))
 
 (define (eval-or exp env)
   (define (loop exps)
-    (cond ((null? exps) false)
-	  ((eval (car exps) env) true)
-	  (else (loop (cdr exps)))))
+    (if (null? exps)
+	false
+	(let ((cur (eval (car exps) env)))
+	  (if cur
+	      cur
+	      (loop (cdr exps))))))
   (loop (cdr exp)))
 
 (define (and-tests)
@@ -63,7 +65,11 @@
   (A (eval '(or true (should-not-be-called)) the-global-environment) true))
 
 (and-tests)
+(A (eval '(and 1) the-global-environment) 1)
 (or-tests)
+(A (eval '(or 1) the-global-environment) 1)
+
+; Strictly speaking, most of the time we should return "value of some expression" instead of "true" in functions below. In case of derived expressions, it looks pretty hard because we don't want to re-evaluate "value of some expression". I don't want to do this now.
 
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
