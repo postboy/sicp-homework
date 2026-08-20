@@ -54,7 +54,8 @@
   (A (eval '(and true) the-global-environment) true)
   (A (eval '(and true true) the-global-environment) true)
   (A (eval '(and true false) the-global-environment) false)
-  (A (eval '(and false (should-not-be-called)) the-global-environment) false))
+  (A (eval '(and false (should-not-be-called)) the-global-environment) false)
+  (A (eval '(and 1) the-global-environment) 1))
 
 (define (or-tests)
   (A (eval '(or) the-global-environment) false)
@@ -65,7 +66,6 @@
   (A (eval '(or true (should-not-be-called)) the-global-environment) true))
 
 (and-tests)
-(A (eval '(and 1) the-global-environment) 1)
 (or-tests)
 (A (eval '(or 1) the-global-environment) 1)
 
@@ -97,9 +97,11 @@
   (define (loop exps)
     (if (null? exps)
 	'true
-	(make-if (car exps)
+	(if (null? (cdr exps))
+	    (car exps)
+	    (make-if (car exps)
 		 (loop (cdr exps))
-		 'false)))
+		 'false))))
   (loop (cdr exp)))
 
 (define (or->if exp)
