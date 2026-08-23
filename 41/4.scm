@@ -55,7 +55,8 @@
   (A (eval '(and true true) the-global-environment) true)
   (A (eval '(and true false) the-global-environment) false)
   (A (eval '(and false (should-not-be-called)) the-global-environment) false)
-  (A (eval '(and 1) the-global-environment) 1))
+  (A (eval '(and 1) the-global-environment) 1)
+  (A (eval '(and 0) the-global-environment) 0))
 
 (define (or-tests)
   (A (eval '(or) the-global-environment) false)
@@ -63,13 +64,12 @@
   (A (eval '(or true) the-global-environment) true)
   (A (eval '(or false false) the-global-environment) false)
   (A (eval '(or false true) the-global-environment) true)
-  (A (eval '(or true (should-not-be-called)) the-global-environment) true))
+  (A (eval '(or true (should-not-be-called)) the-global-environment) true)
+  (A (eval '(or 1) the-global-environment) 1)
+  (A (eval '(or 0) the-global-environment) 0))
 
 (and-tests)
 (or-tests)
-(A (eval '(or 1) the-global-environment) 1)
-
-; Strictly speaking, most of the time we should return "value of some expression" instead of "true" in functions below. In case of derived expressions, it looks pretty hard because we don't want to re-evaluate "value of some expression". I don't want to do this now.
 
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
@@ -93,24 +93,34 @@
         (else
          (error "Unknown expression type -- EVAL" exp))))
 
+(define (make-var-definition variable value)
+  (list 'define variable value))
+
+(A (definition-variable (make-var-definition 'a '1)) 'a)
+(A (definition-value (make-var-definition 'a '1)) '1)
+
 (define (and->if exp)
   (define (loop exps)
     (if (null? exps)
 	'true
 	(if (null? (cdr exps))
 	    (car exps)
-	    (make-if (car exps)
-		 (loop (cdr exps))
-		 'false))))
+	    (make-begin (cons
+			 (make-var-definition 'internal-interpreter-variable (car exps))
+			 (list (make-if 'internal-interpreter-variable
+					(loop (cdr exps))
+					'false)))))))
   (loop (cdr exp)))
 
 (define (or->if exp)
   (define (loop exps)
     (if (null? exps)
 	'false
-	(make-if (car exps)
-		 'true
-		 (loop (cdr exps)))))
+	(make-begin (cons
+		     (make-var-definition 'internal-interpreter-variable (car exps))
+		     (list (make-if 'internal-interpreter-variable
+				    'internal-interpreter-variable
+				    (loop (cdr exps))))))))
   (loop (cdr exp)))
 
 (and-tests)
