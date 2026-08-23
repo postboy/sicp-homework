@@ -101,26 +101,23 @@
 
 (define (and->if exp)
   (define (loop exps)
-    (if (null? exps)
-	'true
-	(if (null? (cdr exps))
-	    (car exps)
-	    (make-begin (cons
-			 (make-var-definition 'internal-interpreter-variable (car exps))
-			 (list (make-if 'internal-interpreter-variable
-					(loop (cdr exps))
-					'false)))))))
+    (cond ((null? exps) 'true)
+	  ((null? (cdr exps)) (car exps))
+	  (else (make-begin (cons
+			     (make-var-definition 'internal-interpreter-variable (car exps))
+			     (list (make-if 'internal-interpreter-variable
+					    (loop (cdr exps))
+					    'false)))))))
   (loop (cdr exp)))
 
 (define (or->if exp)
   (define (loop exps)
-    (if (null? exps)
-	'false
-	(make-begin (cons
-		     (make-var-definition 'internal-interpreter-variable (car exps))
-		     (list (make-if 'internal-interpreter-variable
-				    'internal-interpreter-variable
-				    (loop (cdr exps))))))))
+    (cond ((null? exps) 'false)
+	  (else (make-begin (cons
+			     (make-var-definition 'internal-interpreter-variable (car exps))
+			     (list (make-if 'internal-interpreter-variable
+					    'internal-interpreter-variable
+					    (loop (cdr exps)))))))))
   (loop (cdr exp)))
 
 (and-tests)
