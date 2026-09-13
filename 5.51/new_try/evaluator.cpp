@@ -1,9 +1,10 @@
 #include <stack>
+#include <cstdio>
+#include <cstdlib>
 
 typedef void *(state_t)();
 
-state_t
-initialize_stack,
+state_t initialize_stack,
   read,
   get_global_environment,
   print_result,
@@ -40,7 +41,7 @@ initialize_stack,
   ev_appl_accumulate_arg,
   ev_appl_accum_last_arg;
 
-void *flag = NULL;
+bool flag = false;
 void *expr, *env, *val, *proc, *argl, *unev;
 state_t *cont;
 
@@ -51,8 +52,8 @@ void *empty_arglist = NULL;
 
 void *the_global_environment = NULL;
 
-void prompt_for_input(const char *);
-void announce_output(const char *);
+void prompt_for_input(const char *str);
+void announce_output(const char *str);
 void user_print(void *);
 void define_variable(void *, void *, void *);
 void set_variable_value(void *, void *, void *);
@@ -60,26 +61,26 @@ void *make_procedure(void *, void *, void *);
 void *lookup_variable_value(void *, void *);
 void *apply_primitive_procedure(void *, void *);
 void *extend_environment(void *, void *, void *);
-void *is_self_evaluating(void *);
+bool is_self_evaluating(void *);
 void *adjoin_arg(void *, void *);
 
 void *lambda_parameters(void *);
 void *lambda_body(void *);
-void *is_no_operands(void *);
-void *is_last_operand(void *);
+bool is_no_operands(void *);
+bool is_last_operand(void *);
 void *first_operand(void *);
 void *rest_operands(void *);
 void *operands(void *);
 void *operation(void *);
 void *text_of_quotation(void *);
-void *is_variable(void *);
-void *is_quoted(void *);
-void *is_assignment(void *);
-void *is_definition(void *);
-void *is_if(void *);
-void *is_lambda(void *);
-void *is_begin(void *);
-void *is_application(void *);
+bool is_variable(void *);
+bool is_quoted(void *);
+bool is_assignment(void *);
+bool is_definition(void *);
+bool is_if(void *);
+bool is_lambda(void *);
+bool is_begin(void *);
+bool is_application(void *);
 void *definition_variable(void *);
 void *definition_value(void *);
 void *assignment_variable(void *);
@@ -90,10 +91,10 @@ void *if_consequent(void *);
 void *begin_actions(void *);
 void *first_exp(void *);
 void *rest_exps(void *);
-void *is_true(void *);
-void *is_last_exp(void *);
-void *is_primitive_procedure(void *);
-void *is_compound_procedure(void *);
+bool is_true(void *);
+bool is_last_exp(void *);
+bool is_primitive_procedure(void *);
+bool is_compound_procedure(void *);
 void *procedure_parameters(void *);
 void *procedure_environment(void *);
 void *procedure_body(void *);
@@ -115,6 +116,107 @@ void *restore()
   the_stack.pop();
   return value;
 }
+
+/*void *setup_environment()
+{
+  void *initial_env = extend-environment(primitive_procedure_names(), primitive_procedure_objects(), the_empty_environment);
+  define_variable("true", true, initial_env);
+  define_variable("false", false, initial_env);
+  return initial_env;
+}*/
+
+void prompt_for_input(const char *str)
+{
+  announce_output(str);
+}
+
+void announce_output(const char *str)
+{
+  printf("%s\n", str);
+}
+
+void *read()
+{
+  exit(1);//todo
+}
+
+void user_print(void *)
+{
+  exit(1);//todo
+}
+
+//----------------------------
+
+/*(define (self-evaluating? exp)
+  (cond ((number? exp) true)
+        ((string? exp) true)
+        (else false)))
+
+(define (variable? exp) (symbol? exp))
+
+(define (quoted? exp)
+  (tagged-list? exp 'quote))
+
+(define (text-of-quotation exp) (cadr exp))
+
+(define (tagged-list? exp tag)
+  (if (pair? exp)
+      (eq? (car exp) tag)
+      false))
+
+(define (assignment? exp)
+  (tagged-list? exp 'set!))
+(define (assignment-variable exp) (cadr exp))
+(define (assignment-value exp) (caddr exp))
+
+(define (definition? exp)
+  (tagged-list? exp 'define))
+(define (definition-variable exp)
+  (if (symbol? (cadr exp))
+      (cadr exp)
+      (caadr exp)))
+(define (definition-value exp)
+  (if (symbol? (cadr exp))
+      (caddr exp)
+      (make-lambda (cdadr exp)   ; formal parameters
+                   (cddr exp)))) ; body
+
+(define (lambda? exp) (tagged-list? exp 'lambda))
+(define (lambda-parameters exp) (cadr exp))
+(define (lambda-body exp) (cddr exp))
+
+(define (make-lambda parameters body)
+  (cons 'lambda (cons parameters body)))
+
+(define (if? exp) (tagged-list? exp 'if))
+(define (if-predicate exp) (cadr exp))
+(define (if-consequent exp) (caddr exp))
+(define (if-alternative exp)
+  (if (not (null? (cdddr exp)))
+      (cadddr exp)
+      'false))
+
+(define (make-if predicate consequent alternative)
+  (list 'if predicate consequent alternative))
+
+(define (begin? exp) (tagged-list? exp 'begin))
+(define (begin-actions exp) (cdr exp))
+(define (last-exp? seq) (null? (cdr seq)))
+(define (first-exp seq) (car seq))
+(define (rest-exps seq) (cdr seq))
+
+(define (sequence->exp seq)
+  (cond ((null? seq) seq)
+        ((last-exp? seq) (first-exp seq))
+        (else (make-begin seq))))
+(define (make-begin seq) (cons 'begin seq))
+
+(define (application? exp) (pair? exp))
+(define (operator exp) (car exp))
+(define (operands exp) (cdr exp))
+(define (no-operands? ops) (null? ops))
+(define (first-operand ops) (car ops))
+(define (rest-operands ops) (cdr ops))*/
 
 //----------------------------
 
