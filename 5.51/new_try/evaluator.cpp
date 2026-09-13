@@ -4,41 +4,41 @@ typedef void *(state_t)();
 
 state_t
 initialize_stack,
-read,
-get_global_environment,
-print_result,
-eval_dispatch,
-signal_error,
-setup_environment,
-ev_definition,
-ev_definition_1,
-ev_assignment,
-ev_assignment_1,
-ev_if_decide,
-ev_if_consequent,
-ev_if_alternative,
-ev_sequence,
-ev_sequence_last_exp,
-ev_sequence_continue,
-primitive_apply,
-compound_apply,
-unknown_procedure_type,
-ev_self_eval,
-ev_variable,
-ev_quoted,
-ev_assignment,
-ev_definition,
-ev_if,
-ev_lambda,
-ev_begin,
-ev_application,
-unknown_expression_type,
-ev_appl_did_operator,
-apply_dispatch,
-ev_appl_operand_loop,
-ev_appl_last_arg,
-ev_appl_accumulate_arg,
-ev_appl_accum_last_arg;
+  read,
+  get_global_environment,
+  print_result,
+  eval_dispatch,
+  signal_error,
+  setup_environment,
+  ev_definition,
+  ev_definition_1,
+  ev_assignment,
+  ev_assignment_1,
+  ev_if_decide,
+  ev_if_consequent,
+  ev_if_alternative,
+  ev_sequence,
+  ev_sequence_last_exp,
+  ev_sequence_continue,
+  primitive_apply,
+  compound_apply,
+  unknown_procedure_type,
+  ev_self_eval,
+  ev_variable,
+  ev_quoted,
+  ev_assignment,
+  ev_definition,
+  ev_if,
+  ev_lambda,
+  ev_begin,
+  ev_application,
+  unknown_expression_type,
+  ev_appl_did_operator,
+  apply_dispatch,
+  ev_appl_operand_loop,
+  ev_appl_last_arg,
+  ev_appl_accumulate_arg,
+  ev_appl_accum_last_arg;
 
 void *flag = NULL;
 void *expr, *env, *val, *proc, *argl, *unev;
@@ -394,6 +394,8 @@ void *signal_error()
   user_print(val);
   go_to(read_eval_print_loop);
 }
+
+//----------------------------
 
 int main()
 {
