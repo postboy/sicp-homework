@@ -121,6 +121,7 @@ void *procedure_parameters(void *);
 void *procedure_environment(void *);
 void *procedure_body(void *);
 void *make_lambda(void *, void *);
+void *make_begin(void *);
 
 #define go_to(x) return (void *)x
 #define test(x) flag = x
@@ -304,13 +305,22 @@ void *rest_exps(void *exp)
   return cdr(exp);
 }
 
-/*
-(define (sequence->exp seq)
-  (cond ((null? seq) seq)
-        ((last-exp? seq) (first-exp seq))
-        (else (make-begin seq))))
-(define (make-begin seq) (cons 'begin seq))
+void *sequence_to_exp(void *seq)
+{
+  if (!seq)
+    return seq;
+  if (is_last_exp(seq))
+    return first_exp(seq);
+  return make_begin(seq);
+}
 
+void *make_begin(void *seq)
+{
+  // todo this should be just a constant
+  return cons(make_string("begin"), seq);
+}
+
+/*
 (define (application? exp) (pair? exp))
 (define (operator exp) (car exp))
 (define (operands exp) (cdr exp))
