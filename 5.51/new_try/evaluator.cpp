@@ -68,7 +68,7 @@ void *adjoin_arg(void *, void *);
 bool is_pair(void *);
 bool is_number(void *);
 bool is_string(void *);
-void *make_string(char *);
+void *make_string(const char *);
 void *make_bool(bool);
 char *get_string(void *);
 bool is_symbol(void *);
@@ -76,6 +76,7 @@ bool is_tagged_list(void *, const char *);
 
 void *cons(void *, void *);
 void *car(void *);
+void *cdr(void *);
 void *cadr(void *);
 void *cddr(void *);
 void *caadr(void *);
@@ -278,13 +279,32 @@ void *make_if(void *predicate, void *consequent, void *alternative)
   return make_list_4(make_string("if"), predicate, consequent, alternative);
 }
 
-/*
-(define (begin? exp) (tagged-list? exp 'begin))
-(define (begin-actions exp) (cdr exp))
-(define (last-exp? seq) (null? (cdr seq)))
-(define (first-exp seq) (car seq))
-(define (rest-exps seq) (cdr seq))
+bool is_begin(void *exp)
+{
+  return is_tagged_list(exp, "begin");
+}
 
+void *begin_actions(void *exp)
+{
+  return cdr(exp);
+}
+
+bool is_last_exp(void *seq)
+{
+  return !cdr(seq);
+}
+
+void *first_exp(void *seq)
+{
+  return car(seq);
+}
+
+void *rest_exps(void *exp)
+{
+  return cdr(exp);
+}
+
+/*
 (define (sequence->exp seq)
   (cond ((null? seq) seq)
         ((last-exp? seq) (first-exp seq))
