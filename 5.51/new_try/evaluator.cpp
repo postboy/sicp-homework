@@ -71,6 +71,7 @@ bool is_string(void *);
 bool is_symbol(void *);
 bool is_tagged_list(void *, const char *);
 
+void *cons(void *, void *);
 void *car(void *);
 void *cadr(void *);
 void *cddr(void *);
@@ -225,14 +226,28 @@ void *definition_value(void *exp)
   return make_lambda(cdadr(exp), cddr(exp));
 }
 
+bool is_lambda(void *exp)
+{
+  return is_tagged_list(exp, "lambda");
+}
+
+void *lambda_parameters(void *exp)
+{
+  return cadr(exp);
+}
+
+void *lambda_body(void *exp)
+{
+  return cddr(exp);
+}
+
+void *make_lambda(void *parameters, void *body)
+{
+  // todo
+  return cons((void *)"lambda", cons(parameters, body));
+}
+
 /*
-(define (lambda? exp) (tagged-list? exp 'lambda))
-(define (lambda-parameters exp) (cadr exp))
-(define (lambda-body exp) (cddr exp))
-
-(define (make-lambda parameters body)
-  (cons 'lambda (cons parameters body)))
-
 (define (if? exp) (tagged-list? exp 'if))
 (define (if-predicate exp) (cadr exp))
 (define (if-consequent exp) (caddr exp))
