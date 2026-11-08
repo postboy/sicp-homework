@@ -73,7 +73,10 @@ bool is_tagged_list(void *, const char *);
 
 void *car(void *);
 void *cadr(void *);
+void *cddr(void *);
+void *caadr(void *);
 void *caddr(void *);
+void *cdadr(void *);
 
 void *lambda_parameters(void *);
 void *lambda_body(void *);
@@ -109,6 +112,7 @@ bool is_compound_procedure(void *);
 void *procedure_parameters(void *);
 void *procedure_environment(void *);
 void *procedure_body(void *);
+void *make_lambda(void *, void *);
 
 #define go_to(x) return (void *)x
 #define test(x) flag = x
@@ -206,17 +210,22 @@ bool is_definition(void *exp)
   return is_tagged_list(exp, "define");
 }
 
-/*
-(define (definition-variable exp)
-  (if (symbol? (cadr exp))
-      (cadr exp)
-      (caadr exp)))
-(define (definition-value exp)
-  (if (symbol? (cadr exp))
-      (caddr exp)
-      (make-lambda (cdadr exp)   ; formal parameters
-                   (cddr exp)))) ; body
+void *definition_variable(void *exp)
+{
+  if (is_symbol(cadr(exp)))
+    return cadr(exp);
+  return caadr(exp);
+}
 
+void *definition_value(void *exp)
+{
+  if (is_symbol(cadr(exp)))
+    return caddr(exp);
+  // formal parameters and body
+  return make_lambda(cdadr(exp), cddr(exp));
+}
+
+/*
 (define (lambda? exp) (tagged-list? exp 'lambda))
 (define (lambda-parameters exp) (cadr exp))
 (define (lambda-body exp) (cddr exp))
