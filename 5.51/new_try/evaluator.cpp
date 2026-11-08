@@ -78,6 +78,8 @@ void *cddr(void *);
 void *caadr(void *);
 void *caddr(void *);
 void *cdadr(void *);
+void *cdddr(void *);
+void *cadddr(void *);
 
 void *lambda_parameters(void *);
 void *lambda_body(void *);
@@ -247,15 +249,30 @@ void *make_lambda(void *parameters, void *body)
   return cons((void *)"lambda", cons(parameters, body));
 }
 
-/*
-(define (if? exp) (tagged-list? exp 'if))
-(define (if-predicate exp) (cadr exp))
-(define (if-consequent exp) (caddr exp))
-(define (if-alternative exp)
-  (if (not (null? (cdddr exp)))
-      (cadddr exp)
-      'false))
+bool is_if(void *exp)
+{
+  return is_tagged_list(exp, "if");
+}
 
+void *if_predicate(void *exp)
+{
+  return cadr(exp);
+}
+
+void *if_consequent(void *exp)
+{
+  return caddr(exp);
+}
+
+void *if_alternative(void *exp)
+{
+  if (cdddr(exp))
+      return cadddr(exp);
+  // todo
+  return (void *)false;
+}
+
+/*
 (define (make-if predicate consequent alternative)
   (list 'if predicate consequent alternative))
 
