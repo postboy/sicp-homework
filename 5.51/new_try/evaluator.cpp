@@ -68,6 +68,9 @@ void *adjoin_arg(void *, void *);
 bool is_pair(void *);
 bool is_number(void *);
 bool is_string(void *);
+void *make_string(char *);
+void *make_bool(bool);
+char *get_string(void *);
 bool is_symbol(void *);
 bool is_tagged_list(void *, const char *);
 
@@ -80,6 +83,7 @@ void *caddr(void *);
 void *cdadr(void *);
 void *cdddr(void *);
 void *cadddr(void *);
+void *make_list_4(void *, void *, void *, void *);
 
 void *lambda_parameters(void *);
 void *lambda_body(void *);
@@ -188,8 +192,7 @@ void *text_of_quotation(void *exp)
 bool is_tagged_list(void *exp, const char *tag)
 {
   if (is_pair(exp))
-    // todo?
-    return !strcmp((const char *)car(exp), tag);
+    return !strcmp(get_string(car(exp)), tag);
   return false;
 }
 
@@ -245,8 +248,7 @@ void *lambda_body(void *exp)
 
 void *make_lambda(void *parameters, void *body)
 {
-  // todo
-  return cons((void *)"lambda", cons(parameters, body));
+  return cons(make_string("lambda"), cons(parameters, body));
 }
 
 bool is_if(void *exp)
@@ -268,14 +270,15 @@ void *if_alternative(void *exp)
 {
   if (cdddr(exp))
       return cadddr(exp);
-  // todo
-  return (void *)false;
+  return make_bool(false);
+}
+
+void *make_if(void *predicate, void *consequent, void *alternative)
+{
+  return make_list_4(make_string("if"), predicate, consequent, alternative);
 }
 
 /*
-(define (make-if predicate consequent alternative)
-  (list 'if predicate consequent alternative))
-
 (define (begin? exp) (tagged-list? exp 'begin))
 (define (begin-actions exp) (cdr exp))
 (define (last-exp? seq) (null? (cdr seq)))
