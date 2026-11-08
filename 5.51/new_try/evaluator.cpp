@@ -320,13 +320,35 @@ void *make_begin(void *seq)
   return cons(make_string("begin"), seq);
 }
 
-/*
-(define (application? exp) (pair? exp))
-(define (operator exp) (car exp))
-(define (operands exp) (cdr exp))
-(define (no-operands? ops) (null? ops))
-(define (first-operand ops) (car ops))
-(define (rest-operands ops) (cdr ops))*/
+bool is_application(void *exp)
+{
+  return is_pair(exp);
+}
+
+void *get_operator(void *exp)
+{
+  return car(exp);
+}
+
+void *get_operands(void *exp)
+{
+  return cdr(exp);
+}
+
+bool is_no_operands(void *ops)
+{
+  return !ops;
+}
+
+void *first_operand(void *ops)
+{
+  return car(ops);
+}
+
+void *rest_operands(void *ops)
+{
+  return cdr(ops);
+}
 
 //----------------------------
 
