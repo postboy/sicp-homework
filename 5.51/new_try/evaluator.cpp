@@ -1,6 +1,7 @@
 #include <stack>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
 typedef void *(state_t)();
 
@@ -63,6 +64,16 @@ void *apply_primitive_procedure(void *, void *);
 void *extend_environment(void *, void *, void *);
 bool is_self_evaluating(void *);
 void *adjoin_arg(void *, void *);
+
+bool is_pair(void *);
+bool is_number(void *);
+bool is_string(void *);
+bool is_symbol(void *);
+bool is_tagged_list(void *, const char *);
+
+void *car(void *);
+void *cadr(void *);
+void *caddr(void *);
 
 void *lambda_parameters(void *);
 void *lambda_body(void *);
@@ -147,30 +158,55 @@ void user_print(void *)
 
 //----------------------------
 
-/*(define (self-evaluating? exp)
-  (cond ((number? exp) true)
-        ((string? exp) true)
-        (else false)))
+bool is_self_evaluating(void *exp)
+{
+  return (is_number(exp) || is_string(exp));
+}
 
-(define (variable? exp) (symbol? exp))
+bool is_variable(void *exp)
+{
+  return is_symbol(exp);
+}
 
-(define (quoted? exp)
-  (tagged-list? exp 'quote))
+bool is_quoted(void *exp)
+{
+  return is_tagged_list(exp, "quote");
+}
 
-(define (text-of-quotation exp) (cadr exp))
+void *text_of_quotation(void *exp)
+{
+  return cadr(exp);
+}
 
-(define (tagged-list? exp tag)
-  (if (pair? exp)
-      (eq? (car exp) tag)
-      false))
+bool is_tagged_list(void *exp, const char *tag)
+{
+  if (is_pair(exp))
+    // todo?
+    return !strcmp((const char *)car(exp), tag);
+  return false;
+}
 
-(define (assignment? exp)
-  (tagged-list? exp 'set!))
-(define (assignment-variable exp) (cadr exp))
-(define (assignment-value exp) (caddr exp))
+bool is_assignment(void *exp)
+{
+  return is_tagged_list(exp, "set!");
+}
 
-(define (definition? exp)
-  (tagged-list? exp 'define))
+void *assignment_variable(void *exp)
+{
+  return cadr(exp);
+}
+
+void *assignment_value(void *exp)
+{
+  return caddr(exp);
+}
+
+bool is_definition(void *exp)
+{
+  return is_tagged_list(exp, "define");
+}
+
+/*
 (define (definition-variable exp)
   (if (symbol? (cadr exp))
       (cadr exp)
