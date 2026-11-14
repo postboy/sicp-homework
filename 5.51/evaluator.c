@@ -29,7 +29,7 @@ lisp_elt_t *text_of_quotation(lisp_elt_t *e) { return cadr(e); }
 lisp_elt_t *make_quoted(lisp_elt_t *e) {
     // list?
     //return cons(&quote_const, e); // many errors
-    return cons(&quote_const, cons(e, nil));
+    return cons(&quote_const, cons(e, empty_list));
 }
 
 // exp as variable?
@@ -75,7 +75,7 @@ lisp_elt_t *if_alternative(lisp_elt_t *e) {
 
 lisp_elt_t *make_if(lisp_elt_t *predicate, lisp_elt_t *consequent, lisp_elt_t *alternative) {
     // list?
-    return cons(&if_const, cons(predicate, cons(consequent, cons(alternative, nil))));
+    return cons(&if_const, cons(predicate, cons(consequent, cons(alternative, empty_list))));
 }
 
 bool is_begin(lisp_elt_t *e) { return is_tagged_list(e, &begin_const); }
@@ -87,7 +87,7 @@ lisp_elt_t *make_begin(lisp_elt_t *e) { return cons(&begin_const, e); }
 
 lisp_elt_t *sequence_to_exp(lisp_elt_t *e) {
     if (!e)
-	return nil;
+	return empty_list;
     if (is_last_exp(e))
 	return first_exp(e);
     return make_begin(e);
@@ -110,12 +110,12 @@ lisp_elt_t *append(lisp_elt_t *a, lisp_elt_t *b) {
 
 lisp_elt_t *adjoin_arg(lisp_elt_t *arg, lisp_elt_t *arglist) {
     // list?
-    return append(arglist, cons(arg, nil));
+    return append(arglist, cons(arg, empty_list));
 }
 
 lisp_elt_t *make_procedure(lisp_elt_t *parameters, lisp_elt_t *body, lisp_elt_t *env) {
     //list?
-    return cons(&procedure_const, cons(parameters, cons(body, cons(env, nil))));
+    return cons(&procedure_const, cons(parameters, cons(body, cons(env, empty_list))));
 }
 
 bool is_primitive_procedure(lisp_elt_t *e) { return is_tagged_list(e, &primitive_const); }
@@ -124,7 +124,7 @@ lisp_elt_t *procedure_parameters(lisp_elt_t *e) { return cadr(e); }
 lisp_elt_t *procedure_body(lisp_elt_t *e) { return caddr(e); }
 lisp_elt_t *procedure_environment(lisp_elt_t *e) { return cadddr(e); }
 
-void *the_empty_environment = nil;
+void *the_empty_environment = NULL;
 
 // type?
 void *enclosing_environment(void *e) { return cdr(e); }

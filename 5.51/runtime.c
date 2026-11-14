@@ -135,14 +135,14 @@ lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
 	    //result = elt; // todo
 	    // empty list
 	    if (!elt)
-		return cons(nil, nil);
+		return cons(empty_list, empty_list); // wtf?
 	    //return elt;
 	    return elt_or_sublist(elt, next, in_list);
 	}
 	else if (str[0] == ')') {
 	    ensure(next);
 	    *next = ++str;
-	    return nil;
+	    return empty_list;
 	}
 	else if (str[0] == '"') {
 	    char *start = ++str;
@@ -194,7 +194,7 @@ lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
 	}
     }
     ensure(0); // ?
-    return nil;
+    return empty_list;
 }
 
 // GNU readline? name of func? load function is must-have

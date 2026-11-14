@@ -105,7 +105,7 @@ lisp_elt_t unknown_expression_type_error = { string, "unknown_expression_type_er
 lisp_elt_t unknown_procedure_type_error = { string, "unknown_procedure_type_error" };
 lisp_elt_t ok_const = { string, "unknown_procedure_type_error" };
 
-lisp_elt_t *empty_arglist = nil;
+lisp_elt_t *empty_arglist = NULL;
 
 void *unknown_expression_type(void) {
     assign(val_reg, &unknown_expression_type_error);

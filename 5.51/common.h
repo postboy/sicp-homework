@@ -26,7 +26,7 @@ typedef struct {
     };
 } lisp_elt_t;
 
-#define nil NULL
+#define empty_list NULL
 
 // interpreter.c
 
