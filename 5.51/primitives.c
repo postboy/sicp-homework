@@ -48,6 +48,10 @@ lisp_elt_t *cdddr(lisp_elt_t *e) { return cdr(cdr(cdr(e))); }
 lisp_elt_t *cadddr(lisp_elt_t *e) { return car(cdr(cdr(cdr(e)))); }
 
 bool is_eq(lisp_elt_t *a, lisp_elt_t *b) {
+    if (!a && !b)
+	return true;
+    if (!a || !b)
+	return false;
     if (a->type != b->type)
 	return false; // error?
     if (a->type == string) // todo obarray
@@ -58,8 +62,8 @@ bool is_eq(lisp_elt_t *a, lisp_elt_t *b) {
 	return !strcmp(a->sym, b->sym);
     if (a->type == number)
 	return (a->num == b->num);
-    if (a->type == pair) // ?
-	return ((a->pair.car == b->pair.car) && (a->pair.cdr == b->pair.cdr));
+    if (a->type == pair) // I guess
+	return (is_eq(a->pair.car, b->pair.car) && is_eq(a->pair.cdr, b->pair.cdr));
     ensure(false); // error!
     return false;
 }
