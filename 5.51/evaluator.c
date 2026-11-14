@@ -124,7 +124,7 @@ lisp_elt_t *procedure_parameters(lisp_elt_t *e) { return cadr(e); }
 lisp_elt_t *procedure_body(lisp_elt_t *e) { return caddr(e); }
 lisp_elt_t *procedure_environment(lisp_elt_t *e) { return cadddr(e); }
 
-void *the_empty_environment = NULL;
+void *the_empty_environment = empty_list;
 
 // type?
 void *enclosing_environment(void *e) { return cdr(e); }
@@ -159,10 +159,30 @@ lisp_elt_t *lookup_variable_value(lisp_elt_t *e, lisp_elt_t *e2) {return NULL;}
 
 lisp_elt_t *set_variable_value(lisp_elt_t *e, lisp_elt_t *e2, lisp_elt_t *e3) {return NULL;}
 
-lisp_elt_t *extend_environment(lisp_elt_t *e, lisp_elt_t *e2, lisp_elt_t *e3) {return NULL;}
+lisp_elt_t *extend_environment(lisp_elt_t *vars, lisp_elt_t *vals, lisp_elt_t *base_env) {
+    ensure(vars);
+    ensure(vals);
+    //(if (= (length vars) (length vals))
+    //(if (< (length vars) (length vals))
+    //(error "Too many arguments supplied" vars vals)
+    //(error "Too few arguments supplied" vars vals))))    
+    return cons(make_frame(vars, vals), base_env);
+}
+
+// todo add more, .func, 
+lisp_elt_t cons_name = { string, "cons" };
+//lisp_pair_t cons_name_pair = { &cons_name, empty_list };
+lisp_elt_t cons_object = { primitive, (char *)cons };
+//lisp_pair_t cons_obj_pair = { &cons_object, empty_list };
+//lisp_elt_t car_name = { string, "car" };
+//lisp_elt_t car_object = { primitive, (char *)car };
+//lisp_elt_t cdr_name = { string, "cdr" };
+//lisp_elt_t cdr_object = { primitive, (char *)cdr };
+lisp_elt_t primitive_procedure_names = { pair, .pair = { &cons_name, empty_list } };
+lisp_elt_t primitive_procedure_objects = { pair, .pair = { &cons_object, empty_list } };
 
 void *setup_environment(void) {
-    void *initial_env = NULL;//extend_environment(primitive_proc_names, primitive_proc_objects, the_empty_environment); // todo
+    void *initial_env = extend_environment(&primitive_procedure_names, &primitive_procedure_objects, the_empty_environment);
     //define_variable(true_const.str, &true_const, initial_env); // ?
     //define_variable(false_const.str, &false_const, initial_env); //?
     return initial_env;

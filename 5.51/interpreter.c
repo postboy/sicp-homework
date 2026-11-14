@@ -76,11 +76,6 @@ bool is_variable(lisp_elt_t *e) {
 
 typedef lisp_elt_t *(*primitive_func_t)(lisp_elt_t *);
 
-// how to do it?
-//const char *primitive_procedure_names[] = { "car", NULL };
-//lisp_elt_t *primitive_car_object[] = { { string, primitive_const.str },  };
-//lisp_elt_t *primitive_procedure_objects[] = { { primitive, car }, NULL };
-
 lisp_elt_t *apply_primitive_procedure(lisp_elt_t *proc, lisp_elt_t *args) {
     primitive_func_t impl = NULL;//primitive_implementation(proc); // todo
     return impl(args);

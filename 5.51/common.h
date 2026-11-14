@@ -14,6 +14,7 @@ typedef enum {
     symbol,
     number,
     pair,
+    primitive,
 } lisp_type_t;
 
 typedef struct {
@@ -23,6 +24,7 @@ typedef struct {
 	/*const*/ char *sym;
 	int num;
 	lisp_pair_t pair;
+	void *func;
     };
 } lisp_elt_t;
 
@@ -108,7 +110,7 @@ void *define_variable(void *var, void *val, void *env);
 lisp_elt_t *lookup_variable_value(lisp_elt_t *e, lisp_elt_t *e2);
 lisp_elt_t *set_variable_value(lisp_elt_t *e, lisp_elt_t *e2, lisp_elt_t *e3);
 
-lisp_elt_t *extend_environment(lisp_elt_t *e, lisp_elt_t *e2, lisp_elt_t *e3);
+lisp_elt_t *extend_environment(lisp_elt_t *vars, lisp_elt_t *vals, lisp_elt_t *base_env);
 void *get_global_environment(void);
 
 // runtime.c
