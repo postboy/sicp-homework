@@ -183,8 +183,8 @@ lisp_elt_t primitive_procedure_objects = { pair, .pair = { &cons_object, empty_l
 
 void *setup_environment(void) {
     void *initial_env = extend_environment(&primitive_procedure_names, &primitive_procedure_objects, the_empty_environment);
-    //define_variable(true_const.str, &true_const, initial_env); // ?
-    //define_variable(false_const.str, &false_const, initial_env); //?
+    define_variable(true_const.str, &true_const, initial_env); // ?
+    define_variable(false_const.str, &false_const, initial_env); //?
     return initial_env;
 }
 
