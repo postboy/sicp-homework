@@ -4,8 +4,8 @@
 #include <stdbool.h>
 
 typedef struct {
-    /*lisp_elt_t*/void *car;
-    /*lisp_elt_t*/void *cdr;
+    /*lelt*/void *car;
+    /*lelt*/void *cdr;
 } lisp_pair_t;
 
 // boolean type?
@@ -26,7 +26,7 @@ typedef struct {
 	lisp_pair_t pair;
 	void *func;
     };
-} lisp_elt_t;
+} lelt;
 
 #define empty_list NULL
 
@@ -37,80 +37,80 @@ extern bool interactive;
 
 // primitives.c
 
-lisp_elt_t *set_car(lisp_elt_t *e, lisp_elt_t *val);
-lisp_elt_t *set_cdr(lisp_elt_t *e, lisp_elt_t *val);
+lelt *set_car(lelt *e, lelt *val);
+lelt *set_cdr(lelt *e, lelt *val);
 
-lisp_elt_t *cons(lisp_elt_t *car, lisp_elt_t *cdr);
-lisp_elt_t *car(lisp_elt_t *e);
-lisp_elt_t *cdr(lisp_elt_t *e);
+lelt *cons(lelt *car, lelt *cdr);
+lelt *car(lelt *e);
+lelt *cdr(lelt *e);
 
-lisp_elt_t *cadr(lisp_elt_t *e);
-lisp_elt_t *cddr(lisp_elt_t *e);
-lisp_elt_t *caadr(lisp_elt_t *e);
-lisp_elt_t *caddr(lisp_elt_t *e);
-lisp_elt_t *cdadr(lisp_elt_t *e);
-lisp_elt_t *cdddr(lisp_elt_t *e);
-lisp_elt_t *cadddr(lisp_elt_t *e);
+lelt *cadr(lelt *e);
+lelt *cddr(lelt *e);
+lelt *caadr(lelt *e);
+lelt *caddr(lelt *e);
+lelt *cdadr(lelt *e);
+lelt *cdddr(lelt *e);
+lelt *cadddr(lelt *e);
 
-bool is_eq(lisp_elt_t *a, lisp_elt_t *b);
+bool is_eq(lelt *a, lelt *b);
 
-bool is_number(lisp_elt_t *e);
-bool is_string(lisp_elt_t *e);
-bool is_symbol(lisp_elt_t *e);
-bool is_pair(lisp_elt_t *e);
+bool is_number(lelt *e);
+bool is_string(lelt *e);
+bool is_symbol(lelt *e);
+bool is_pair(lelt *e);
 
 // evaluator.c
 
-bool is_true(lisp_elt_t *e);
+bool is_true(lelt *e);
 
-bool is_definition(lisp_elt_t *e);
-lisp_elt_t *definition_variable(lisp_elt_t *e);
-lisp_elt_t *definition_value(lisp_elt_t *e);
+bool is_definition(lelt *e);
+lelt *definition_variable(lelt *e);
+lelt *definition_value(lelt *e);
 
-bool is_quoted(lisp_elt_t *e);
-lisp_elt_t *text_of_quotation(lisp_elt_t *e);
-lisp_elt_t *make_quoted(lisp_elt_t *e);
+bool is_quoted(lelt *e);
+lelt *text_of_quotation(lelt *e);
+lelt *make_quoted(lelt *e);
 
-bool is_assignment(lisp_elt_t *e);
-lisp_elt_t *assignment_value(lisp_elt_t *e);
-lisp_elt_t *assignment_variable(lisp_elt_t *e);
+bool is_assignment(lelt *e);
+lelt *assignment_value(lelt *e);
+lelt *assignment_variable(lelt *e);
 
-bool is_lambda(lisp_elt_t *e);
-lisp_elt_t *lambda_parameters(lisp_elt_t *e);
-lisp_elt_t *lambda_body(lisp_elt_t *e);
+bool is_lambda(lelt *e);
+lelt *lambda_parameters(lelt *e);
+lelt *lambda_body(lelt *e);
 
-bool is_application(lisp_elt_t *e);
-lisp_elt_t *operator(lisp_elt_t *e);
-lisp_elt_t *operands(lisp_elt_t *e);
-bool is_no_operands(lisp_elt_t *e);
-bool is_last_operand(lisp_elt_t *e);
-lisp_elt_t *first_operand(lisp_elt_t *e);
-lisp_elt_t *rest_operands(lisp_elt_t *e);
-lisp_elt_t *adjoin_arg(lisp_elt_t *arg, lisp_elt_t *arglist);
-lisp_elt_t *make_procedure(lisp_elt_t *parameters, lisp_elt_t *body, lisp_elt_t *env);
+bool is_application(lelt *e);
+lelt *operator(lelt *e);
+lelt *operands(lelt *e);
+bool is_no_operands(lelt *e);
+bool is_last_operand(lelt *e);
+lelt *first_operand(lelt *e);
+lelt *rest_operands(lelt *e);
+lelt *adjoin_arg(lelt *arg, lelt *arglist);
+lelt *make_procedure(lelt *parameters, lelt *body, lelt *env);
 
-bool is_primitive_procedure(lisp_elt_t *e);
-bool is_compound_procedure(lisp_elt_t *e);
-lisp_elt_t *procedure_parameters(lisp_elt_t *e);
-lisp_elt_t *procedure_body(lisp_elt_t *e);
-lisp_elt_t *procedure_environment(lisp_elt_t *e);
+bool is_primitive_procedure(lelt *e);
+bool is_compound_procedure(lelt *e);
+lelt *procedure_parameters(lelt *e);
+lelt *procedure_body(lelt *e);
+lelt *procedure_environment(lelt *e);
 
-bool is_if(lisp_elt_t *e);
-lisp_elt_t *if_predicate(lisp_elt_t *e);
-lisp_elt_t *if_consequent(lisp_elt_t *e);
-lisp_elt_t *if_alternative(lisp_elt_t *e);
+bool is_if(lelt *e);
+lelt *if_predicate(lelt *e);
+lelt *if_consequent(lelt *e);
+lelt *if_alternative(lelt *e);
 
-bool is_begin(lisp_elt_t *e);
-lisp_elt_t *begin_actions(lisp_elt_t *e);
-bool is_last_exp(lisp_elt_t *e);
-lisp_elt_t *first_exp(lisp_elt_t *e);
-lisp_elt_t *rest_exps(lisp_elt_t *e);
+bool is_begin(lelt *e);
+lelt *begin_actions(lelt *e);
+bool is_last_exp(lelt *e);
+lelt *first_exp(lelt *e);
+lelt *rest_exps(lelt *e);
 
-lisp_elt_t *define_variable(lisp_elt_t *var, lisp_elt_t *val, lisp_elt_t *env);
-lisp_elt_t *lookup_variable_value(lisp_elt_t *var, lisp_elt_t *env);
-lisp_elt_t *set_variable_value(lisp_elt_t *var, lisp_elt_t *val, lisp_elt_t *env);
+lelt *define_variable(lelt *var, lelt *val, lelt *env);
+lelt *lookup_variable_value(lelt *var, lelt *env);
+lelt *set_variable_value(lelt *var, lelt *val, lelt *env);
 
-lisp_elt_t *extend_environment(lisp_elt_t *vars, lisp_elt_t *vals, lisp_elt_t *base_env);
+lelt *extend_environment(lelt *vars, lelt *vals, lelt *base_env);
 void *get_global_environment(void);
 
 // runtime.c
@@ -118,13 +118,13 @@ void *get_global_environment(void);
 void *gc_alloc(size_t size);
 
 #define ensure(inv) do { if (!(inv)) { fatal(__FILE__, __LINE__, #inv); return NULL; } } while(0)
-lisp_elt_t *fatal(const char *file, int line, const char *inv);
+lelt *fatal(const char *file, int line, const char *inv);
 
 void prompt_for_input(const char *str);
 void announce_output(const char *str);
-lisp_elt_t *user_print(lisp_elt_t *e);
-lisp_elt_t *read_stdin(void);
+lelt *user_print(lelt *e);
+lelt *read_stdin(void);
 
 void initialize_stack(void);
-lisp_elt_t *push(lisp_elt_t *e);
-lisp_elt_t *pop();
+lelt *push(lelt *e);
+lelt *pop();

@@ -25,7 +25,7 @@ char *gc_strdup(const char *str) {
 }
 
 // call this less often? better error handling
-lisp_elt_t *fatal(const char *file, int line, const char *inv) {
+lelt *fatal(const char *file, int line, const char *inv) {
     fprintf(stderr, "fatal error: check \"%s\" failed at %s:%i\n", inv, file, line);
 #ifdef __GLIBC__
     void *bt_stack[50];
@@ -50,7 +50,7 @@ void prompt_for_input(const char *str) {
 }
 
 // return value -- does it need space after itself in general?
-bool user_print_internal(lisp_elt_t *e, bool needs_parens, bool needs_separator) {
+bool user_print_internal(lelt *e, bool needs_parens, bool needs_separator) {
     // for printing lists
     if (!e)
 	return false;
@@ -79,7 +79,7 @@ bool user_print_internal(lisp_elt_t *e, bool needs_parens, bool needs_separator)
     return true;
 }
 
-lisp_elt_t *user_print(lisp_elt_t *e) {
+lelt *user_print(lelt *e) {
     ensure(e); //?
     user_print_internal(e, true, false);
     printf("\n");
@@ -87,9 +87,9 @@ lisp_elt_t *user_print(lisp_elt_t *e) {
 }
 
 // forward decl
-lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list);
+lelt *string_to_lisp(char *str, char **next, bool in_list);
 
-lisp_elt_t *elt_or_sublist(lisp_elt_t *elt, char **next, bool in_list)
+lelt *elt_or_sublist(lelt *elt, char **next, bool in_list)
 {
     if (in_list) {
 	ensure(next);
@@ -101,16 +101,16 @@ lisp_elt_t *elt_or_sublist(lisp_elt_t *elt, char **next, bool in_list)
 }
 
 // beware of stack overflow!
-lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
+lelt *string_to_lisp(char *str, char **next, bool in_list)
 {
     ensure(str);
-    //lisp_elt_t *result = NULL;
+    //lelt *result = NULL;
     while (str[0]) {
 	if (isspace(str[0])) {
 	    str++;
 	}
 	else if (isdigit(str[0])) {
-	    lisp_elt_t *elt = gc_alloc(sizeof(lisp_elt_t));
+	    lelt *elt = gc_alloc(sizeof(lelt));
 	    // ensure?
 	    elt->type = number;
 	    elt->num = strtol(str, next, 0);
@@ -120,17 +120,17 @@ lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
 	}
 	else if (str[0] == '\'') {
 	    str++;
-	    lisp_elt_t *elt = string_to_lisp(str, &str, in_list);
+	    lelt *elt = string_to_lisp(str, &str, in_list);
 	    ensure(elt);
 	    return make_quoted(elt);
 	}
 	else if (str[0] == '(') {
 	    str++;
-	    lisp_elt_t *elt = string_to_lisp(str, next, true);
+	    lelt *elt = string_to_lisp(str, next, true);
 	    //ensure(car_elt);
-	    //lisp_elt_t *cdr_elt = string_to_lisp(str, &str, true);
+	    //lelt *cdr_elt = string_to_lisp(str, &str, true);
 	    //ensure(cdr_elt); // no, end of list!
-       	    //lisp_elt_t *elt = cons(car_elt, cdr_elt);
+       	    //lelt *elt = cons(car_elt, cdr_elt);
 	    //ensure(elt);
 	    //result = elt; // todo
 	    // empty list
@@ -160,7 +160,7 @@ lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
 	    // ensure?
 	    *next = ++str;
 
-	    lisp_elt_t *elt = gc_alloc(sizeof(lisp_elt_t));
+	    lelt *elt = gc_alloc(sizeof(lelt));
 	    // ensure?
 	    elt->type = string;
 	    elt->str = start;
@@ -185,7 +185,7 @@ lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
 	    str[0] = tmp;
 	    *next = str;
 
-	    lisp_elt_t *elt = gc_alloc(sizeof(lisp_elt_t));
+	    lelt *elt = gc_alloc(sizeof(lelt));
 	    // ensure?
 	    elt->type = symbol;
 	    elt->sym = copy;
@@ -198,7 +198,7 @@ lisp_elt_t *string_to_lisp(char *str, char **next, bool in_list)
 }
 
 // GNU readline? name of func? load function is must-have
-lisp_elt_t *read_stdin(void) {
+lelt *read_stdin(void) {
     char *line = NULL;
     if (interactive) {
 	char *tmp_line = NULL;
@@ -223,7 +223,7 @@ lisp_elt_t *read_stdin(void) {
 }
 
 // automatic memory?
-lisp_elt_t *stack_mem[2048];
+lelt *stack_mem[2048];
 size_t stack_elts = 0;
 
 //  static, (void)
@@ -231,13 +231,13 @@ void initialize_stack(void) {
     stack_elts = 0;
 }
 
-lisp_elt_t *push(lisp_elt_t *e) {
+lelt *push(lelt *e) {
     ensure(stack_elts < (sizeof(stack_mem)/sizeof(*stack_mem)));
     stack_mem[stack_elts++] = e;
     return e;
 }
 
-lisp_elt_t *pop() {
+lelt *pop() {
     ensure(stack_elts > 0);
     return stack_mem[--stack_elts];
 }

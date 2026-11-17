@@ -3,14 +3,14 @@
 
 // modify to optimize non-lisp usages like stack
 
-lisp_elt_t *set_car(lisp_elt_t *e, lisp_elt_t *val) {
+lelt *set_car(lelt *e, lelt *val) {
     ensure(is_pair(e));
     ensure(val);
     e->pair.car = val;
     return e;
 }
 
-lisp_elt_t *set_cdr(lisp_elt_t *e, lisp_elt_t *val) {
+lelt *set_cdr(lelt *e, lelt *val) {
     ensure(is_pair(e));
     //ensure(val); // ok?
     e->pair.cdr = val;
@@ -18,10 +18,10 @@ lisp_elt_t *set_cdr(lisp_elt_t *e, lisp_elt_t *val) {
 }
 
 // not sure
-lisp_elt_t *cons(lisp_elt_t *car, lisp_elt_t *cdr) {
+lelt *cons(lelt *car, lelt *cdr) {
     //ensure(car); // for empty list
     //ensure(cdr); //?
-    lisp_elt_t *result = gc_alloc(sizeof(lisp_elt_t));
+    lelt *result = gc_alloc(sizeof(lelt));
     ensure(result);
     result->type = pair;
     result->pair.car = car;
@@ -29,25 +29,25 @@ lisp_elt_t *cons(lisp_elt_t *car, lisp_elt_t *cdr) {
     return result;
 }
 
-lisp_elt_t *car(lisp_elt_t *e) {
+lelt *car(lelt *e) {
     ensure(is_pair(e));
     return e->pair.car;
 }
 
-lisp_elt_t *cdr(lisp_elt_t *e) {
+lelt *cdr(lelt *e) {
     ensure(is_pair(e));
     return e->pair.cdr;
 }
 
-lisp_elt_t *cadr(lisp_elt_t *e) { return car(cdr(e)); }
-lisp_elt_t *cddr(lisp_elt_t *e) { return cdr(cdr(e)); }
-lisp_elt_t *caadr(lisp_elt_t *e) { return car(car(cdr(e))); }
-lisp_elt_t *caddr(lisp_elt_t *e) { return car(cdr(cdr(e))); }
-lisp_elt_t *cdadr(lisp_elt_t *e) { return cdr(car(cdr(e))); }
-lisp_elt_t *cdddr(lisp_elt_t *e) { return cdr(cdr(cdr(e))); }
-lisp_elt_t *cadddr(lisp_elt_t *e) { return car(cdr(cdr(cdr(e)))); }
+lelt *cadr(lelt *e) { return car(cdr(e)); }
+lelt *cddr(lelt *e) { return cdr(cdr(e)); }
+lelt *caadr(lelt *e) { return car(car(cdr(e))); }
+lelt *caddr(lelt *e) { return car(cdr(cdr(e))); }
+lelt *cdadr(lelt *e) { return cdr(car(cdr(e))); }
+lelt *cdddr(lelt *e) { return cdr(cdr(cdr(e))); }
+lelt *cadddr(lelt *e) { return car(cdr(cdr(cdr(e)))); }
 
-bool is_eq(lisp_elt_t *a, lisp_elt_t *b) {
+bool is_eq(lelt *a, lelt *b) {
     if (!a && !b)
 	return true;
     if (!a || !b)
@@ -68,22 +68,22 @@ bool is_eq(lisp_elt_t *a, lisp_elt_t *b) {
     return false;
 }
 
-bool is_number(lisp_elt_t *e) {
+bool is_number(lelt *e) {
     ensure(e);
     return (e->type == number);
 }
 
-bool is_string(lisp_elt_t *e) {
+bool is_string(lelt *e) {
     ensure(e);
     return (e->type == string);
 }
 
-bool is_symbol(lisp_elt_t *e) {
+bool is_symbol(lelt *e) {
     ensure(e);
     return (e->type == symbol);    
 }
 
-bool is_pair(lisp_elt_t *e) {
+bool is_pair(lelt *e) {
     ensure(e);
     return (e->type == pair);    
 }

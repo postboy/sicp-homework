@@ -30,11 +30,11 @@ int last_test_result = 0;
 #define restore(e) e = pop()
 
 //  types, = NULL, static
-lisp_elt_t *exp_reg;
+lelt *exp_reg;
 void *env_reg; //?
-lisp_elt_t *val_reg;
+lelt *val_reg;
 void *proc_reg; //?
-lisp_elt_t *argl_reg;
+lelt *argl_reg;
 void *continue_reg; //?
 void *unev_reg; //?
 
@@ -42,11 +42,11 @@ char **global_argv = NULL;
 bool interactive = true;
 
 // types?
-bool is_self_evaluating(lisp_elt_t *e) {
+bool is_self_evaluating(lelt *e) {
     return (is_number(e) || is_string(e));
 }
 
-bool is_variable(lisp_elt_t *e) {
+bool is_variable(lelt *e) {
     return is_symbol(e);
 }
 
@@ -74,9 +74,9 @@ bool is_variable(lisp_elt_t *e) {
        primitive-procedures))
 */
 
-typedef lisp_elt_t *(*primitive_func_t)(lisp_elt_t *);
+typedef lelt *(*primitive_func_t)(lelt *);
 
-lisp_elt_t *apply_primitive_procedure(lisp_elt_t *proc, lisp_elt_t *args) {
+lelt *apply_primitive_procedure(lelt *proc, lelt *args) {
     primitive_func_t impl = NULL;//primitive_implementation(proc); // todo
     return impl(args);
 }
@@ -96,11 +96,11 @@ void *signal_error(void) {
 }
 
 //const?
-lisp_elt_t unknown_expression_type_error = { string, "unknown_expression_type_error" };
-lisp_elt_t unknown_procedure_type_error = { string, "unknown_procedure_type_error" };
-lisp_elt_t ok_const = { string, "unknown_procedure_type_error" };
+lelt unknown_expression_type_error = { string, "unknown_expression_type_error" };
+lelt unknown_procedure_type_error = { string, "unknown_procedure_type_error" };
+lelt ok_const = { string, "unknown_procedure_type_error" };
 
-lisp_elt_t *empty_arglist = NULL;
+lelt *empty_arglist = NULL;
 
 void *unknown_expression_type(void) {
     assign(val_reg, &unknown_expression_type_error);
