@@ -140,10 +140,10 @@ lisp_elt_t *add_binding_to_frame(lisp_elt_t *var, lisp_elt_t *val, lisp_elt_t *f
 }
 
 lisp_elt_t *define_variable(lisp_elt_t *var, lisp_elt_t *val, lisp_elt_t *env) {
-    void *frame = first_frame(env);
+    lisp_elt_t *frame = first_frame(env);
     ensure(frame);
-    void *vars = frame_variables(frame);
-    void *vals = frame_values(frame);
+    lisp_elt_t *vars = frame_variables(frame);
+    lisp_elt_t *vals = frame_values(frame);
 scan:
     if (!vars)
 	return add_binding_to_frame(var, val, frame);
@@ -157,10 +157,10 @@ scan:
 lisp_elt_t *lookup_variable_value(lisp_elt_t *var, lisp_elt_t *env) {
 env_loop:
     ensure(env != the_empty_environment); // (error "Unbound variable" var)
-    void *frame = first_frame(env);
+    lisp_elt_t *frame = first_frame(env);
     ensure(frame);
-    void *vars = frame_variables(frame);
-    void *vals = frame_values(frame);
+    lisp_elt_t *vars = frame_variables(frame);
+    lisp_elt_t *vals = frame_values(frame);
 scan:
     if (!vars) {
         env = enclosing_environment(env);
@@ -176,10 +176,10 @@ scan:
 lisp_elt_t *set_variable_value(lisp_elt_t *var, lisp_elt_t *val, lisp_elt_t *env) {
 env_loop:
     ensure(env != the_empty_environment); // (error "Unbound variable -- SET!" var)
-    void *frame = first_frame(env);
+    lisp_elt_t *frame = first_frame(env);
     ensure(frame);
-    void *vars = frame_variables(frame);
-    void *vals = frame_values(frame);
+    lisp_elt_t *vars = frame_variables(frame);
+    lisp_elt_t *vals = frame_values(frame);
 scan:
     if (!vars) {
         env = enclosing_environment(env);
