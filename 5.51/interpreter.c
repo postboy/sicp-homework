@@ -50,34 +50,12 @@ bool is_variable(lelt *e) {
     return is_symbol(e);
 }
 
-/*
-(define (primitive-implementation proc) (cadr proc))
-
-(define primitive-procedures
-  (list (list 'car car)
-	(list 'cdr cdr)
-	(list 'cons cons)
-	(list 'null? null?)
-	(list '+ +)
-	(list '- -)
-	(list '* *)
-	(list '/ /)
-	; <more primitives>
-	))
-
-(define (primitive-procedure-names)
-  (map car
-       primitive-procedures))
-
-(define (primitive-procedure-objects)
-  (map (lambda (proc) (list 'primitive (cadr proc)))
-       primitive-procedures))
-*/
-
 typedef lelt *(*primitive_func_t)(lelt *);
 
+primitive_func_t primitive_implementation(lelt *e) { return (primitive_func_t)cadr(e)->func; }
+
 lelt *apply_primitive_procedure(lelt *proc, lelt *args) {
-    primitive_func_t impl = NULL;//primitive_implementation(proc); // todo
+    primitive_func_t impl = primitive_implementation(proc);
     return impl(args);
 }
 
