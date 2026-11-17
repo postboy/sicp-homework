@@ -140,7 +140,7 @@ void *add_binding_to_frame(void *var, void *val, void *frame) {
     return frame;
 }
 
-void *define_variable(void *var, lisp_elt_t *val, lisp_elt_t *env) {
+void *define_variable(lisp_elt_t *var, lisp_elt_t *val, lisp_elt_t *env) {
     void *frame = first_frame(env);
     ensure(frame);
     void *vars = frame_variables(frame);
@@ -217,8 +217,8 @@ lisp_elt_t primitive_procedure_objects = { pair, .pair = { &cons_object, empty_l
 
 void *setup_environment(void) {
     void *initial_env = extend_environment(&primitive_procedure_names, &primitive_procedure_objects, the_empty_environment);
-    define_variable(true_const.str, &true_const, initial_env); // ?
-    define_variable(false_const.str, &false_const, initial_env); //?
+    define_variable(&true_const, &true_const, initial_env); // ?
+    define_variable(&false_const, &false_const, initial_env); //?
     return initial_env;
 }
 
