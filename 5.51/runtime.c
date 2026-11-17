@@ -50,13 +50,16 @@ void prompt_for_input(const char *str) {
 }
 
 // return value -- does it need space after itself in general?
-bool user_print_internal(lelt *e, bool needs_parens, bool needs_separator) {
+bool user_print_internal(lelt *e, bool needs_parens, bool needs_separator, bool is_cdr) {
     // for printing lists
     if (!e)
 	return false;
 
     if (needs_separator)
 	printf(" ");
+    
+    if (is_cdr && e->type != pair)
+        printf(". ");
     
     if (e->type == string) {
 	printf("\"%s\"", e->str);
@@ -69,8 +72,8 @@ bool user_print_internal(lelt *e, bool needs_parens, bool needs_separator) {
     }
     else if (e->type == pair) {
 	if (needs_parens) printf("(");
-	needs_separator = user_print_internal(car(e), true, false);
-	user_print_internal(cdr(e), false, needs_separator);
+	needs_separator = user_print_internal(car(e), true, false, false);
+	user_print_internal(cdr(e), false, needs_separator, true);
 	if (needs_parens) printf(")");
     }
     else {
@@ -81,7 +84,7 @@ bool user_print_internal(lelt *e, bool needs_parens, bool needs_separator) {
 
 lelt *user_print(lelt *e) {
     ensure(e); //?
-    user_print_internal(e, true, false);
+    user_print_internal(e, true, false, false);
     printf("\n");
     return e;
 }
