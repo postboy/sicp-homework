@@ -98,7 +98,7 @@ void *signal_error(void) {
 //const?
 lelt unknown_expression_type_error = { string, "unknown_expression_type_error" };
 lelt unknown_procedure_type_error = { string, "unknown_procedure_type_error" };
-lelt ok_const = { string, "unknown_procedure_type_error" };
+lelt ok_const = { string, "ok" };
 
 lelt *empty_arglist = NULL;
 
