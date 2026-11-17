@@ -232,7 +232,6 @@ void initialize_stack(void) {
 }
 
 lisp_elt_t *push(lisp_elt_t *e) {
-    ensure(e);
     ensure(stack_elts < (sizeof(stack_mem)/sizeof(*stack_mem)));
     stack_mem[stack_elts++] = e;
     return e;
