@@ -52,6 +52,8 @@ lelt *cdadr(lelt *e);
 lelt *cdddr(lelt *e);
 lelt *cadddr(lelt *e);
 
+lelt *cons_wrapper(lelt *args);
+
 bool is_eq(lelt *a, lelt *b);
 
 bool is_number(lelt *e);

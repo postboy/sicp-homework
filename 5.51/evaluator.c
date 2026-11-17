@@ -205,7 +205,7 @@ lelt *extend_environment(lelt *vars, lelt *vals, lelt *base_env) {
 // todo add more, .func, 
 lelt cons_name = { symbol, "cons" };
 //lisp_pair_t cons_name_pair = { &cons_name, empty_list };
-lelt cons_primitive = { primitive, (char *)cons };
+lelt cons_primitive = { primitive, (char *)cons_wrapper };
 lelt another_pair = { pair, .pair = { &cons_primitive, empty_list } };
 lelt cons_object = { pair, .pair = { &primitive_const, &another_pair } };
 //lisp_pair_t cons_obj_pair = { &cons_object, empty_list };

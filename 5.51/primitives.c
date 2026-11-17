@@ -29,6 +29,15 @@ lelt *cons(lelt *car, lelt *cdr) {
     return result;
 }
 
+lelt *cons_wrapper(lelt *args) {
+    // todo: more general and more effective
+    lelt *first = car(args);
+    ensure(first);
+    lelt *second = cadr(args);
+    ensure(second);
+    return cons(first, second);
+}
+
 lelt *car(lelt *e) {
     ensure(is_pair(e));
     return e->pair.car;
