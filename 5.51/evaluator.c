@@ -203,13 +203,13 @@ lisp_elt_t *extend_environment(lisp_elt_t *vars, lisp_elt_t *vals, lisp_elt_t *b
 }
 
 // todo add more, .func, 
-lisp_elt_t cons_name = { string, "cons" };
+lisp_elt_t cons_name = { symbol, "cons" };
 //lisp_pair_t cons_name_pair = { &cons_name, empty_list };
 lisp_elt_t cons_object = { primitive, (char *)cons };
 //lisp_pair_t cons_obj_pair = { &cons_object, empty_list };
-//lisp_elt_t car_name = { string, "car" };
+//lisp_elt_t car_name = { symbol, "car" };
 //lisp_elt_t car_object = { primitive, (char *)car };
-//lisp_elt_t cdr_name = { string, "cdr" };
+//lisp_elt_t cdr_name = { symbol, "cdr" };
 //lisp_elt_t cdr_object = { primitive, (char *)cdr };
 lisp_elt_t primitive_procedure_names = { pair, .pair = { &cons_name, empty_list } };
 lisp_elt_t primitive_procedure_objects = { pair, .pair = { &cons_object, empty_list } };
