@@ -140,7 +140,7 @@ void *add_binding_to_frame(void *var, void *val, void *frame) {
     return frame;
 }
 
-void *define_variable(void *var, void *val, void *env) {
+void *define_variable(void *var, lisp_elt_t *val, lisp_elt_t *env) {
     void *frame = first_frame(env);
     ensure(frame);
     void *vars = frame_variables(frame);
