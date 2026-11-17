@@ -106,7 +106,7 @@ bool is_last_exp(lisp_elt_t *e);
 lisp_elt_t *first_exp(lisp_elt_t *e);
 lisp_elt_t *rest_exps(lisp_elt_t *e);
 
-void *define_variable(void *var, lisp_elt_t *val, lisp_elt_t *env);
+lisp_elt_t *define_variable(lisp_elt_t *var, lisp_elt_t *val, lisp_elt_t *env);
 lisp_elt_t *lookup_variable_value(lisp_elt_t *var, lisp_elt_t *env);
 lisp_elt_t *set_variable_value(lisp_elt_t *var, lisp_elt_t *val, lisp_elt_t *env);
 

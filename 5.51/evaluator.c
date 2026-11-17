@@ -127,20 +127,19 @@ lisp_elt_t *procedure_environment(lisp_elt_t *e) { return cadddr(e); }
 void *the_empty_environment = empty_list;
 
 // type?
-void *enclosing_environment(void *e) { return cdr(e); }
-void *first_frame(void *e) { return car(e); }
-void *make_frame(void *vars, void *vals) { return cons(vars, vals); }
-void *frame_variables(void *frame) { return car(frame); }
+lisp_elt_t *enclosing_environment(lisp_elt_t *e) { return cdr(e); }
+lisp_elt_t *first_frame(lisp_elt_t *e) { return car(e); }
+lisp_elt_t *make_frame(lisp_elt_t *vars, lisp_elt_t *vals) { return cons(vars, vals); }
+lisp_elt_t *frame_variables(lisp_elt_t *frame) { return car(frame); }
+lisp_elt_t *frame_values(lisp_elt_t *frame) { return cdr(frame); }
 
-void *frame_values(void *frame) { return cdr(frame); }
-
-void *add_binding_to_frame(void *var, void *val, void *frame) {
+lisp_elt_t *add_binding_to_frame(lisp_elt_t *var, lisp_elt_t *val, lisp_elt_t *frame) {
     set_car(frame, cons(var, car(frame)));
     set_cdr(frame, cons(val, cdr(frame)));
     return frame;
 }
 
-void *define_variable(lisp_elt_t *var, lisp_elt_t *val, lisp_elt_t *env) {
+lisp_elt_t *define_variable(lisp_elt_t *var, lisp_elt_t *val, lisp_elt_t *env) {
     void *frame = first_frame(env);
     ensure(frame);
     void *vars = frame_variables(frame);
