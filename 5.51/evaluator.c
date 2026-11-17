@@ -174,8 +174,23 @@ scan:
     goto scan;
 }
 
-lisp_elt_t *set_variable_value(lisp_elt_t *e, lisp_elt_t *e2, lisp_elt_t *e3) {
-    return NULL;
+lisp_elt_t *set_variable_value(lisp_elt_t *var, lisp_elt_t *val, lisp_elt_t *env) {
+env_loop:
+    ensure(env != the_empty_environment); // (error "Unbound variable -- SET!" var)
+    void *frame = first_frame(env);
+    ensure(frame);
+    void *vars = frame_variables(frame);
+    void *vals = frame_values(frame);
+scan:
+    if (!vars) {
+        env = enclosing_environment(env);
+        goto env_loop;
+    }
+    if (is_eq(var, car(vars)))
+        return set_car(vals, val);
+    vars = cdr(vars);
+    vals = cdr(vals);
+    goto scan;
 }
 
 lisp_elt_t *extend_environment(lisp_elt_t *vars, lisp_elt_t *vals, lisp_elt_t *base_env) {
