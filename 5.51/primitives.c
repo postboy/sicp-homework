@@ -1,6 +1,17 @@
 #include "common.h"
 #include <string.h>
 
+typedef lelt *(*callback_1_t)(lelt *);
+
+// todo: more general and more effective
+lelt *apply_1(callback_1_t func, lelt *args)
+{
+	lelt *first = car(args);
+	ensure(first);
+	ensure(!cdr(args));	
+	return func(first);
+}
+
 typedef lelt *(*callback_2_t)(lelt *, lelt *);
 
 // todo: more general and more effective
@@ -107,8 +118,13 @@ lelt *apply_primitive_procedure(lelt *proc, lelt *args)
 {
 	ensure(proc);
 	ensure(proc->func.callback);
-	if (proc->func.variant == two_args)
+	switch (proc->func.variant) {
+	case one_arg:
+		return apply_1(proc->func.callback, args);
+	case two_args:
 		return apply_2(proc->func.callback, args);
-    ensure(false); // error
-	return empty_list;
+	default:
+		ensure(false); // error
+		return empty_list;
+	}
 }

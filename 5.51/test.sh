@@ -35,6 +35,7 @@ assert "(quote a)" "a"
 assert "(quote 1)" "1"
 assert "(quote (quote a))" "(quote a)"
 assert "(cons 1 2)" "(1 . 2)"
+assert "(car (cons 1 2))" "1"
 
 # tests that don't pass yet. provide extra arguments to this script to run them
 if [ "$#" -ne 0 ]; then
