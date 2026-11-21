@@ -4,7 +4,7 @@
 typedef lelt *(*callback_2_t)(lelt *, lelt *);
 
 // todo: more general and more effective
-lelt *apply_2(lelt *args, callback_2_t func)
+lelt *apply_2(callback_2_t func, lelt *args)
 {
 	lelt *first = car(args);
 	ensure(first);
@@ -108,7 +108,7 @@ lelt *apply_primitive_procedure(lelt *proc, lelt *args)
 	ensure(proc);
 	ensure(proc->func.callback);
 	if (proc->func.variant == two_args)
-		return apply_2(args, proc->func.callback);
+		return apply_2(proc->func.callback, args);
     ensure(false); // error
 	return empty_list;
 }
