@@ -51,7 +51,7 @@ void *unknown_procedure_type_error = NULL;
 void *ok = NULL;
 void *empty_arglist = NULL;
 
-void *the_global_environment = NULL;
+void *global_environment = NULL;
 
 void prompt_for_input(const char *str);
 void announce_output(const char *str);
@@ -633,7 +633,7 @@ void *signal_error()
 
 int main()
 {
-  the_global_environment = setup_environment();
+  global_environment = setup_environment();
   state_t *cur = read_eval_print_loop;
   while (cur)
     cur = (state_t *)cur();

@@ -224,6 +224,6 @@ void *setup_environment(void) {
 }
 
 void *get_global_environment(void) {
-    /*static*/ void *the_global_environment = setup_environment();
-    return the_global_environment;
+    /*static*/ void *global_environment = setup_environment();
+    return global_environment;
 }
