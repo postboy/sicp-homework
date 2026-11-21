@@ -1,4 +1,4 @@
 # exclude temporary files
 *~
-.#*
+*#*
 5.51/lisp
