@@ -1,5 +1,7 @@
 #include "common.h"
 
+bool is_true(lelt *e) { return !is_false(e); }
+
 lelt *cadr(lelt *e) { return car(cdr(e)); }
 lelt *cddr(lelt *e) { return cdr(cdr(e)); }
 lelt *caadr(lelt *e) { return car(car(cdr(e))); }

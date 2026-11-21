@@ -44,14 +44,6 @@ lelt *cons(lelt *car, lelt *cdr);
 lelt *car(lelt *e);
 lelt *cdr(lelt *e);
 
-lelt *cadr(lelt *e);
-lelt *cddr(lelt *e);
-lelt *caadr(lelt *e);
-lelt *caddr(lelt *e);
-lelt *cdadr(lelt *e);
-lelt *cdddr(lelt *e);
-lelt *cadddr(lelt *e);
-
 lelt *cons_wrapper(lelt *args);
 
 bool is_eq(lelt *a, lelt *b);
@@ -63,12 +55,24 @@ bool is_pair(lelt *e);
 
 lelt *apply_primitive_procedure(lelt *proc, lelt *args);
 
+// combinations.c
+
+bool is_true(lelt *e);
+
+lelt *cadr(lelt *e);
+lelt *cddr(lelt *e);
+lelt *caadr(lelt *e);
+lelt *caddr(lelt *e);
+lelt *cdadr(lelt *e);
+lelt *cdddr(lelt *e);
+lelt *cadddr(lelt *e);
+
 // interpreter.c
 
 bool is_self_evaluating(lelt *e);
 bool is_variable(lelt *e);
 
-bool is_true(lelt *e);
+bool is_false(lelt *e);
 
 bool is_definition(lelt *e);
 lelt *definition_variable(lelt *e);

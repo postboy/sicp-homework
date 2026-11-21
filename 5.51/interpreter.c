@@ -26,12 +26,6 @@ bool is_false(lelt *e)
 	return is_eq(e, &false_const);
 }
 
-bool is_true(lelt *e)
-{
-	return !is_eq(e, &false_const);
-}
-
-// consts etc
 bool is_tagged_list(lelt *e, lelt *tag)
 {
 	return is_pair(e) && is_eq(car(e), tag);
