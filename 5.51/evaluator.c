@@ -61,16 +61,18 @@ lelt *apply_primitive_procedure(lelt *proc, lelt *args) {
     return impl(args);
 }
 
-// forward decl?
-void *read_eval_print_loop(void);
+// forward decl
+state(read_eval_print_loop);
 
-void *print_result(void) {
+state(print_result)
+{
     perform(announce_output("result: "));
     perform(user_print(val_reg));
     go_to(read_eval_print_loop);
 }
 
-void *signal_error(void) {
+state(signal_error)
+{
     perform(user_print(val_reg));
     go_to(read_eval_print_loop);
 }
