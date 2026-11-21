@@ -4,8 +4,8 @@
 #include <stdbool.h>
 
 typedef struct {
-    /*lelt*/void *car;
-    /*lelt*/void *cdr;
+    /* lelt* */void *car;
+    /* lelt* */void *cdr;
 } lisp_pair_t;
 
 typedef enum {
@@ -133,4 +133,4 @@ lelt *read_input(void);
 
 void initialize_stack(void);
 lelt *push(lelt *e);
-lelt *pop();
+lelt *pop(void);

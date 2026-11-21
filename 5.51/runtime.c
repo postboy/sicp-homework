@@ -253,7 +253,7 @@ lelt *push(lelt *e)
     return e;
 }
 
-lelt *pop()
+lelt *pop(void)
 {
     ensure(stack_elts > 0);
     return stack_mem[--stack_elts];
