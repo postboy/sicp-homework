@@ -1,229 +1,340 @@
+// todo less?
+#include <stdio.h>
+#include <stdlib.h>
 #include "common.h"
 
-lelt quote_const = { symbol, "quote" };
-lelt set_const = { symbol, "set!" };
-lelt define_const = { symbol, "define" };
-lelt lambda_const = { symbol, "lambda" };
-lelt if_const = { symbol, "if" };
-lelt true_const = { symbol, "true" };
-lelt false_const = { symbol, "false" };
-lelt begin_const = { symbol, "begin" };
-lelt primitive_const = { symbol, "primitive" };
-lelt procedure_const = { symbol, "procedure" };
+/* Exercise 5.51.  Develop a rudimentary implementation of Scheme in C (or some other low-level
+language of your choice) by translating the explicit-control evaluator of section 5.4 into C. In
+order to run this code you will need to also provide appropriate storage-allocation routines and
+other run-time support. */
 
-bool is_false(lelt *e) {
-    return is_eq(e, &false_const);
+// -Wall so on
+// makefile or script
+// several files: evaluator, primitives
+
+//  better?
+typedef void *(*impl_func_t)(void);
+//typedef impl_func_internal (*impl_func)(void);
+
+//  bool type?
+int last_test_result = 0;
+
+//  error checks, names, all args in ()
+#define assign(a, b) a = b
+#define perform(a) a
+#define test(a) last_test_result = (a)
+#define branch(a) if (last_test_result) return (a)
+
+// name collisions?
+#define save(e) push(e)
+#define restore(e) e = pop()
+
+//  types, = NULL, static
+lelt *exp_reg;
+void *env_reg; //?
+lelt *val_reg;
+void *proc_reg; //?
+lelt *argl_reg;
+void *continue_reg; //?
+void *unev_reg; //?
+
+char **global_argv = NULL;
+bool interactive = true;
+
+// types?
+bool is_self_evaluating(lelt *e) {
+    return (is_number(e) || is_string(e));
 }
 
-bool is_true(lelt *e) {
-    return !is_eq(e, &false_const);
+bool is_variable(lelt *e) {
+    return is_symbol(e);
 }
 
-// consts etc
-bool is_tagged_list(lelt *e, lelt *tag) {
-    return is_pair(e) && is_eq(car(e), tag);
+typedef lelt *(*primitive_func_t)(lelt *);
+
+primitive_func_t primitive_implementation(lelt *e) { return (primitive_func_t)cadr(e)->func; }
+
+lelt *apply_primitive_procedure(lelt *proc, lelt *args) {
+    primitive_func_t impl = primitive_implementation(proc);
+    return impl(args);
 }
 
-bool is_quoted(lelt *e) { return is_tagged_list(e, &quote_const); }
-lelt *text_of_quotation(lelt *e) { return cadr(e); }
-lelt *make_quoted(lelt *e) {
-    // list?
-    //return cons(&quote_const, e); // many errors
-    return cons(&quote_const, cons(e, empty_list));
+// forward decl?
+void *read_eval_print_loop(void);
+
+void *print_result(void) {
+    perform(announce_output("result: "));
+    perform(user_print(val_reg));
+    return read_eval_print_loop;
 }
 
-// exp as variable?
-bool is_assignment(lelt *e) { return is_tagged_list(e, &set_const); }
-lelt *assignment_value(lelt *e) { return cadr(e); }
-lelt *assignment_variable(lelt *e) { return caddr(e); }
-
-bool is_lambda(lelt *e) { return is_tagged_list(e, &lambda_const); }
-lelt *lambda_parameters(lelt *e) { return cadr(e); }
-lelt *lambda_body(lelt *e) { return cddr(e); }
-
-lelt *make_lambda(lelt *parameters, lelt *body) {
-    // list?
-    return cons(&lambda_const, cons(parameters, body));
+void *signal_error(void) {
+    perform(user_print(val_reg));
+    return read_eval_print_loop;
 }
 
-bool is_definition(lelt *e) { return is_tagged_list(e, &define_const); }
+//const?
+lelt unknown_expression_type_error = { string, "unknown_expression_type_error" };
+lelt unknown_procedure_type_error = { string, "unknown_procedure_type_error" };
+lelt ok_const = { string, "ok" };
 
-lelt *definition_variable(lelt *e) {
-    if (is_symbol(cadr(e)))
-	return cadr(e);
-    else
-	return caadr(e);
+lelt *empty_arglist = NULL;
+
+void *unknown_expression_type(void) {
+    assign(val_reg, &unknown_expression_type_error);
+    return signal_error;
 }
 
-lelt *definition_value(lelt *e) {
-    if (is_symbol(cadr(e)))
-	return caddr(e);
-    else
-	return make_lambda(cdadr(e), cddr(e));
+void *unknown_procedure_type(void) {
+    restore(continue_reg);    // clean up stack (from apply_dispatch)
+    assign(val_reg, &unknown_procedure_type_error);
+    return signal_error;
 }
 
-bool is_if(lelt *e) { return is_tagged_list(e, &if_const); }
-lelt *if_predicate(lelt *e) { return cadr(e); }
-lelt *if_consequent(lelt *e) { return caddr(e); }
+// forward decl
+void *eval_dispatch(void);
 
-lelt *if_alternative(lelt *e) {
-    if (cdddr(e))
-	return cadddr(e);
-    else
-	return &false_const;
+void *ev_sequence_last_exp(void) {
+    restore(continue_reg);
+    return eval_dispatch;
 }
 
-lelt *make_if(lelt *predicate, lelt *consequent, lelt *alternative) {
-    // list?
-    return cons(&if_const, cons(predicate, cons(consequent, cons(alternative, empty_list))));
+// forward decl
+void *ev_sequence(void);
+
+void *ev_sequence_continue(void) {
+    restore(env_reg);
+    restore(unev_reg);
+    assign(unev_reg, rest_exps(unev_reg));
+    return ev_sequence;
 }
 
-bool is_begin(lelt *e) { return is_tagged_list(e, &begin_const); }
-lelt *begin_actions(lelt *e) { return cdr(e); }
-bool is_last_exp(lelt *e) { return (!cdr(e)); }
-lelt *first_exp(lelt *e) { return car(e); }
-lelt *rest_exps(lelt *e) { return cdr(e); }
-lelt *make_begin(lelt *e) { return cons(&begin_const, e); }
-
-lelt *sequence_to_exp(lelt *e) {
-    if (!e)
-	return empty_list;
-    if (is_last_exp(e))
-	return first_exp(e);
-    return make_begin(e);
+void *ev_sequence(void) {
+    assign(exp_reg, first_exp(unev_reg));
+    test(is_last_exp(unev_reg));
+    branch(ev_sequence_last_exp);
+    save(unev_reg);
+    save(env_reg);
+    assign(continue_reg, ev_sequence_continue);
+    return eval_dispatch;
 }
 
-bool is_application(lelt *e) { return is_pair(e); }
-lelt *operator(lelt *e) { return car(e); }
-lelt *operands(lelt *e) { return cdr(e); }
-bool is_no_operands(lelt *e) { return !e; }
-bool is_last_operand(lelt *e) { return !cdr(e); }
-lelt *first_operand(lelt *e) { return car(e); }
-lelt *rest_operands(lelt *e) { return cdr(e); }
+// forward decl
+void *apply_dispatch(void);
 
-// more efficient?
-lelt *append(lelt *a, lelt *b) {
-    if (!a)
-	return b;
-    return cons(car(a), append(cdr(a), b));
+void *ev_appl_accum_last_arg(void) {
+    restore(argl_reg);
+    assign(argl_reg, adjoin_arg(val_reg, argl_reg));
+    restore(proc_reg);
+    return apply_dispatch;
 }
 
-lelt *adjoin_arg(lelt *arg, lelt *arglist) {
-    // list?
-    return append(arglist, cons(arg, empty_list));
+void *ev_appl_last_arg(void) {
+    assign(continue_reg, ev_appl_accum_last_arg);
+    return eval_dispatch;
 }
 
-lelt *make_procedure(lelt *parameters, lelt *body, lelt *env) {
-    //list?
-    return cons(&procedure_const, cons(parameters, cons(body, cons(env, empty_list))));
+// forward decl
+void *ev_appl_operand_loop(void);
+
+void *ev_appl_accumulate_arg(void) {
+    restore(unev_reg);
+    restore(env_reg);
+    restore(argl_reg);
+    assign(argl_reg, adjoin_arg(val_reg, argl_reg));
+    assign(unev_reg, rest_operands(unev_reg));
+    return ev_appl_operand_loop;
 }
 
-bool is_primitive_procedure(lelt *e) { return is_tagged_list(e, &primitive_const); }
-bool is_compound_procedure(lelt *e) { return is_tagged_list(e, &procedure_const); }
-lelt *procedure_parameters(lelt *e) { return cadr(e); }
-lelt *procedure_body(lelt *e) { return caddr(e); }
-lelt *procedure_environment(lelt *e) { return cadddr(e); }
-
-void *the_empty_environment = empty_list;
-
-// type?
-lelt *enclosing_environment(lelt *e) { return cdr(e); }
-lelt *first_frame(lelt *e) { return car(e); }
-lelt *make_frame(lelt *vars, lelt *vals) { return cons(vars, vals); }
-lelt *frame_variables(lelt *frame) { return car(frame); }
-lelt *frame_values(lelt *frame) { return cdr(frame); }
-
-lelt *add_binding_to_frame(lelt *var, lelt *val, lelt *frame) {
-    set_car(frame, cons(var, car(frame)));
-    set_cdr(frame, cons(val, cdr(frame)));
-    return frame;
+void *ev_appl_operand_loop(void) {
+    save(argl_reg);
+    assign(exp_reg, first_operand(unev_reg));
+    test(is_last_operand(unev_reg));
+    branch(ev_appl_last_arg);
+    save(env_reg);
+    save(unev_reg);
+    assign(continue_reg, ev_appl_accumulate_arg);
+    return eval_dispatch;
 }
 
-lelt *define_variable(lelt *var, lelt *val, lelt *env) {
-    lelt *frame = first_frame(env);
-    ensure(frame);
-    lelt *vars = frame_variables(frame);
-    lelt *vals = frame_values(frame);
-scan:
-    if (!vars)
-	return add_binding_to_frame(var, val, frame);
-    if (is_eq(var, car(vars)))
-	return set_car(vals, val);
-    vars = cdr(vars);
-    vals = cdr(vals);
-    goto scan;    
+void *primitive_apply(void) {
+    assign(val_reg, apply_primitive_procedure(proc_reg, argl_reg));
+    restore(continue_reg);
+    return continue_reg;
 }
 
-lelt *lookup_variable_value(lelt *var, lelt *env) {
-env_loop:
-    ensure(env != the_empty_environment); // (error "Unbound variable" var)
-    lelt *frame = first_frame(env);
-    ensure(frame);
-    lelt *vars = frame_variables(frame);
-    lelt *vals = frame_values(frame);
-scan:
-    if (!vars) {
-        env = enclosing_environment(env);
-        goto env_loop;
+void *compound_apply(void) {
+    assign(unev_reg, procedure_parameters(proc_reg));
+    assign(env_reg, procedure_environment(proc_reg));
+    assign(env_reg, extend_environment(unev_reg, argl_reg, env_reg));
+    assign(unev_reg, procedure_body(proc_reg));
+    return ev_sequence;
+}
+
+void *apply_dispatch(void) {
+    test(is_primitive_procedure(proc_reg));
+    branch(primitive_apply);
+    test(is_compound_procedure(proc_reg));
+    branch(compound_apply);
+    return unknown_procedure_type;
+}
+
+void *ev_self_eval(void) {
+    assign(val_reg, exp_reg);
+    return continue_reg;
+}
+
+void *ev_variable(void) {
+    assign(val_reg, lookup_variable_value(exp_reg, env_reg));
+    return continue_reg;
+}
+
+void *ev_quoted(void) {
+    assign(val_reg, text_of_quotation(exp_reg));
+    return continue_reg;
+}
+
+void *ev_appl_did_operator(void) {
+    restore(unev_reg);                 // the operands
+    restore(env_reg);
+    assign(argl_reg, empty_arglist);
+    assign(proc_reg, val_reg);         // the operator
+    test(is_no_operands(unev_reg));
+    branch(apply_dispatch);
+    save(proc_reg);
+    return ev_appl_operand_loop;
+}
+
+void *ev_assignment_1(void) {
+    restore(continue_reg);
+    restore(env_reg);
+    restore(unev_reg);
+    perform(set_variable_value(unev_reg, val_reg, env_reg));
+    assign(val_reg, &ok_const);
+    return continue_reg;
+}
+
+void *ev_assignment(void) {
+    assign(unev_reg, assignment_variable(exp_reg));
+    save(unev_reg); // save variable for later
+    assign(exp_reg, assignment_value(exp_reg));
+    save(env_reg);
+    save(continue_reg);
+    assign(continue_reg, ev_assignment_1);
+    return eval_dispatch; // evaluate the assignment value
+}
+
+void *ev_definition_1(void) {
+    restore(continue_reg);
+    restore(env_reg);
+    restore(unev_reg);
+    perform(define_variable(unev_reg, val_reg, env_reg));
+    assign(val_reg, &ok_const);
+    return continue_reg;
+}
+
+void *ev_definition(void) {
+    assign(unev_reg, definition_variable(exp_reg));
+    save(unev_reg); // save variable for later
+    assign(exp_reg, definition_value(exp_reg));
+    save(env_reg);
+    save(continue_reg);
+    assign(continue_reg, ev_definition_1);
+    return eval_dispatch; // evaluate the definition value
+}
+
+void *ev_if_consequent(void) {
+    assign(exp_reg, if_consequent(exp_reg));
+    return eval_dispatch;
+}
+
+void *ev_if_alternative(void) {
+    assign(exp_reg, if_alternative(exp_reg));
+    return eval_dispatch;
+}
+
+void *ev_if_decide(void) {
+    restore(continue_reg);
+    restore(env_reg);
+    restore(exp_reg);
+    test(is_true(val_reg));
+    branch(ev_if_consequent);
+    return ev_if_alternative;
+}
+
+void *ev_if(void) {
+    save(exp_reg); // save expression for later
+    save(env_reg);
+    save(continue_reg);
+    assign(continue_reg, ev_if_decide);
+    assign(exp_reg, if_predicate(exp_reg));
+    return eval_dispatch; // evaluate the predicate
+}
+
+void *ev_lambda(void) {
+    assign(unev_reg, lambda_parameters(exp_reg));
+    assign(exp_reg, lambda_body(exp_reg));
+    assign(val_reg, make_procedure(unev_reg, exp_reg, env_reg));
+    return continue_reg;
+}
+
+void *ev_begin(void) {
+    assign(unev_reg, begin_actions(exp_reg));
+    save(continue_reg);
+    return ev_sequence;
+}
+
+void *ev_application(void) {
+    save(continue_reg);
+    save(env_reg);
+    assign(unev_reg, operands(exp_reg));
+    save(unev_reg);
+    assign(exp_reg, operator(exp_reg));
+    assign(continue_reg, ev_appl_did_operator);
+    return eval_dispatch;
+}
+
+//  autoformat
+void *eval_dispatch(void) {
+    test(is_self_evaluating(exp_reg));
+    branch(ev_self_eval);
+    test(is_variable(exp_reg));
+    branch(ev_variable);
+    test(is_quoted(exp_reg));
+    branch(ev_quoted);
+    test(is_assignment(exp_reg));
+    branch(ev_assignment);
+    test(is_definition(exp_reg));
+    branch(ev_definition);
+    test(is_if(exp_reg));
+    branch(ev_if);
+    test(is_lambda(exp_reg));
+    branch(ev_lambda);
+    test(is_begin(exp_reg));
+    branch(ev_begin);
+    test(is_application(exp_reg));
+    branch(ev_application);
+    return unknown_expression_type;
+}
+
+void *read_eval_print_loop(void) {
+    perform(initialize_stack());
+    perform(prompt_for_input("lisp> "));
+    assign(exp_reg, read_stdin());
+    assign(env_reg, get_global_environment());
+    assign(continue_reg, print_result);
+    return eval_dispatch;
+}
+
+int main(int argc, char *argv[]) {
+    if (argc > 1) {
+	interactive = false;
+	global_argv = &argv[1];
     }
-    if (is_eq(var, car(vars)))
-        return car(vals);
-    vars = cdr(vars);
-    vals = cdr(vals);
-    goto scan;
-}
-
-lelt *set_variable_value(lelt *var, lelt *val, lelt *env) {
-env_loop:
-    ensure(env != the_empty_environment); // (error "Unbound variable -- SET!" var)
-    lelt *frame = first_frame(env);
-    ensure(frame);
-    lelt *vars = frame_variables(frame);
-    lelt *vals = frame_values(frame);
-scan:
-    if (!vars) {
-        env = enclosing_environment(env);
-        goto env_loop;
+    void *ptr = read_eval_print_loop;
+    for (;ptr;) {
+	impl_func_t func = (impl_func_t)ptr;
+	ptr = func();
     }
-    if (is_eq(var, car(vars)))
-        return set_car(vals, val);
-    vars = cdr(vars);
-    vals = cdr(vals);
-    goto scan;
-}
-
-lelt *extend_environment(lelt *vars, lelt *vals, lelt *base_env) {
-    ensure(vars);
-    ensure(vals);
-    //(if (= (length vars) (length vals))
-    //(if (< (length vars) (length vals))
-    //(error "Too many arguments supplied" vars vals)
-    //(error "Too few arguments supplied" vars vals))))    
-    return cons(make_frame(vars, vals), base_env);
-}
-
-// todo add more, .func, 
-lelt cons_name = { symbol, "cons" };
-//lisp_pair_t cons_name_pair = { &cons_name, empty_list };
-lelt cons_primitive = { primitive, (char *)cons_wrapper };
-lelt another_pair = { pair, .pair = { &cons_primitive, empty_list } };
-lelt cons_object = { pair, .pair = { &primitive_const, &another_pair } };
-//lisp_pair_t cons_obj_pair = { &cons_object, empty_list };
-//lelt car_name = { symbol, "car" };
-//lelt car_object = { primitive, (char *)car };
-//lelt cdr_name = { symbol, "cdr" };
-//lelt cdr_object = { primitive, (char *)cdr };
-lelt primitive_procedure_names = { pair, .pair = { &cons_name, empty_list } };
-lelt primitive_procedure_objects = { pair, .pair = { &cons_object, empty_list } };
-
-void *setup_environment(void) {
-    void *initial_env = extend_environment(&primitive_procedure_names, &primitive_procedure_objects, the_empty_environment);
-    define_variable(&true_const, &true_const, initial_env); // ?
-    define_variable(&false_const, &false_const, initial_env); //?
-    return initial_env;
-}
-
-void *get_global_environment(void) {
-    /*static*/ void *the_global_environment = setup_environment();
-    return the_global_environment;
+    return 0;
 }
