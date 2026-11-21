@@ -16,6 +16,17 @@ typedef enum {
 	primitive,
 } lisp_type_t;
 
+typedef enum {
+	no_args = 0,
+	one_arg,
+	two_args,
+} apply_variant_t;
+
+typedef struct {
+	/* primitive_callback_t */ void *callback;
+	apply_variant_t variant;
+} primitive_func_t;
+
 typedef struct {
 	lisp_type_t type;
 	union {
@@ -23,7 +34,7 @@ typedef struct {
 		const char *sym;
 		int num;
 		lisp_pair_t pair;
-		/* primitive_func_t */ void *func;
+		primitive_func_t func;
 	};
 } lelt;
 

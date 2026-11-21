@@ -102,7 +102,7 @@ bool is_eq(lelt *a, lelt *b)
 	if (is_pair(a))
 		return (is_eq(car(a), car(b)) && is_eq(cdr(a), cdr(b)));
 	if (is_primitive_procedure(a))
-		return (a->func == b->func);
+		return (a->func.callback == b->func.callback && a->func.variant == b->func.variant);
 	ensure(false); // error!
 	return false;
 }
@@ -111,8 +111,8 @@ bool is_eq(lelt *a, lelt *b)
 lelt *apply_primitive_procedure(lelt *proc, lelt *args)
 {
 	ensure(proc);
-	typedef lelt *(*primitive_func_t)(lelt *);
-	primitive_func_t impl = proc->func;
+	typedef lelt *(*primitive_callback_t)(lelt *);
+	primitive_callback_t impl = proc->func.callback;
 	ensure(impl);
 	return impl(args);
 }
