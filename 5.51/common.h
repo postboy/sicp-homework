@@ -8,7 +8,6 @@ typedef struct {
     /*lelt*/void *cdr;
 } lisp_pair_t;
 
-// boolean type?
 typedef enum {
     string = 1,
     symbol,
@@ -20,8 +19,8 @@ typedef enum {
 typedef struct {
     lisp_type_t type;
     union {
-	/*const*/ char *str;
-	/*const*/ char *sym;
+	const char *str;
+        const char *sym;
 	int num;
 	lisp_pair_t pair;
 	void *func;
@@ -31,8 +30,6 @@ typedef struct {
 #define empty_list NULL
 
 // evaluator.c
-
-extern bool interactive;
 
 #define state(name) void *name(void)
 typedef void *(*impl_func_t)(void);
