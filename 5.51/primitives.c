@@ -72,6 +72,11 @@ bool is_pair(lelt *e)
 	return (e->type == pair);	
 }
 
+bool is_primitive_procedure(lelt *e) {
+	ensure(e);
+	return (e->type == primitive);
+}
+
 bool is_eq(lelt *a, lelt *b)
 {
 	if (!a && !b)
@@ -88,17 +93,19 @@ bool is_eq(lelt *a, lelt *b)
 		return (a->num == b->num);
 	if (is_pair(a))
 		return (is_eq(car(a), car(b)) && is_eq(cdr(a), cdr(b)));
+	if (is_primitive_procedure(a))
+		return (a->func == b->func);
 	ensure(false); // error!
 	return false;
 }
 
 typedef lelt *(*primitive_func_t)(lelt *);
 
-primitive_func_t primitive_implementation(lelt *e) { return (primitive_func_t)cadr(e)->func; }
-
 // todo proper apply because this is ugly
 lelt *apply_primitive_procedure(lelt *proc, lelt *args)
 {
-	primitive_func_t impl = primitive_implementation(proc);
+	ensure(proc);
+	primitive_func_t impl = proc->func;
+	ensure(impl);
 	return impl(args);
 }

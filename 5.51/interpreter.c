@@ -56,7 +56,6 @@ lelt *first_operand(lelt *e) { return car(e); }
 lelt *rest_operands(lelt *e) { return cdr(e); }
 
 lelt *make_procedure(lelt *params, lelt *body, lelt *env) { return cons(&procedure_const, cons(params, cons(body, cons(env, empty_list)))); }
-bool is_primitive_procedure(lelt *e) { return is_tagged_list(e, &primitive_const); }
 bool is_compound_procedure(lelt *e) { return is_tagged_list(e, &procedure_const); }
 lelt *procedure_parameters(lelt *e) { return cadr(e); }
 lelt *procedure_body(lelt *e) { return caddr(e); }
@@ -147,17 +146,9 @@ lelt *extend_environment(lelt *vars, lelt *vals, lelt *base_env)
 }
 
 lelt cons_name = { symbol, "cons" };
-//lisp_pair_t cons_name_pair = { &cons_name, empty_list };
 lelt cons_primitive = { primitive, .func = cons_wrapper };
-lelt another_pair = { pair, .pair = { &cons_primitive, empty_list } };
-lelt cons_object = { pair, .pair = { &primitive_const, &another_pair } };
-//lisp_pair_t cons_obj_pair = { &cons_object, empty_list };
-//lelt car_name = { symbol, "car" };
-//lelt car_object = { primitive, (char *)car };
-//lelt cdr_name = { symbol, "cdr" };
-//lelt cdr_object = { primitive, (char *)cdr };
 lelt primitive_procedure_names = { pair, .pair = { &cons_name, empty_list } };
-lelt primitive_procedure_objects = { pair, .pair = { &cons_object, empty_list } };
+lelt primitive_procedure_objects = { pair, .pair = { &cons_primitive, empty_list } };
 
 void *setup_environment(void)
 {

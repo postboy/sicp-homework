@@ -23,7 +23,7 @@ typedef struct {
 		const char *sym;
 		int num;
 		lisp_pair_t pair;
-		void *func;
+		/* primitive_func_t */ void *func;
 	};
 } lelt;
 
@@ -52,6 +52,7 @@ bool is_number(lelt *e);
 bool is_string(lelt *e);
 bool is_symbol(lelt *e);
 bool is_pair(lelt *e);
+bool is_primitive_procedure(lelt *e);
 
 lelt *apply_primitive_procedure(lelt *proc, lelt *args);
 
@@ -104,7 +105,6 @@ lelt *rest_operands(lelt *e);
 lelt *adjoin_arg(lelt *arg, lelt *arglist);
 lelt *make_procedure(lelt *parameters, lelt *body, lelt *env);
 
-bool is_primitive_procedure(lelt *e);
 bool is_compound_procedure(lelt *e);
 lelt *procedure_parameters(lelt *e);
 lelt *procedure_body(lelt *e);
