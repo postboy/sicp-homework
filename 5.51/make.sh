@@ -1,4 +1,4 @@
 #!/bin/sh
 
 # -rdynamic for stacktraces, -g for debugging
-gcc -Werror -g -rdynamic runtime.c primitives.c evaluator.c interpreter.c -o lisp
+gcc -Werror -g -rdynamic runtime.c primitives.c combinations.c interpreter.c evaluator.c -o lisp
