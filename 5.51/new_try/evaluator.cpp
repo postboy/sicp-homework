@@ -39,8 +39,8 @@ state_t initialize_stack,
   apply_dispatch,
   ev_appl_operand_loop,
   ev_appl_last_arg,
-  ev_appl_accumulate_arg,
-  ev_appl_accum_last_arg;
+    ev_appl_accumulate_arg,
+    ev_appl_accum_last_arg;
 
 bool flag = false;
 void *expr, *env, *val, *proc, *argl, *unev;
@@ -131,511 +131,511 @@ std::stack<void *> the_stack;
 
 void save(void *val)
 {
-  the_stack.push(val);
+    the_stack.push(val);
 }
 
 void *restore()
 {
-  void *value = the_stack.top();
-  the_stack.pop();
-  return value;
+    void *value = the_stack.top();
+    the_stack.pop();
+    return value;
 }
 
 /*void *setup_environment()
 {
-  void *initial_env = extend-environment(primitive_procedure_names(), primitive_procedure_objects(), the_empty_environment);
-  define_variable("true", true, initial_env);
-  define_variable("false", false, initial_env);
-  return initial_env;
+    void *initial_env = extend-environment(primitive_procedure_names(), primitive_procedure_objects(), the_empty_environment);
+    define_variable("true", true, initial_env);
+    define_variable("false", false, initial_env);
+    return initial_env;
 }*/
 
 void prompt_for_input(const char *str)
 {
-  announce_output(str);
+    announce_output(str);
 }
 
 void announce_output(const char *str)
 {
-  printf("%s\n", str);
+    printf("%s\n", str);
 }
 
 void *read()
 {
-  exit(1);//todo
+    exit(1);//todo
 }
 
 void user_print(void *)
 {
-  exit(1);//todo
+    exit(1);//todo
 }
 
 //----------------------------
 
 bool is_self_evaluating(void *exp)
 {
-  return (is_number(exp) || is_string(exp));
+    return (is_number(exp) || is_string(exp));
 }
 
 bool is_variable(void *exp)
 {
-  return is_symbol(exp);
+    return is_symbol(exp);
 }
 
 bool is_quoted(void *exp)
 {
-  return is_tagged_list(exp, "quote");
+    return is_tagged_list(exp, "quote");
 }
 
 void *text_of_quotation(void *exp)
 {
-  return cadr(exp);
+    return cadr(exp);
 }
 
 bool is_tagged_list(void *exp, const char *tag)
 {
-  if (is_pair(exp))
-    return !strcmp(get_string(car(exp)), tag);
-  return false;
+    if (is_pair(exp))
+        return !strcmp(get_string(car(exp)), tag);
+    return false;
 }
 
 bool is_assignment(void *exp)
 {
-  return is_tagged_list(exp, "set!");
+    return is_tagged_list(exp, "set!");
 }
 
 void *assignment_variable(void *exp)
 {
-  return cadr(exp);
+    return cadr(exp);
 }
 
 void *assignment_value(void *exp)
 {
-  return caddr(exp);
+    return caddr(exp);
 }
 
 bool is_definition(void *exp)
 {
-  return is_tagged_list(exp, "define");
+    return is_tagged_list(exp, "define");
 }
 
 void *definition_variable(void *exp)
 {
-  if (is_symbol(cadr(exp)))
-    return cadr(exp);
-  return caadr(exp);
+    if (is_symbol(cadr(exp)))
+        return cadr(exp);
+    return caadr(exp);
 }
 
 void *definition_value(void *exp)
 {
-  if (is_symbol(cadr(exp)))
-    return caddr(exp);
-  // formal parameters and body
-  return make_lambda(cdadr(exp), cddr(exp));
+    if (is_symbol(cadr(exp)))
+        return caddr(exp);
+    // formal parameters and body
+    return make_lambda(cdadr(exp), cddr(exp));
 }
 
 bool is_lambda(void *exp)
 {
-  return is_tagged_list(exp, "lambda");
+    return is_tagged_list(exp, "lambda");
 }
 
 void *lambda_parameters(void *exp)
 {
-  return cadr(exp);
+    return cadr(exp);
 }
 
 void *lambda_body(void *exp)
 {
-  return cddr(exp);
+    return cddr(exp);
 }
 
 void *make_lambda(void *parameters, void *body)
 {
-  return cons(make_string("lambda"), cons(parameters, body));
+    return cons(make_string("lambda"), cons(parameters, body));
 }
 
 bool is_if(void *exp)
 {
-  return is_tagged_list(exp, "if");
+    return is_tagged_list(exp, "if");
 }
 
 void *if_predicate(void *exp)
 {
-  return cadr(exp);
+    return cadr(exp);
 }
 
 void *if_consequent(void *exp)
 {
-  return caddr(exp);
+    return caddr(exp);
 }
 
 void *if_alternative(void *exp)
 {
-  if (cdddr(exp))
-      return cadddr(exp);
-  return make_bool(false);
+    if (cdddr(exp))
+            return cadddr(exp);
+    return make_bool(false);
 }
 
 void *make_if(void *predicate, void *consequent, void *alternative)
 {
-  return make_list_4(make_string("if"), predicate, consequent, alternative);
+    return make_list_4(make_string("if"), predicate, consequent, alternative);
 }
 
 bool is_begin(void *exp)
 {
-  return is_tagged_list(exp, "begin");
+    return is_tagged_list(exp, "begin");
 }
 
 void *begin_actions(void *exp)
 {
-  return cdr(exp);
+    return cdr(exp);
 }
 
 bool is_last_exp(void *seq)
 {
-  return !cdr(seq);
+    return !cdr(seq);
 }
 
 void *first_exp(void *seq)
 {
-  return car(seq);
+    return car(seq);
 }
 
 void *rest_exps(void *exp)
 {
-  return cdr(exp);
+    return cdr(exp);
 }
 
 void *sequence_to_exp(void *seq)
 {
-  if (!seq)
-    return seq;
-  if (is_last_exp(seq))
-    return first_exp(seq);
-  return make_begin(seq);
+    if (!seq)
+        return seq;
+    if (is_last_exp(seq))
+        return first_exp(seq);
+    return make_begin(seq);
 }
 
 void *make_begin(void *seq)
 {
-  // todo this should be just a constant
-  return cons(make_string("begin"), seq);
+    // todo this should be just a constant
+    return cons(make_string("begin"), seq);
 }
 
 bool is_application(void *exp)
 {
-  return is_pair(exp);
+    return is_pair(exp);
 }
 
 void *get_operator(void *exp)
 {
-  return car(exp);
+    return car(exp);
 }
 
 void *get_operands(void *exp)
 {
-  return cdr(exp);
+    return cdr(exp);
 }
 
 bool is_no_operands(void *ops)
 {
-  return !ops;
+    return !ops;
 }
 
 void *first_operand(void *ops)
 {
-  return car(ops);
+    return car(ops);
 }
 
 void *rest_operands(void *ops)
 {
-  return cdr(ops);
+    return cdr(ops);
 }
 
 //----------------------------
 
 void *eval_dispatch()
 {
-  test(is_self_evaluating(expr));
-  branch(ev_self_eval);
-  test(is_variable(expr));
-  branch(ev_variable);
-  test(is_quoted(expr));
-  branch(ev_quoted);
-  test(is_assignment(expr));
-  branch(ev_assignment);
-  test(is_definition(expr));
-  branch(ev_definition);
-  test(is_if(expr));
-  branch(ev_if);
-  test(is_lambda(expr));
-  branch(ev_lambda);
-  test(is_begin(expr));
-  branch(ev_begin);
-  test(is_application(expr));
-  branch(ev_application);
-  go_to(unknown_expression_type);
+    test(is_self_evaluating(expr));
+    branch(ev_self_eval);
+    test(is_variable(expr));
+    branch(ev_variable);
+    test(is_quoted(expr));
+    branch(ev_quoted);
+    test(is_assignment(expr));
+    branch(ev_assignment);
+    test(is_definition(expr));
+    branch(ev_definition);
+    test(is_if(expr));
+    branch(ev_if);
+    test(is_lambda(expr));
+    branch(ev_lambda);
+    test(is_begin(expr));
+    branch(ev_begin);
+    test(is_application(expr));
+    branch(ev_application);
+    go_to(unknown_expression_type);
 }
 
 void *ev_self_eval()
 {
-  val = expr;
-  go_to(cont);
+    val = expr;
+    go_to(cont);
 }
 
 void *ev_variable()
 {
-  val = lookup_variable_value(expr, env);
-  go_to(cont);
+    val = lookup_variable_value(expr, env);
+    go_to(cont);
 }
 
 void *ev_quoted()
 {
-  val = text_of_quotation(expr);
-  go_to(cont);
+    val = text_of_quotation(expr);
+    go_to(cont);
 }
 
 void *ev_lambda()
 {
-  unev = lambda_parameters(expr);
-  expr = lambda_body(expr);
-  val = make_procedure(unev, expr, env);
-  go_to(cont);
+    unev = lambda_parameters(expr);
+    expr = lambda_body(expr);
+    val = make_procedure(unev, expr, env);
+    go_to(cont);
 }
 
 void *ev_application()
 {
-  save((void *)cont);
-  save(env);
-  unev = operands(expr);
-  save(unev);
-  expr = operation(expr);
-  cont = ev_appl_did_operator;
-  go_to(eval_dispatch);
+    save((void *)cont);
+    save(env);
+    unev = operands(expr);
+    save(unev);
+    expr = operation(expr);
+    cont = ev_appl_did_operator;
+    go_to(eval_dispatch);
 }
 
 void *ev_appl_did_operator()
 {
-  unev = restore(); // the operands
-  env = restore();
-  argl = empty_arglist;
-  proc = val; // the operator
-  test(is_no_operands(unev));
-  branch(apply_dispatch);
-  save(proc);
-  go_to(ev_appl_operand_loop);
+    unev = restore(); // the operands
+    env = restore();
+    argl = empty_arglist;
+    proc = val; // the operator
+    test(is_no_operands(unev));
+    branch(apply_dispatch);
+    save(proc);
+    go_to(ev_appl_operand_loop);
 }
 
 void *ev_appl_operand_loop()
 {
-  save(argl);
-  expr = first_operand(unev);
-  test(is_last_operand(unev));
-  branch(ev_appl_last_arg);
-  save(env);
-  save(unev);
-  cont = ev_appl_accumulate_arg;
-  go_to(eval_dispatch);
+    save(argl);
+    expr = first_operand(unev);
+    test(is_last_operand(unev));
+    branch(ev_appl_last_arg);
+    save(env);
+    save(unev);
+    cont = ev_appl_accumulate_arg;
+    go_to(eval_dispatch);
 }
 
 void *ev_appl_accumulate_arg()
 {
-  unev = restore();
-  env = restore();
-  argl = restore();
-  argl = adjoin_arg(val, argl);
-  unev = rest_operands(unev);
-  go_to(ev_appl_operand_loop);
+    unev = restore();
+    env = restore();
+    argl = restore();
+    argl = adjoin_arg(val, argl);
+    unev = rest_operands(unev);
+    go_to(ev_appl_operand_loop);
 }
 
 void *ev_appl_last_arg()
 {
-  cont = ev_appl_accum_last_arg;
-  go_to(eval_dispatch);
+    cont = ev_appl_accum_last_arg;
+    go_to(eval_dispatch);
 }
 
 void *ev_appl_accum_last_arg()
 {
-  argl = restore();
-  argl = adjoin_arg(val, argl);
-  proc = restore();
-  go_to(apply_dispatch);
+    argl = restore();
+    argl = adjoin_arg(val, argl);
+    proc = restore();
+    go_to(apply_dispatch);
 }
 
 void *apply_dispatch()
 {
-  test(is_primitive_procedure(proc));
-  branch(primitive_apply);
-  test(is_compound_procedure(proc));  
-  branch(compound_apply);
-  go_to(unknown_procedure_type);
+    test(is_primitive_procedure(proc));
+    branch(primitive_apply);
+    test(is_compound_procedure(proc));    
+    branch(compound_apply);
+    go_to(unknown_procedure_type);
 }
 
 void *primitive_apply()
 {
-  val = apply_primitive_procedure(proc, argl);
-  cont = (state_t *)restore();
-  go_to(cont);
+    val = apply_primitive_procedure(proc, argl);
+    cont = (state_t *)restore();
+    go_to(cont);
 }
 
 void *compound_apply()
 {
-  unev = procedure_parameters(proc);
-  env = procedure_environment(proc);
-  env = extend_environment(unev, argl, env);
-  unev = procedure_body(proc);
-  go_to(ev_sequence);
+    unev = procedure_parameters(proc);
+    env = procedure_environment(proc);
+    env = extend_environment(unev, argl, env);
+    unev = procedure_body(proc);
+    go_to(ev_sequence);
 }
 
 void *ev_begin()
 {
-  unev = begin_actions(expr);
-  save((void *)cont);
-  go_to(ev_sequence);
+    unev = begin_actions(expr);
+    save((void *)cont);
+    go_to(ev_sequence);
 }
 
 void *ev_sequence()
 {
-  expr = first_exp(unev);
-  test(is_last_exp(unev));
-  branch(ev_sequence_last_exp);
-  save(unev);
-  save(env);
-  cont = ev_sequence_continue;
-  go_to(eval_dispatch);
+    expr = first_exp(unev);
+    test(is_last_exp(unev));
+    branch(ev_sequence_last_exp);
+    save(unev);
+    save(env);
+    cont = ev_sequence_continue;
+    go_to(eval_dispatch);
 }
 
 void *ev_sequence_continue()
 {
-  env = restore();
-  unev = restore();
-  unev = rest_exps(unev);
-  go_to(ev_sequence);
+    env = restore();
+    unev = restore();
+    unev = rest_exps(unev);
+    go_to(ev_sequence);
 }
 
 void *ev_sequence_last_exp()
 {
-  cont = (state_t *)restore();
-  go_to(eval_dispatch);
+    cont = (state_t *)restore();
+    go_to(eval_dispatch);
 }
 
 void *ev_if()
 {
-  save(expr); // save expression for later
-  save(env);
-  save((void *)cont);
-  cont = ev_if_decide;
-  expr = if_predicate(expr);
-  go_to(eval_dispatch); // evaluate the predicate
+    save(expr); // save expression for later
+    save(env);
+    save((void *)cont);
+    cont = ev_if_decide;
+    expr = if_predicate(expr);
+    go_to(eval_dispatch); // evaluate the predicate
 }
 
 void *ev_if_decide()
 {
-  cont = (state_t *)restore();
-  env = restore();
-  expr = restore();
-  test(is_true(val));
-  branch(ev_if_consequent);
-  go_to(ev_if_alternative);
+    cont = (state_t *)restore();
+    env = restore();
+    expr = restore();
+    test(is_true(val));
+    branch(ev_if_consequent);
+    go_to(ev_if_alternative);
 }
 
 void *ev_if_alternative()
 {
-  expr = if_alternative(expr);
-  go_to(eval_dispatch);
+    expr = if_alternative(expr);
+    go_to(eval_dispatch);
 }
 
 void *ev_if_consequent()
 {
-  expr = if_consequent(expr);
-  go_to(eval_dispatch);
+    expr = if_consequent(expr);
+    go_to(eval_dispatch);
 }
 
 void *ev_assignment()
 {
-  unev = assignment_variable(expr);
-  save(unev); // save variable for later
-  expr = assignment_value(expr);
-  save(env);
-  save((void *)cont);
-  cont = ev_assignment_1;
-  go_to(eval_dispatch); // evaluate the assignment value
+    unev = assignment_variable(expr);
+    save(unev); // save variable for later
+    expr = assignment_value(expr);
+    save(env);
+    save((void *)cont);
+    cont = ev_assignment_1;
+    go_to(eval_dispatch); // evaluate the assignment value
 }
 
 void *ev_assignment_1()
 {
-  cont = (state_t *)restore();
-  env = restore();
-  unev = restore();
-  set_variable_value(unev, val, env);
-  val = ok;
-  go_to(cont);
+    cont = (state_t *)restore();
+    env = restore();
+    unev = restore();
+    set_variable_value(unev, val, env);
+    val = ok;
+    go_to(cont);
 }
 
 void *ev_definition()
 {
-  unev = definition_variable(expr);
-  save(unev); // save variable for later
-  expr = definition_value(expr);
-  save(env);
-  save((void *)cont);
-  cont = ev_definition_1;
-  go_to(eval_dispatch); // evaluate the definition value
+    unev = definition_variable(expr);
+    save(unev); // save variable for later
+    expr = definition_value(expr);
+    save(env);
+    save((void *)cont);
+    cont = ev_definition_1;
+    go_to(eval_dispatch); // evaluate the definition value
 }
 
 void *ev_definition_1()
 {
-  cont = (state_t *)restore();
-  env = restore();
-  unev = restore();
-  define_variable(unev, val, env);
-  val = ok;
-  go_to(cont);
+    cont = (state_t *)restore();
+    env = restore();
+    unev = restore();
+    define_variable(unev, val, env);
+    val = ok;
+    go_to(cont);
 }
 
 //----------------------------
 
 void *read_eval_print_loop()
 {
-  initialize_stack();
-  prompt_for_input(";;; EC-Eval input:");
-  expr = read();
-  env = get_global_environment();
-  cont = print_result;
-  go_to(eval_dispatch);
+    initialize_stack();
+    prompt_for_input(";;; EC-Eval input:");
+    expr = read();
+    env = get_global_environment();
+    cont = print_result;
+    go_to(eval_dispatch);
 }
 
 void *print_result()
 {
-  announce_output(";;; EC-Eval value:");
-  user_print(val);
-  go_to(read_eval_print_loop);
+    announce_output(";;; EC-Eval value:");
+    user_print(val);
+    go_to(read_eval_print_loop);
 }
 
 void *unknown_expression_type()
 {
-  val = unknown_expression_type_error;
-  go_to(signal_error);
+    val = unknown_expression_type_error;
+    go_to(signal_error);
 }
 
 void *unknown_procedure_type()
 {
-  cont = (state_t *)restore(); // clean up stack (from apply_dispatch)
-  val = unknown_procedure_type_error;
-  go_to(signal_error);
+    cont = (state_t *)restore(); // clean up stack (from apply_dispatch)
+    val = unknown_procedure_type_error;
+    go_to(signal_error);
 }
 
 void *signal_error()
 {
-  user_print(val);
-  go_to(read_eval_print_loop);
+    user_print(val);
+    go_to(read_eval_print_loop);
 }
 
 //----------------------------
 
 int main()
 {
-  global_environment = setup_environment();
-  state_t *cur = read_eval_print_loop;
-  while (cur)
-    cur = (state_t *)cur();
-  return 0;
+    global_environment = setup_environment();
+    state_t *cur = read_eval_print_loop;
+    while (cur)
+        cur = (state_t *)cur();
+    return 0;
 }
