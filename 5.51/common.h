@@ -67,6 +67,10 @@ lelt *cdadr(lelt *e);
 lelt *cdddr(lelt *e);
 lelt *cadddr(lelt *e);
 
+lelt *append(lelt *a, lelt *b);
+
+//lelt *sequence_to_exp(lelt *e);
+
 // interpreter.c
 
 bool is_self_evaluating(lelt *e);

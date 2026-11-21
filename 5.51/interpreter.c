@@ -55,36 +55,14 @@ bool is_last_operand(lelt *e) { return !cdr(e); }
 lelt *first_operand(lelt *e) { return car(e); }
 lelt *rest_operands(lelt *e) { return cdr(e); }
 
-lelt *sequence_to_exp(lelt *e)
-{
-	if (!e)
-		return empty_list;
-	return (is_last_exp(e) ? first_exp(e) : make_begin(e));
-}
-
-// more efficient?
-lelt *append(lelt *a, lelt *b)
-{
-	if (!a)
-		return b;
-	return cons(car(a), append(cdr(a), b));
-}
-
-lelt *adjoin_arg(lelt *arg, lelt *arglist)
-{
-	return append(arglist, cons(arg, empty_list));
-}
-
-lelt *make_procedure(lelt *parameters, lelt *body, lelt *env)
-{
-	return cons(&procedure_const, cons(parameters, cons(body, cons(env, empty_list))));
-}
-
+lelt *make_procedure(lelt *params, lelt *body, lelt *env) { return cons(&procedure_const, cons(params, cons(body, cons(env, empty_list)))); }
 bool is_primitive_procedure(lelt *e) { return is_tagged_list(e, &primitive_const); }
 bool is_compound_procedure(lelt *e) { return is_tagged_list(e, &procedure_const); }
 lelt *procedure_parameters(lelt *e) { return cadr(e); }
 lelt *procedure_body(lelt *e) { return caddr(e); }
 lelt *procedure_environment(lelt *e) { return cadddr(e); }
+
+lelt *adjoin_arg(lelt *arg, lelt *arglist) { return append(arglist, cons(arg, empty_list)); }
 
 void *the_empty_environment = empty_list;
 
