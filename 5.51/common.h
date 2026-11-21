@@ -130,3 +130,7 @@ lelt *read_input(void);
 void initialize_stack(void);
 lelt *push(lelt *e);
 lelt *pop();
+
+#define state(name) void *name(void)
+state(read_eval_print_loop);
+typedef void *(*impl_func_t)(void);

@@ -20,8 +20,6 @@ int last_test_result = 0;
 #define test(a) last_test_result = (a)
 #define branch(a) if (last_test_result) return (a)
 #define go_to(x) return x
-#define state(name) static void *name(void)
-typedef void *(*impl_func_t)(void);
 
 #define save(e) push(e)
 #define restore(e) e = pop()
@@ -351,16 +349,4 @@ state(read_eval_print_loop)
     assign(env_reg, get_global_environment());
     assign(continue_reg, print_result);
     go_to(eval_dispatch);
-}
-
-int main(int argc, char *argv[]) {
-    if (argc > 1) {
-	interactive = false;
-	global_argv = &argv[1];
-    }
-    impl_func_t func = read_eval_print_loop;
-    while (func) {
-	func = (impl_func_t)func();
-    }
-    return 0;
 }

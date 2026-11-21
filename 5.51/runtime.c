@@ -244,3 +244,15 @@ lelt *pop() {
     ensure(stack_elts > 0);
     return stack_mem[--stack_elts];
 }
+
+int main(int argc, char *argv[]) {
+    if (argc > 1) {
+	interactive = false;
+	global_argv = &argv[1];
+    }
+    impl_func_t func = read_eval_print_loop;
+    while (func) {
+	func = (impl_func_t)func();
+    }
+    return 0;
+}
