@@ -1,20 +1,15 @@
-// todo less?
-#include <stdio.h>
-#include <stdlib.h>
-#include "common.h"
-
 /* Exercise 5.51.  Develop a rudimentary implementation of Scheme in C (or some other low-level
 language of your choice) by translating the explicit-control evaluator of section 5.4 into C. In
 order to run this code you will need to also provide appropriate storage-allocation routines and
 other run-time support. */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include "common.h"
+
 // -Wall so on
 // makefile or script
 // several files: evaluator, primitives
-
-//  better?
-typedef void *(*impl_func_t)(void);
-//typedef impl_func_internal (*impl_func)(void);
 
 //  bool type?
 int last_test_result = 0;
@@ -25,9 +20,9 @@ int last_test_result = 0;
 #define test(a) last_test_result = (a)
 #define branch(a) if (last_test_result) return (a)
 #define go_to(x) return x
-#define state(name) void *name(void)
+#define state(name) static void *name(void)
+typedef void *(*impl_func_t)(void);
 
-// name collisions?
 #define save(e) push(e)
 #define restore(e) e = pop()
 
