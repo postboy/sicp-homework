@@ -156,8 +156,16 @@ lelt plus_primitive = { primitive, .func = { plus, two_args } };
 
 void *setup_environment(void)
 {
-	lelt *primitive_procedure_names = make_inv_list(&cons_name, &car_name, &cdr_name, &plus_name, empty_list);
-	lelt *primitive_procedure_objects = make_inv_list(&cons_primitive,&car_primitive, &cdr_primitive, &plus_primitive, empty_list);
+	lelt *primitive_procedure_names = make_inv_list(&cons_name,
+													&car_name,
+													&cdr_name,
+													&plus_name,
+													empty_list);
+	lelt *primitive_procedure_objects = make_inv_list(&cons_primitive,
+													  &car_primitive,
+													  &cdr_primitive,
+													  &plus_primitive,
+													  empty_list);
 	void *initial_env = extend_environment(primitive_procedure_names, primitive_procedure_objects, the_empty_environment);
 	define_variable(&true_const, &true_const, initial_env);
 	define_variable(&false_const, &false_const, initial_env);
