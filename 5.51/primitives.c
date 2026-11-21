@@ -49,26 +49,6 @@ lelt *cdr(lelt *e)
 	return e->pair.cdr;
 }
 
-bool is_eq(lelt *a, lelt *b)
-{
-	if (!a && !b)
-		return true;
-	if (!a || !b)
-		return false;
-	if (a->type != b->type)
-		return false;
-	if (a->type == string)
-		return !strcmp(a->str, b->str);
-	if (a->type == symbol)
-		return !strcmp(a->sym, b->sym);
-	if (a->type == number)
-		return (a->num == b->num);
-	if (a->type == pair)
-		return (is_eq(car(a), car(b)) && is_eq(cdr(a), cdr(b)));
-	ensure(false); // error!
-	return false;
-}
-
 bool is_number(lelt *e)
 {
 	ensure(e);
@@ -93,11 +73,31 @@ bool is_pair(lelt *e)
 	return (e->type == pair);	
 }
 
+bool is_eq(lelt *a, lelt *b)
+{
+	if (!a && !b)
+		return true;
+	if (!a || !b)
+		return false;
+	if (a->type != b->type)
+		return false;
+	if (is_string(a))
+		return !strcmp(a->str, b->str);
+	if (is_symbol(a))
+		return !strcmp(a->sym, b->sym);
+	if (is_number(a))
+		return (a->num == b->num);
+	if (is_pair(a))
+		return (is_eq(car(a), car(b)) && is_eq(cdr(a), cdr(b)));
+	ensure(false); // error!
+	return false;
+}
+
 typedef lelt *(*primitive_func_t)(lelt *);
 
 primitive_func_t primitive_implementation(lelt *e) { return (primitive_func_t)cadr(e)->func; }
 
-// todo proper apply, cause this is ugly
+// todo proper apply because this is ugly
 lelt *apply_primitive_procedure(lelt *proc, lelt *args)
 {
 	primitive_func_t impl = primitive_implementation(proc);
