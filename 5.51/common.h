@@ -117,7 +117,10 @@ lelt *lookup_variable_value(lelt *var, lelt *env);
 lelt *set_variable_value(lelt *var, lelt *val, lelt *env);
 
 lelt *extend_environment(lelt *vars, lelt *vals, lelt *base_env);
-void *get_global_environment(void);
+
+void *setup_environment(void);
+
+extern void *global_environment;
 
 // runtime.c
 

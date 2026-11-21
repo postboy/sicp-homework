@@ -12,7 +12,7 @@
 bool interactive = true;
 char **global_argv = NULL;
 
-// gc_free
+// todo: garbage collector
 void *gc_alloc(size_t size)
 {
     void *result = malloc(size);
@@ -261,6 +261,7 @@ lelt *pop(void)
 
 int main(int argc, char *argv[])
 {
+    global_environment = setup_environment();
     if (argc > 1) {
         interactive = false;
         global_argv = &argv[1];

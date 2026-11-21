@@ -306,7 +306,7 @@ state(read_eval_print_loop)
     perform(initialize_stack());
     perform(prompt_for_input("lisp> "));
     assign(exp_reg, read_input());
-    assign(env_reg, get_global_environment());
+    assign(env_reg, global_environment);
     assign(continue_reg, print_result);
     go_to(eval_dispatch);
 }

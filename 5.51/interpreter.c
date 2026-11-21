@@ -247,13 +247,9 @@ lelt primitive_procedure_objects = { pair, .pair = { &cons_object, empty_list } 
 void *setup_environment(void)
 {
     void *initial_env = extend_environment(&primitive_procedure_names, &primitive_procedure_objects, the_empty_environment);
-    define_variable(&true_const, &true_const, initial_env); // ?
-    define_variable(&false_const, &false_const, initial_env); //?
+    define_variable(&true_const, &true_const, initial_env);
+    define_variable(&false_const, &false_const, initial_env);
     return initial_env;
 }
 
-void *get_global_environment(void)
-{
-    /*static*/ void *global_environment = setup_environment();
-    return global_environment;
-}
+void *global_environment = NULL;
