@@ -61,19 +61,19 @@ lelt *cadddr(lelt *e) { return car(cdr(cdr(cdr(e)))); }
 bool is_eq(lelt *a, lelt *b)
 {
     if (!a && !b)
-	return true;
+        return true;
     if (!a || !b)
-	return false;
+        return false;
     if (a->type != b->type)
-	return false; // error?
+        return false; // error?
     if (a->type == string)
-	return !strcmp(a->str, b->str);
+        return !strcmp(a->str, b->str);
     if (a->type == symbol)
-	return !strcmp(a->sym, b->sym);
+        return !strcmp(a->sym, b->sym);
     if (a->type == number)
-	return (a->num == b->num);
+        return (a->num == b->num);
     if (a->type == pair)
-	return (is_eq(a->pair.car, b->pair.car) && is_eq(a->pair.cdr, b->pair.cdr));
+        return (is_eq(a->pair.car, b->pair.car) && is_eq(a->pair.cdr, b->pair.cdr));
     ensure(false); // error!
     return false;
 }

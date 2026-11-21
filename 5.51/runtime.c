@@ -45,14 +45,14 @@ lelt *fatal(const char *file, int line, const char *inv)
 void announce_output(const char *str)
 {
     if (!interactive)
-	return;
+        return;
     printf("%s", str);
 }
 
 void prompt_for_input(const char *str)
 {
     if (!interactive)
-	return;
+        return;
     printf("%s", str);
     fflush(stdout);
 }
@@ -62,31 +62,31 @@ bool user_print_internal(lelt *e, bool needs_parens, bool needs_separator, bool 
 {
     // for printing lists
     if (!e)
-	return false;
+        return false;
 
     if (needs_separator)
-	printf(" ");
+        printf(" ");
     
     if (is_cdr && e->type != pair)
         printf(". ");
     
     if (e->type == string) {
-	printf("\"%s\"", e->str);
+        printf("\"%s\"", e->str);
     }
     else if (e->type == symbol) {
-	printf("%s", e->sym);
+        printf("%s", e->sym);
     }
     else if (e->type == number) {
-	printf("%i", e->num);
+        printf("%i", e->num);
     }
     else if (e->type == pair) {
-	if (needs_parens) printf("(");
-	needs_separator = user_print_internal(car(e), true, false, false);
-	user_print_internal(cdr(e), false, needs_separator, true);
-	if (needs_parens) printf(")");
+        if (needs_parens) printf("(");
+        needs_separator = user_print_internal(car(e), true, false, false);
+        user_print_internal(cdr(e), false, needs_separator, true);
+        if (needs_parens) printf(")");
     }
     else {
-	ensure(0); //error
+        ensure(0); //error
     }
     return true;
 }
@@ -105,11 +105,11 @@ lelt *string_to_lisp(char *str, char **next, bool in_list);
 lelt *elt_or_sublist(lelt *elt, char **next, bool in_list)
 {
     if (in_list) {
-	ensure(next);
-	return cons(elt, string_to_lisp(*next, next, true));
+        ensure(next);
+        return cons(elt, string_to_lisp(*next, next, true));
     }
     else {
-	return elt;
+        return elt;
     }
 }
 
@@ -119,92 +119,92 @@ lelt *string_to_lisp(char *str, char **next, bool in_list)
     ensure(str);
     //lelt *result = NULL;
     while (str[0]) {
-	if (isspace(str[0])) {
-	    str++;
-	}
-	else if (isdigit(str[0])) {
-	    lelt *elt = gc_alloc(sizeof(lelt));
-	    // ensure?
-	    elt->type = number;
-	    elt->num = strtol(str, next, 0);
-	    //str = str_end;
-	    //result = elt; // todo
-	    return elt_or_sublist(elt, next, in_list);
-	}
-	else if (str[0] == '\'') {
-	    str++;
-	    lelt *elt = string_to_lisp(str, &str, in_list);
-	    ensure(elt);
-	    return make_quoted(elt);
-	}
-	else if (str[0] == '(') {
-	    str++;
-	    lelt *elt = string_to_lisp(str, next, true);
-	    //ensure(car_elt);
-	    //lelt *cdr_elt = string_to_lisp(str, &str, true);
-	    //ensure(cdr_elt); // no, end of list!
-       	    //lelt *elt = cons(car_elt, cdr_elt);
-	    //ensure(elt);
-	    //result = elt; // todo
-	    // empty list
-	    if (!elt)
-		return cons(empty_list, empty_list); // wtf?
-	    //return elt;
-	    return elt_or_sublist(elt, next, in_list);
-	}
-	else if (str[0] == ')') {
-	    ensure(next);
-	    *next = ++str;
-	    return empty_list;
-	}
-	else if (str[0] == '"') {
-	    char *start = ++str;
-	    do {
-		ensure(str[0]);
-		// skip next symbol
-		/*if (str[0] == "\\") {
-		  str++;
-		  ensure(str[0]);
-		  }*/ // todo
-		str++;
-	    } while (str[0] != '"');
-	    str[0] = '\0';
-	    //char *copy = gc_strdup(start);
-	    // ensure?
-	    *next = ++str;
+        if (isspace(str[0])) {
+            str++;
+        }
+        else if (isdigit(str[0])) {
+            lelt *elt = gc_alloc(sizeof(lelt));
+            // ensure?
+            elt->type = number;
+            elt->num = strtol(str, next, 0);
+            //str = str_end;
+            //result = elt; // todo
+            return elt_or_sublist(elt, next, in_list);
+        }
+        else if (str[0] == '\'') {
+            str++;
+            lelt *elt = string_to_lisp(str, &str, in_list);
+            ensure(elt);
+            return make_quoted(elt);
+        }
+        else if (str[0] == '(') {
+            str++;
+            lelt *elt = string_to_lisp(str, next, true);
+            //ensure(car_elt);
+            //lelt *cdr_elt = string_to_lisp(str, &str, true);
+            //ensure(cdr_elt); // no, end of list!
+                   //lelt *elt = cons(car_elt, cdr_elt);
+            //ensure(elt);
+            //result = elt; // todo
+            // empty list
+            if (!elt)
+                return cons(empty_list, empty_list); // wtf?
+            //return elt;
+            return elt_or_sublist(elt, next, in_list);
+        }
+        else if (str[0] == ')') {
+            ensure(next);
+            *next = ++str;
+            return empty_list;
+        }
+        else if (str[0] == '"') {
+            char *start = ++str;
+            do {
+                ensure(str[0]);
+                // skip next symbol
+                /*if (str[0] == "\\") {
+                  str++;
+                  ensure(str[0]);
+                  }*/ // todo
+                str++;
+            } while (str[0] != '"');
+            str[0] = '\0';
+            //char *copy = gc_strdup(start);
+            // ensure?
+            *next = ++str;
 
-	    lelt *elt = gc_alloc(sizeof(lelt));
-	    // ensure?
-	    elt->type = string;
-	    elt->str = start;
-	    //result = elt; // todo
-	    //return elt;
-	    return elt_or_sublist(elt, next, in_list);
-	} else {
-	    char *start = str;
-	    do {
-		ensure(str[0]);
-		// skip next symbol
-		/*if (str[0] == "\\") {
-		  str++;
-		  ensure(str[0]);
-		  }*/ // todo
-		str++;
-	    } while (isalnum(str[0]));
-	    char tmp = str[0];
-	    str[0] = '\0'; // end
-	    char *copy = gc_strdup(start);
-	    // ensure?
-	    str[0] = tmp;
-	    *next = str;
+            lelt *elt = gc_alloc(sizeof(lelt));
+            // ensure?
+            elt->type = string;
+            elt->str = start;
+            //result = elt; // todo
+            //return elt;
+            return elt_or_sublist(elt, next, in_list);
+        } else {
+            char *start = str;
+            do {
+                ensure(str[0]);
+                // skip next symbol
+                /*if (str[0] == "\\") {
+                  str++;
+                  ensure(str[0]);
+                  }*/ // todo
+                str++;
+            } while (isalnum(str[0]));
+            char tmp = str[0];
+            str[0] = '\0'; // end
+            char *copy = gc_strdup(start);
+            // ensure?
+            str[0] = tmp;
+            *next = str;
 
-	    lelt *elt = gc_alloc(sizeof(lelt));
-	    // ensure?
-	    elt->type = symbol;
-	    elt->sym = copy;
-	    //result = elt; // todo
-	    return elt_or_sublist(elt, next, in_list);
-	}
+            lelt *elt = gc_alloc(sizeof(lelt));
+            // ensure?
+            elt->type = symbol;
+            elt->sym = copy;
+            //result = elt; // todo
+            return elt_or_sublist(elt, next, in_list);
+        }
     }
     ensure(0); // ?
     return empty_list;
@@ -215,21 +215,21 @@ lelt *read_input(void)
 {
     char *line = NULL;
     if (interactive) {
-	char *tmp_line = NULL;
-	size_t len = 0;
-	ensure(getline(&tmp_line, &len, stdin) != -1);
-	// remove trailing newline
-	len = strlen(tmp_line);
-	tmp_line[len - 1] = '\0';
-	line = gc_alloc(len);
-	memcpy(line, tmp_line, len);
-	free(tmp_line);
+        char *tmp_line = NULL;
+        size_t len = 0;
+        ensure(getline(&tmp_line, &len, stdin) != -1);
+        // remove trailing newline
+        len = strlen(tmp_line);
+        tmp_line[len - 1] = '\0';
+        line = gc_alloc(len);
+        memcpy(line, tmp_line, len);
+        free(tmp_line);
     }
     else {
-	line = global_argv[0];
-	if (!line)
-	    exit(0);
-	global_argv++;
+        line = global_argv[0];
+        if (!line)
+            exit(0);
+        global_argv++;
     }
     char *next = line;
     //return user_print(string_to_lisp(line, NULL)); // debug
@@ -262,12 +262,12 @@ lelt *pop()
 int main(int argc, char *argv[])
 {
     if (argc > 1) {
-	interactive = false;
-	global_argv = &argv[1];
+        interactive = false;
+        global_argv = &argv[1];
     }
     impl_func_t func = read_eval_print_loop;
     while (func) {
-	func = (impl_func_t)func();
+        func = (impl_func_t)func();
     }
     return 0;
 }

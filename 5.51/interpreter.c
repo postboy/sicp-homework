@@ -74,14 +74,14 @@ bool is_definition(lelt *e) { return is_tagged_list(e, &define_const); }
 lelt *definition_variable(lelt *e)
 {
     if (is_symbol(cadr(e)))
-	return cadr(e);
+        return cadr(e);
     return caadr(e);
 }
 
 lelt *definition_value(lelt *e)
 {
     if (is_symbol(cadr(e)))
-	return caddr(e);
+        return caddr(e);
     return make_lambda(cdadr(e), cddr(e));
 }
 
@@ -92,7 +92,7 @@ lelt *if_consequent(lelt *e) { return caddr(e); }
 lelt *if_alternative(lelt *e)
 {
     if (cdddr(e))
-	return cadddr(e);
+        return cadddr(e);
     return &false_const;
 }
 
@@ -111,9 +111,9 @@ lelt *make_begin(lelt *e) { return cons(&begin_const, e); }
 lelt *sequence_to_exp(lelt *e)
 {
     if (!e)
-	return empty_list;
+        return empty_list;
     if (is_last_exp(e))
-	return first_exp(e);
+        return first_exp(e);
     return make_begin(e);
 }
 
@@ -129,7 +129,7 @@ lelt *rest_operands(lelt *e) { return cdr(e); }
 lelt *append(lelt *a, lelt *b)
 {
     if (!a)
-	return b;
+        return b;
     return cons(car(a), append(cdr(a), b));
 }
 
@@ -172,9 +172,9 @@ lelt *define_variable(lelt *var, lelt *val, lelt *env)
     lelt *vals = frame_values(frame);
 scan:
     if (!vars)
-	return add_binding_to_frame(var, val, frame);
+        return add_binding_to_frame(var, val, frame);
     if (is_eq(var, car(vars)))
-	return set_car(vals, val);
+        return set_car(vals, val);
     vars = cdr(vars);
     vals = cdr(vals);
     goto scan;    

@@ -5,7 +5,7 @@ assert () {
     expect=$2
     result=`./lisp "$arg"`
     if [ "$result" != "$expect" ]; then
-	echo "error: $arg: $expect != $result"
+        echo "error: $arg: $expect != $result"
     fi
 }
 

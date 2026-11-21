@@ -19,11 +19,11 @@ typedef enum {
 typedef struct {
     lisp_type_t type;
     union {
-	const char *str;
+        const char *str;
         const char *sym;
-	int num;
-	lisp_pair_t pair;
-	void *func;
+        int num;
+        lisp_pair_t pair;
+        void *func;
     };
 } lelt;
 
