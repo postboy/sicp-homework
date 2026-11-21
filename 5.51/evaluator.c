@@ -37,11 +37,13 @@ char **global_argv = NULL;
 bool interactive = true;
 
 // types?
-bool is_self_evaluating(lelt *e) {
+bool is_self_evaluating(lelt *e)
+{
     return (is_number(e) || is_string(e));
 }
 
-bool is_variable(lelt *e) {
+bool is_variable(lelt *e)
+{
     return is_symbol(e);
 }
 
@@ -49,7 +51,8 @@ typedef lelt *(*primitive_func_t)(lelt *);
 
 primitive_func_t primitive_implementation(lelt *e) { return (primitive_func_t)cadr(e)->func; }
 
-lelt *apply_primitive_procedure(lelt *proc, lelt *args) {
+lelt *apply_primitive_procedure(lelt *proc, lelt *args)
+{
     primitive_func_t impl = primitive_implementation(proc);
     return impl(args);
 }

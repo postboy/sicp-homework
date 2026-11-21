@@ -11,22 +11,26 @@ lelt begin_const = { symbol, "begin" };
 lelt primitive_const = { symbol, "primitive" };
 lelt procedure_const = { symbol, "procedure" };
 
-bool is_false(lelt *e) {
+bool is_false(lelt *e)
+{
     return is_eq(e, &false_const);
 }
 
-bool is_true(lelt *e) {
+bool is_true(lelt *e)
+{
     return !is_eq(e, &false_const);
 }
 
 // consts etc
-bool is_tagged_list(lelt *e, lelt *tag) {
+bool is_tagged_list(lelt *e, lelt *tag)
+{
     return is_pair(e) && is_eq(car(e), tag);
 }
 
 bool is_quoted(lelt *e) { return is_tagged_list(e, &quote_const); }
 lelt *text_of_quotation(lelt *e) { return cadr(e); }
-lelt *make_quoted(lelt *e) {
+lelt *make_quoted(lelt *e)
+{
     // list?
     //return cons(&quote_const, e); // many errors
     return cons(&quote_const, cons(e, empty_list));
@@ -41,21 +45,24 @@ bool is_lambda(lelt *e) { return is_tagged_list(e, &lambda_const); }
 lelt *lambda_parameters(lelt *e) { return cadr(e); }
 lelt *lambda_body(lelt *e) { return cddr(e); }
 
-lelt *make_lambda(lelt *parameters, lelt *body) {
+lelt *make_lambda(lelt *parameters, lelt *body)
+{
     // list?
     return cons(&lambda_const, cons(parameters, body));
 }
 
 bool is_definition(lelt *e) { return is_tagged_list(e, &define_const); }
 
-lelt *definition_variable(lelt *e) {
+lelt *definition_variable(lelt *e)
+{
     if (is_symbol(cadr(e)))
 	return cadr(e);
     else
 	return caadr(e);
 }
 
-lelt *definition_value(lelt *e) {
+lelt *definition_value(lelt *e)
+{
     if (is_symbol(cadr(e)))
 	return caddr(e);
     else
@@ -66,14 +73,16 @@ bool is_if(lelt *e) { return is_tagged_list(e, &if_const); }
 lelt *if_predicate(lelt *e) { return cadr(e); }
 lelt *if_consequent(lelt *e) { return caddr(e); }
 
-lelt *if_alternative(lelt *e) {
+lelt *if_alternative(lelt *e)
+{
     if (cdddr(e))
 	return cadddr(e);
     else
 	return &false_const;
 }
 
-lelt *make_if(lelt *predicate, lelt *consequent, lelt *alternative) {
+lelt *make_if(lelt *predicate, lelt *consequent, lelt *alternative)
+{
     // list?
     return cons(&if_const, cons(predicate, cons(consequent, cons(alternative, empty_list))));
 }
@@ -85,7 +94,8 @@ lelt *first_exp(lelt *e) { return car(e); }
 lelt *rest_exps(lelt *e) { return cdr(e); }
 lelt *make_begin(lelt *e) { return cons(&begin_const, e); }
 
-lelt *sequence_to_exp(lelt *e) {
+lelt *sequence_to_exp(lelt *e)
+{
     if (!e)
 	return empty_list;
     if (is_last_exp(e))
@@ -102,18 +112,21 @@ lelt *first_operand(lelt *e) { return car(e); }
 lelt *rest_operands(lelt *e) { return cdr(e); }
 
 // more efficient?
-lelt *append(lelt *a, lelt *b) {
+lelt *append(lelt *a, lelt *b)
+{
     if (!a)
 	return b;
     return cons(car(a), append(cdr(a), b));
 }
 
-lelt *adjoin_arg(lelt *arg, lelt *arglist) {
+lelt *adjoin_arg(lelt *arg, lelt *arglist)
+{
     // list?
     return append(arglist, cons(arg, empty_list));
 }
 
-lelt *make_procedure(lelt *parameters, lelt *body, lelt *env) {
+lelt *make_procedure(lelt *parameters, lelt *body, lelt *env)
+{
     //list?
     return cons(&procedure_const, cons(parameters, cons(body, cons(env, empty_list))));
 }
@@ -133,13 +146,15 @@ lelt *make_frame(lelt *vars, lelt *vals) { return cons(vars, vals); }
 lelt *frame_variables(lelt *frame) { return car(frame); }
 lelt *frame_values(lelt *frame) { return cdr(frame); }
 
-lelt *add_binding_to_frame(lelt *var, lelt *val, lelt *frame) {
+lelt *add_binding_to_frame(lelt *var, lelt *val, lelt *frame)
+{
     set_car(frame, cons(var, car(frame)));
     set_cdr(frame, cons(val, cdr(frame)));
     return frame;
 }
 
-lelt *define_variable(lelt *var, lelt *val, lelt *env) {
+lelt *define_variable(lelt *var, lelt *val, lelt *env)
+{
     lelt *frame = first_frame(env);
     ensure(frame);
     lelt *vars = frame_variables(frame);
@@ -154,7 +169,8 @@ scan:
     goto scan;    
 }
 
-lelt *lookup_variable_value(lelt *var, lelt *env) {
+lelt *lookup_variable_value(lelt *var, lelt *env)
+{
 env_loop:
     ensure(env != the_empty_environment); // (error "Unbound variable" var)
     lelt *frame = first_frame(env);
@@ -173,7 +189,8 @@ scan:
     goto scan;
 }
 
-lelt *set_variable_value(lelt *var, lelt *val, lelt *env) {
+lelt *set_variable_value(lelt *var, lelt *val, lelt *env)
+{
 env_loop:
     ensure(env != the_empty_environment); // (error "Unbound variable -- SET!" var)
     lelt *frame = first_frame(env);
@@ -192,7 +209,8 @@ scan:
     goto scan;
 }
 
-lelt *extend_environment(lelt *vars, lelt *vals, lelt *base_env) {
+lelt *extend_environment(lelt *vars, lelt *vals, lelt *base_env)
+{
     ensure(vars);
     ensure(vals);
     //(if (= (length vars) (length vals))
@@ -216,14 +234,16 @@ lelt cons_object = { pair, .pair = { &primitive_const, &another_pair } };
 lelt primitive_procedure_names = { pair, .pair = { &cons_name, empty_list } };
 lelt primitive_procedure_objects = { pair, .pair = { &cons_object, empty_list } };
 
-void *setup_environment(void) {
+void *setup_environment(void)
+{
     void *initial_env = extend_environment(&primitive_procedure_names, &primitive_procedure_objects, the_empty_environment);
     define_variable(&true_const, &true_const, initial_env); // ?
     define_variable(&false_const, &false_const, initial_env); //?
     return initial_env;
 }
 
-void *get_global_environment(void) {
+void *get_global_environment(void)
+{
     /*static*/ void *global_environment = setup_environment();
     return global_environment;
 }

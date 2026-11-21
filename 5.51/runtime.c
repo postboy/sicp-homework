@@ -10,13 +10,15 @@
 #endif // __GLIBC__
 
 // gc_free
-void *gc_alloc(size_t size) {
+void *gc_alloc(size_t size)
+{
     void *result = malloc(size);
     ensure(result);
     return result;
 }
 
-char *gc_strdup(const char *str) {
+char *gc_strdup(const char *str)
+{
     size_t len = strlen(str); // useless?
     char *result = malloc(len + 1);
     ensure(result);
@@ -25,7 +27,8 @@ char *gc_strdup(const char *str) {
 }
 
 // call this less often? better error handling
-lelt *fatal(const char *file, int line, const char *inv) {
+lelt *fatal(const char *file, int line, const char *inv)
+{
     fprintf(stderr, "fatal error: check \"%s\" failed at %s:%i\n", inv, file, line);
 #ifdef __GLIBC__
     void *bt_stack[50];
@@ -36,13 +39,15 @@ lelt *fatal(const char *file, int line, const char *inv) {
     return NULL;
 }
 
-void announce_output(const char *str) {
+void announce_output(const char *str)
+{
     if (!interactive)
 	return;
     printf("%s", str);
 }
 
-void prompt_for_input(const char *str) {
+void prompt_for_input(const char *str)
+{
     if (!interactive)
 	return;
     printf("%s", str);
@@ -50,7 +55,8 @@ void prompt_for_input(const char *str) {
 }
 
 // return value -- does it need space after itself in general?
-bool user_print_internal(lelt *e, bool needs_parens, bool needs_separator, bool is_cdr) {
+bool user_print_internal(lelt *e, bool needs_parens, bool needs_separator, bool is_cdr)
+{
     // for printing lists
     if (!e)
 	return false;
@@ -82,7 +88,8 @@ bool user_print_internal(lelt *e, bool needs_parens, bool needs_separator, bool 
     return true;
 }
 
-lelt *user_print(lelt *e) {
+lelt *user_print(lelt *e)
+{
     ensure(e); //?
     user_print_internal(e, true, false, false);
     printf("\n");
@@ -200,8 +207,9 @@ lelt *string_to_lisp(char *str, char **next, bool in_list)
     return empty_list;
 }
 
-// GNU readline? name of func? load function is must-have
-lelt *read_input(void) {
+// GNU readline? load function is must-have
+lelt *read_input(void)
+{
     char *line = NULL;
     if (interactive) {
 	char *tmp_line = NULL;
@@ -230,22 +238,26 @@ lelt *stack_mem[2048];
 size_t stack_elts = 0;
 
 //  static, (void)
-void initialize_stack(void) {
+void initialize_stack(void)
+{
     stack_elts = 0;
 }
 
-lelt *push(lelt *e) {
+lelt *push(lelt *e)
+{
     ensure(stack_elts < (sizeof(stack_mem)/sizeof(*stack_mem)));
     stack_mem[stack_elts++] = e;
     return e;
 }
 
-lelt *pop() {
+lelt *pop()
+{
     ensure(stack_elts > 0);
     return stack_mem[--stack_elts];
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     if (argc > 1) {
 	interactive = false;
 	global_argv = &argv[1];
