@@ -4,27 +4,27 @@
 #include <stdbool.h>
 
 typedef struct {
-    /* lelt* */void *car;
-    /* lelt* */void *cdr;
+	/* lelt* */void *car;
+	/* lelt* */void *cdr;
 } lisp_pair_t;
 
 typedef enum {
-    string = 1,
-    symbol,
-    number,
-    pair,
-    primitive,
+	string = 1,
+	symbol,
+	number,
+	pair,
+	primitive,
 } lisp_type_t;
 
 typedef struct {
-    lisp_type_t type;
-    union {
-        const char *str;
-        const char *sym;
-        int num;
-        lisp_pair_t pair;
-        void *func;
-    };
+	lisp_type_t type;
+	union {
+		const char *str;
+		const char *sym;
+		int num;
+		lisp_pair_t pair;
+		void *func;
+	};
 } lelt;
 
 #define empty_list NULL

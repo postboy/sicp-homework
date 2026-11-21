@@ -1,12 +1,12 @@
 #!/bin/sh
 
 assert () {
-    arg=$1
-    expect=$2
-    result=`./lisp "$arg"`
-    if [ "$result" != "$expect" ]; then
-        echo "error: $arg: $expect != $result"
-    fi
+	arg=$1
+	expect=$2
+	result=`./lisp "$arg"`
+	if [ "$result" != "$expect" ]; then
+		echo "error: $arg: $expect != $result"
+	fi
 }
 
 # test of this test:
