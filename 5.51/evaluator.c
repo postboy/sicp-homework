@@ -7,7 +7,6 @@ other run-time support. */
 
 bool last_test_result = false;
 
-//  error checks, names, all args in ()
 #define assign(a, b) a = b
 #define perform(a) a
 #define test(a) last_test_result = (a)
@@ -17,7 +16,6 @@ bool last_test_result = false;
 #define save(e) push(e)
 #define restore(e) e = pop()
 
-//  types, = NULL, static
 lelt *exp_reg = NULL;
 void *env_reg = NULL;
 lelt *val_reg = NULL;
@@ -27,9 +25,6 @@ void *continue_reg = NULL;
 void *unev_reg  = NULL;
 
 char **global_argv = NULL;
-
-// forward decl
-state(read_eval_print_loop);
 
 state(print_result)
 {
@@ -44,12 +39,17 @@ state(signal_error)
     go_to(read_eval_print_loop);
 }
 
-//const?
 lelt unknown_expression_type_error = { string, "unknown_expression_type_error" };
 lelt unknown_procedure_type_error = { string, "unknown_procedure_type_error" };
 lelt ok_const = { string, "ok" };
 
 lelt *empty_arglist = NULL;
+
+// forward declarations
+state(eval_dispatch);
+state(ev_sequence);
+state(apply_dispatch);
+state(ev_appl_operand_loop);
 
 state(unknown_expression_type)
 {
@@ -64,17 +64,11 @@ state(unknown_procedure_type)
     go_to(signal_error);
 }
 
-// forward decl
-state(eval_dispatch);
-
 state(ev_sequence_last_exp)
 {
     restore(continue_reg);
     go_to(eval_dispatch);
 }
-
-// forward decl
-state(ev_sequence);
 
 state(ev_sequence_continue)
 {
@@ -95,9 +89,6 @@ state(ev_sequence)
     go_to(eval_dispatch);
 }
 
-// forward decl
-state(apply_dispatch);
-
 state(ev_appl_accum_last_arg)
 {
     restore(argl_reg);
@@ -111,9 +102,6 @@ state(ev_appl_last_arg)
     assign(continue_reg, ev_appl_accum_last_arg);
     go_to(eval_dispatch);
 }
-
-// forward decl
-state(ev_appl_operand_loop);
 
 state(ev_appl_accumulate_arg)
 {
