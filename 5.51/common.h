@@ -48,6 +48,8 @@ state(read_eval_print_loop);
 
 // primitives.c
 
+lelt *apply_primitive_procedure(lelt *proc, lelt *args);
+
 lelt *set_car(lelt *e, lelt *val);
 lelt *set_cdr(lelt *e, lelt *val);
 
@@ -64,8 +66,6 @@ bool is_string(lelt *e);
 bool is_symbol(lelt *e);
 bool is_pair(lelt *e);
 bool is_primitive_procedure(lelt *e);
-
-lelt *apply_primitive_procedure(lelt *proc, lelt *args);
 
 // combinations.c
 

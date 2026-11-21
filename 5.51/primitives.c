@@ -3,7 +3,6 @@
 
 typedef lelt *(*callback_1_t)(lelt *);
 
-// todo: more general and more effective
 lelt *apply_1(callback_1_t func, lelt *args)
 {
 	lelt *first = car(args);
@@ -14,7 +13,6 @@ lelt *apply_1(callback_1_t func, lelt *args)
 
 typedef lelt *(*callback_2_t)(lelt *, lelt *);
 
-// todo: more general and more effective
 lelt *apply_2(callback_2_t func, lelt *args)
 {
 	lelt *first = car(args);
@@ -23,6 +21,22 @@ lelt *apply_2(callback_2_t func, lelt *args)
 	ensure(second);
 	ensure(!cddr(args));	
 	return func(first, second);
+}
+
+// todo more general and effective apply because this is ugly
+lelt *apply_primitive_procedure(lelt *proc, lelt *args)
+{
+	ensure(proc);
+	ensure(proc->func.callback);
+	switch (proc->func.variant) {
+	case one_arg:
+		return apply_1(proc->func.callback, args);
+	case two_args:
+		return apply_2(proc->func.callback, args);
+	default:
+		ensure(false); // error
+		return empty_list;
+	}
 }
 
 lelt *set_car(lelt *e, lelt *val)
@@ -111,20 +125,4 @@ bool is_eq(lelt *a, lelt *b)
 		return (a->func.callback == b->func.callback && a->func.variant == b->func.variant);
 	ensure(false); // error!
 	return false;
-}
-
-// todo proper apply because this is ugly
-lelt *apply_primitive_procedure(lelt *proc, lelt *args)
-{
-	ensure(proc);
-	ensure(proc->func.callback);
-	switch (proc->func.variant) {
-	case one_arg:
-		return apply_1(proc->func.callback, args);
-	case two_args:
-		return apply_2(proc->func.callback, args);
-	default:
-		ensure(false); // error
-		return empty_list;
-	}
 }
