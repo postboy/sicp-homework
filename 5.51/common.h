@@ -66,6 +66,7 @@ bool is_primitive_procedure(lelt *e);
 bool is_eq(lelt *a, lelt *b);
 
 lelt *plus(lelt *a, lelt *b);
+lelt *minus(lelt *a, lelt *b);
 
 // combinations.c
 

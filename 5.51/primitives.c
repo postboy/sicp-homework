@@ -136,3 +136,13 @@ lelt *plus(lelt *a, lelt *b)
 	result->num = a->num + b->num;
 	return result;
 }
+
+lelt *minus(lelt *a, lelt *b)
+{
+	ensure(is_number(a));
+	ensure(is_number(b));
+	lelt *result = gc_alloc(sizeof(lelt));
+	result->type = number;
+	result->num = a->num - b->num;
+	return result;
+}
