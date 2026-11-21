@@ -11,7 +11,6 @@ lelt begin_const = { symbol, "begin" };
 lelt primitive_const = { symbol, "primitive" };
 lelt procedure_const = { symbol, "procedure" };
 
-// types?
 bool is_self_evaluating(lelt *e)
 {
     return (is_number(e) || is_string(e));
@@ -136,13 +135,11 @@ lelt *append(lelt *a, lelt *b)
 
 lelt *adjoin_arg(lelt *arg, lelt *arglist)
 {
-    // list?
     return append(arglist, cons(arg, empty_list));
 }
 
 lelt *make_procedure(lelt *parameters, lelt *body, lelt *env)
 {
-    //list?
     return cons(&procedure_const, cons(parameters, cons(body, cons(env, empty_list))));
 }
 
@@ -154,7 +151,6 @@ lelt *procedure_environment(lelt *e) { return cadddr(e); }
 
 void *the_empty_environment = empty_list;
 
-// type?
 lelt *enclosing_environment(lelt *e) { return cdr(e); }
 lelt *first_frame(lelt *e) { return car(e); }
 lelt *make_frame(lelt *vars, lelt *vals) { return cons(vars, vals); }
@@ -235,10 +231,9 @@ lelt *extend_environment(lelt *vars, lelt *vals, lelt *base_env)
     return cons(make_frame(vars, vals), base_env);
 }
 
-// todo add more, .func, 
 lelt cons_name = { symbol, "cons" };
 //lisp_pair_t cons_name_pair = { &cons_name, empty_list };
-lelt cons_primitive = { primitive, (char *)cons_wrapper };
+lelt cons_primitive = { primitive, .func = cons_wrapper };
 lelt another_pair = { pair, .pair = { &cons_primitive, empty_list } };
 lelt cons_object = { pair, .pair = { &primitive_const, &another_pair } };
 //lisp_pair_t cons_obj_pair = { &cons_object, empty_list };
