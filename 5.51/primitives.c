@@ -1,8 +1,6 @@
 #include "common.h"
 #include <string.h>
 
-// modify to optimize non-lisp usages like stack
-
 lelt *set_car(lelt *e, lelt *val)
 {
     ensure(is_pair(e));
@@ -14,7 +12,7 @@ lelt *set_car(lelt *e, lelt *val)
 lelt *set_cdr(lelt *e, lelt *val)
 {
     ensure(is_pair(e));
-    //ensure(val); // ok?
+    ensure(val);
     e->pair.cdr = val;
     return e;
 }
@@ -22,8 +20,6 @@ lelt *set_cdr(lelt *e, lelt *val)
 // not sure
 lelt *cons(lelt *car, lelt *cdr)
 {
-    //ensure(car); // for empty list
-    //ensure(cdr); //?
     lelt *result = gc_alloc(sizeof(lelt));
     ensure(result);
     result->type = pair;
@@ -70,15 +66,13 @@ bool is_eq(lelt *a, lelt *b)
 	return false;
     if (a->type != b->type)
 	return false; // error?
-    if (a->type == string) // todo obarray
-	//return (a->str == b->str);
+    if (a->type == string)
 	return !strcmp(a->str, b->str);
-    if (a->type == symbol) // todo obarray
-	//return (a->sym == b->sym);
+    if (a->type == symbol)
 	return !strcmp(a->sym, b->sym);
     if (a->type == number)
 	return (a->num == b->num);
-    if (a->type == pair) // I guess
+    if (a->type == pair)
 	return (is_eq(a->pair.car, b->pair.car) && is_eq(a->pair.cdr, b->pair.cdr));
     ensure(false); // error!
     return false;
