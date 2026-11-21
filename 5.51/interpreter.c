@@ -52,7 +52,6 @@ bool is_quoted(lelt *e) { return is_tagged_list(e, &quote_const); }
 lelt *text_of_quotation(lelt *e) { return cadr(e); }
 lelt *make_quoted(lelt *e)
 {
-    // list?
     //return cons(&quote_const, e); // many errors
     return cons(&quote_const, cons(e, empty_list));
 }
@@ -68,7 +67,6 @@ lelt *lambda_body(lelt *e) { return cddr(e); }
 
 lelt *make_lambda(lelt *parameters, lelt *body)
 {
-    // list?
     return cons(&lambda_const, cons(parameters, body));
 }
 
@@ -78,16 +76,14 @@ lelt *definition_variable(lelt *e)
 {
     if (is_symbol(cadr(e)))
 	return cadr(e);
-    else
-	return caadr(e);
+    return caadr(e);
 }
 
 lelt *definition_value(lelt *e)
 {
     if (is_symbol(cadr(e)))
 	return caddr(e);
-    else
-	return make_lambda(cdadr(e), cddr(e));
+    return make_lambda(cdadr(e), cddr(e));
 }
 
 bool is_if(lelt *e) { return is_tagged_list(e, &if_const); }
@@ -98,19 +94,17 @@ lelt *if_alternative(lelt *e)
 {
     if (cdddr(e))
 	return cadddr(e);
-    else
-	return &false_const;
+    return &false_const;
 }
 
 lelt *make_if(lelt *predicate, lelt *consequent, lelt *alternative)
 {
-    // list?
     return cons(&if_const, cons(predicate, cons(consequent, cons(alternative, empty_list))));
 }
 
 bool is_begin(lelt *e) { return is_tagged_list(e, &begin_const); }
 lelt *begin_actions(lelt *e) { return cdr(e); }
-bool is_last_exp(lelt *e) { return (!cdr(e)); }
+bool is_last_exp(lelt *e) { return !cdr(e); }
 lelt *first_exp(lelt *e) { return car(e); }
 lelt *rest_exps(lelt *e) { return cdr(e); }
 lelt *make_begin(lelt *e) { return cons(&begin_const, e); }
