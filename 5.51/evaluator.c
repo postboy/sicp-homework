@@ -25,6 +25,7 @@ int last_test_result = 0;
 #define test(a) last_test_result = (a)
 #define branch(a) if (last_test_result) return (a)
 #define go_to(x) return x
+#define state(name) void *name(void)
 
 // name collisions?
 #define save(e) push(e)
@@ -81,36 +82,41 @@ lelt ok_const = { string, "ok" };
 
 lelt *empty_arglist = NULL;
 
-void *unknown_expression_type(void) {
+state(unknown_expression_type)
+{
     assign(val_reg, &unknown_expression_type_error);
     go_to(signal_error);
 }
 
-void *unknown_procedure_type(void) {
+state(unknown_procedure_type)
+{
     restore(continue_reg);    // clean up stack (from apply_dispatch)
     assign(val_reg, &unknown_procedure_type_error);
     go_to(signal_error);
 }
 
 // forward decl
-void *eval_dispatch(void);
+state(eval_dispatch);
 
-void *ev_sequence_last_exp(void) {
+state(ev_sequence_last_exp)
+{
     restore(continue_reg);
     go_to(eval_dispatch);
 }
 
 // forward decl
-void *ev_sequence(void);
+state(ev_sequence);
 
-void *ev_sequence_continue(void) {
+state(ev_sequence_continue)
+{
     restore(env_reg);
     restore(unev_reg);
     assign(unev_reg, rest_exps(unev_reg));
     go_to(ev_sequence);
 }
 
-void *ev_sequence(void) {
+state(ev_sequence)
+{
     assign(exp_reg, first_exp(unev_reg));
     test(is_last_exp(unev_reg));
     branch(ev_sequence_last_exp);
@@ -121,24 +127,27 @@ void *ev_sequence(void) {
 }
 
 // forward decl
-void *apply_dispatch(void);
+state(apply_dispatch);
 
-void *ev_appl_accum_last_arg(void) {
+state(ev_appl_accum_last_arg)
+{
     restore(argl_reg);
     assign(argl_reg, adjoin_arg(val_reg, argl_reg));
     restore(proc_reg);
     go_to(apply_dispatch);
 }
 
-void *ev_appl_last_arg(void) {
+state(ev_appl_last_arg)
+{
     assign(continue_reg, ev_appl_accum_last_arg);
     go_to(eval_dispatch);
 }
 
 // forward decl
-void *ev_appl_operand_loop(void);
+state(ev_appl_operand_loop);
 
-void *ev_appl_accumulate_arg(void) {
+state(ev_appl_accumulate_arg)
+{
     restore(unev_reg);
     restore(env_reg);
     restore(argl_reg);
@@ -147,7 +156,8 @@ void *ev_appl_accumulate_arg(void) {
     go_to(ev_appl_operand_loop);
 }
 
-void *ev_appl_operand_loop(void) {
+state(ev_appl_operand_loop)
+{
     save(argl_reg);
     assign(exp_reg, first_operand(unev_reg));
     test(is_last_operand(unev_reg));
@@ -158,13 +168,15 @@ void *ev_appl_operand_loop(void) {
     go_to(eval_dispatch);
 }
 
-void *primitive_apply(void) {
+state(primitive_apply)
+{
     assign(val_reg, apply_primitive_procedure(proc_reg, argl_reg));
     restore(continue_reg);
     go_to(continue_reg);
 }
 
-void *compound_apply(void) {
+state(compound_apply)
+{
     assign(unev_reg, procedure_parameters(proc_reg));
     assign(env_reg, procedure_environment(proc_reg));
     assign(env_reg, extend_environment(unev_reg, argl_reg, env_reg));
@@ -172,7 +184,8 @@ void *compound_apply(void) {
     go_to(ev_sequence);
 }
 
-void *apply_dispatch(void) {
+state(apply_dispatch)
+{
     test(is_primitive_procedure(proc_reg));
     branch(primitive_apply);
     test(is_compound_procedure(proc_reg));
@@ -180,22 +193,26 @@ void *apply_dispatch(void) {
     go_to(unknown_procedure_type);
 }
 
-void *ev_self_eval(void) {
+state(ev_self_eval)
+{
     assign(val_reg, exp_reg);
     go_to(continue_reg);
 }
 
-void *ev_variable(void) {
+state(ev_variable)
+{
     assign(val_reg, lookup_variable_value(exp_reg, env_reg));
     go_to(continue_reg);
 }
 
-void *ev_quoted(void) {
+state(ev_quoted)
+{
     assign(val_reg, text_of_quotation(exp_reg));
     go_to(continue_reg);
 }
 
-void *ev_appl_did_operator(void) {
+state(ev_appl_did_operator)
+{
     restore(unev_reg);                 // the operands
     restore(env_reg);
     assign(argl_reg, empty_arglist);
@@ -206,7 +223,8 @@ void *ev_appl_did_operator(void) {
     go_to(ev_appl_operand_loop);
 }
 
-void *ev_assignment_1(void) {
+state(ev_assignment_1)
+{
     restore(continue_reg);
     restore(env_reg);
     restore(unev_reg);
@@ -215,7 +233,8 @@ void *ev_assignment_1(void) {
     go_to(continue_reg);
 }
 
-void *ev_assignment(void) {
+state(ev_assignment)
+{
     assign(unev_reg, assignment_variable(exp_reg));
     save(unev_reg); // save variable for later
     assign(exp_reg, assignment_value(exp_reg));
@@ -225,7 +244,8 @@ void *ev_assignment(void) {
     go_to(eval_dispatch); // evaluate the assignment value
 }
 
-void *ev_definition_1(void) {
+state(ev_definition_1)
+{
     restore(continue_reg);
     restore(env_reg);
     restore(unev_reg);
@@ -234,7 +254,8 @@ void *ev_definition_1(void) {
     go_to(continue_reg);
 }
 
-void *ev_definition(void) {
+state(ev_definition)
+{
     assign(unev_reg, definition_variable(exp_reg));
     save(unev_reg); // save variable for later
     assign(exp_reg, definition_value(exp_reg));
@@ -244,17 +265,20 @@ void *ev_definition(void) {
     go_to(eval_dispatch); // evaluate the definition value
 }
 
-void *ev_if_consequent(void) {
+state(ev_if_consequent)
+{
     assign(exp_reg, if_consequent(exp_reg));
     go_to(eval_dispatch);
 }
 
-void *ev_if_alternative(void) {
+state(ev_if_alternative)
+{
     assign(exp_reg, if_alternative(exp_reg));
     go_to(eval_dispatch);
 }
 
-void *ev_if_decide(void) {
+state(ev_if_decide)
+{
     restore(continue_reg);
     restore(env_reg);
     restore(exp_reg);
@@ -263,7 +287,8 @@ void *ev_if_decide(void) {
     go_to(ev_if_alternative);
 }
 
-void *ev_if(void) {
+state(ev_if)
+{
     save(exp_reg); // save expression for later
     save(env_reg);
     save(continue_reg);
@@ -272,20 +297,23 @@ void *ev_if(void) {
     go_to(eval_dispatch); // evaluate the predicate
 }
 
-void *ev_lambda(void) {
+state(ev_lambda)
+{
     assign(unev_reg, lambda_parameters(exp_reg));
     assign(exp_reg, lambda_body(exp_reg));
     assign(val_reg, make_procedure(unev_reg, exp_reg, env_reg));
     go_to(continue_reg);
 }
 
-void *ev_begin(void) {
+state(ev_begin)
+{
     assign(unev_reg, begin_actions(exp_reg));
     save(continue_reg);
     go_to(ev_sequence);
 }
 
-void *ev_application(void) {
+state(ev_application)
+{
     save(continue_reg);
     save(env_reg);
     assign(unev_reg, operands(exp_reg));
@@ -295,8 +323,8 @@ void *ev_application(void) {
     go_to(eval_dispatch);
 }
 
-//  autoformat
-void *eval_dispatch(void) {
+state(eval_dispatch)
+{
     test(is_self_evaluating(exp_reg));
     branch(ev_self_eval);
     test(is_variable(exp_reg));
@@ -318,7 +346,8 @@ void *eval_dispatch(void) {
     go_to(unknown_expression_type);
 }
 
-void *read_eval_print_loop(void) {
+state(read_eval_print_loop)
+{
     perform(initialize_stack());
     perform(prompt_for_input("lisp> "));
     assign(exp_reg, read_stdin());
