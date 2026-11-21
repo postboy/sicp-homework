@@ -61,9 +61,10 @@ bool is_string(lelt *e);
 bool is_symbol(lelt *e);
 bool is_pair(lelt *e);
 
+lelt *apply_primitive_procedure(lelt *proc, lelt *args);
+
 // interpreter.c
 
-lelt *apply_primitive_procedure(lelt *proc, lelt *args);
 bool is_self_evaluating(lelt *e);
 bool is_variable(lelt *e);
 

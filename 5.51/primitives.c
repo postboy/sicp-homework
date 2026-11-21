@@ -93,3 +93,14 @@ bool is_pair(lelt *e)
 	ensure(e);
 	return (e->type == pair);	
 }
+
+typedef lelt *(*primitive_func_t)(lelt *);
+
+primitive_func_t primitive_implementation(lelt *e) { return (primitive_func_t)cadr(e)->func; }
+
+// todo proper apply, cause this is ugly
+lelt *apply_primitive_procedure(lelt *proc, lelt *args)
+{
+	primitive_func_t impl = primitive_implementation(proc);
+	return impl(args);
+}
