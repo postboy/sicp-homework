@@ -123,7 +123,7 @@ lelt *string_to_lisp(char *str, char **next, bool in_list)
 		if (isspace(str[0])) {
 			str++;
 		}
-		else if (isdigit(str[0])) {
+		else if (isdigit(str[0]) || (str[0] == '-' && str[1] && isdigit(str[1]))) {
 			lelt *elt = gc_alloc(sizeof(lelt));
 			elt->type = number;
 			elt->num = strtol(str, next, 0);
