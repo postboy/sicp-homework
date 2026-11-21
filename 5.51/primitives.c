@@ -156,3 +156,14 @@ lelt *multiply(lelt *a, lelt *b)
 	result->num = a->num * b->num;
 	return result;
 }
+
+lelt *quotient(lelt *a, lelt *b)
+{
+	ensure(is_number(a));
+	ensure(is_number(b));
+	ensure(b->num);
+	lelt *result = gc_alloc(sizeof(lelt));
+	result->type = number;
+	result->num = a->num / b->num;
+	return result;
+}

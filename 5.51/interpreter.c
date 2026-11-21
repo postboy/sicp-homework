@@ -151,12 +151,14 @@ lelt cdr_name = { symbol, "cdr" };
 lelt plus_name = { symbol, "+" };
 lelt minus_name = { symbol, "-" };
 lelt multiply_name = { symbol, "*" };
+lelt quotient_name = { symbol, "quotient" };
 lelt cons_primitive = { primitive, .func = { cons, two_args } };
 lelt car_primitive = { primitive, .func = { car, one_arg } };
 lelt cdr_primitive = { primitive, .func = { cdr, one_arg } };
 lelt plus_primitive = { primitive, .func = { plus, two_args } };
 lelt minus_primitive = { primitive, .func = { minus, two_args } };
 lelt multiply_primitive = { primitive, .func = { multiply, two_args } };
+lelt quotient_primitive = { primitive, .func = { quotient, two_args } };
 
 void *setup_environment(void)
 {
@@ -166,6 +168,7 @@ void *setup_environment(void)
 													&plus_name,
 													&minus_name,
 													&multiply_name,
+													&quotient_name,
 													empty_list);
 	lelt *primitive_procedure_objects = make_inv_list(&cons_primitive,
 													  &car_primitive,
@@ -173,6 +176,7 @@ void *setup_environment(void)
 													  &plus_primitive,
 													  &minus_primitive,
 													  &multiply_primitive,
+													  &quotient_primitive,
 													  empty_list);
 	void *initial_env = extend_environment(primitive_procedure_names, primitive_procedure_objects, the_empty_environment);
 	define_variable(&true_const, &true_const, initial_env);
