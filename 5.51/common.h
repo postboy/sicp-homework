@@ -23,7 +23,7 @@ typedef enum {
 } apply_variant_t;
 
 typedef struct {
-	/* primitive_callback_t */ void *callback;
+	void *callback;
 	apply_variant_t variant;
 } primitive_func_t;
 

@@ -146,7 +146,7 @@ lelt *extend_environment(lelt *vars, lelt *vals, lelt *base_env)
 }
 
 lelt cons_name = { symbol, "cons" };
-lelt cons_primitive = { primitive, .func = { cons_wrapper } };
+lelt cons_primitive = { primitive, .func = { cons, two_args } };
 lelt primitive_procedure_names = { pair, .pair = { &cons_name, empty_list } };
 lelt primitive_procedure_objects = { pair, .pair = { &cons_primitive, empty_list } };
 

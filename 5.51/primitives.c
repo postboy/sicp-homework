@@ -39,11 +39,6 @@ lelt *cons(lelt *car, lelt *cdr)
 	return result;
 }
 
-lelt *cons_wrapper(lelt *args)
-{
-	return apply_2(args, cons);
-}
-
 lelt *car(lelt *e)
 {
 	ensure(is_pair(e));
@@ -111,8 +106,9 @@ bool is_eq(lelt *a, lelt *b)
 lelt *apply_primitive_procedure(lelt *proc, lelt *args)
 {
 	ensure(proc);
-	typedef lelt *(*primitive_callback_t)(lelt *);
-	primitive_callback_t impl = proc->func.callback;
-	ensure(impl);
-	return impl(args);
+	ensure(proc->func.callback);
+	if (proc->func.variant == two_args)
+		return apply_2(args, proc->func.callback);
+    ensure(false); // error
+	return empty_list;
 }
