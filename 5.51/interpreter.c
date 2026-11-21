@@ -47,15 +47,6 @@ lelt *first_exp(lelt *e) { return car(e); }
 lelt *rest_exps(lelt *e) { return cdr(e); }
 lelt *make_begin(lelt *e) { return cons(&begin_const, e); }
 
-lelt *sequence_to_exp(lelt *e)
-{
-	if (!e)
-		return empty_list;
-	if (is_last_exp(e))
-		return first_exp(e);
-	return make_begin(e);
-}
-
 bool is_application(lelt *e) { return is_pair(e); }
 lelt *operator(lelt *e) { return car(e); }
 lelt *operands(lelt *e) { return cdr(e); }
@@ -63,6 +54,13 @@ bool is_no_operands(lelt *e) { return !e; }
 bool is_last_operand(lelt *e) { return !cdr(e); }
 lelt *first_operand(lelt *e) { return car(e); }
 lelt *rest_operands(lelt *e) { return cdr(e); }
+
+lelt *sequence_to_exp(lelt *e)
+{
+	if (!e)
+		return empty_list;
+	return (is_last_exp(e) ? first_exp(e) : make_begin(e));
+}
 
 // more efficient?
 lelt *append(lelt *a, lelt *b)
