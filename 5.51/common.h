@@ -6,7 +6,7 @@
 typedef struct {
 	/* lelt* */void *car;
 	/* lelt* */void *cdr;
-} lisp_pair_t;
+} lpair_t;
 
 typedef enum {
 	string = 1,
@@ -14,7 +14,7 @@ typedef enum {
 	number,
 	pair,
 	primitive,
-} lisp_type_t;
+} ltype_t;
 
 typedef enum {
 	no_args = 0,
@@ -28,12 +28,12 @@ typedef struct {
 } primitive_func_t;
 
 typedef struct {
-	lisp_type_t type;
+	ltype_t type;
 	union {
 		const char *str;
 		const char *sym;
 		int num;
-		lisp_pair_t pair;
+		lpair_t pair;
 		primitive_func_t func;
 	};
 } lelt;
