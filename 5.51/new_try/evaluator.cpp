@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 
-typedef void *(state_t)();
+typedef void *(state_t)(void);
 
 state_t initialize_stack,
     read,
@@ -352,7 +352,7 @@ void *rest_operands(void *ops)
 
 //----------------------------
 
-void *eval_dispatch()
+void *eval_dispatch(void)
 {
     test(is_self_evaluating(expr));
     branch(ev_self_eval);
@@ -375,25 +375,25 @@ void *eval_dispatch()
     go_to(unknown_expression_type);
 }
 
-void *ev_self_eval()
+void *ev_self_eval(void)
 {
     val = expr;
     go_to(cont);
 }
 
-void *ev_variable()
+void *ev_variable(void)
 {
     val = lookup_variable_value(expr, env);
     go_to(cont);
 }
 
-void *ev_quoted()
+void *ev_quoted(void)
 {
     val = text_of_quotation(expr);
     go_to(cont);
 }
 
-void *ev_lambda()
+void *ev_lambda(void)
 {
     unev = lambda_parameters(expr);
     expr = lambda_body(expr);
@@ -401,7 +401,7 @@ void *ev_lambda()
     go_to(cont);
 }
 
-void *ev_application()
+void *ev_application(void)
 {
     save((void *)cont);
     save(env);
@@ -412,7 +412,7 @@ void *ev_application()
     go_to(eval_dispatch);
 }
 
-void *ev_appl_did_operator()
+void *ev_appl_did_operator(void)
 {
     unev = restore(); // the operands
     env = restore();
@@ -424,7 +424,7 @@ void *ev_appl_did_operator()
     go_to(ev_appl_operand_loop);
 }
 
-void *ev_appl_operand_loop()
+void *ev_appl_operand_loop(void)
 {
     save(argl);
     expr = first_operand(unev);
@@ -436,7 +436,7 @@ void *ev_appl_operand_loop()
     go_to(eval_dispatch);
 }
 
-void *ev_appl_accumulate_arg()
+void *ev_appl_accumulate_arg(void)
 {
     unev = restore();
     env = restore();
@@ -446,13 +446,13 @@ void *ev_appl_accumulate_arg()
     go_to(ev_appl_operand_loop);
 }
 
-void *ev_appl_last_arg()
+void *ev_appl_last_arg(void)
 {
     cont = ev_appl_accum_last_arg;
     go_to(eval_dispatch);
 }
 
-void *ev_appl_accum_last_arg()
+void *ev_appl_accum_last_arg(void)
 {
     argl = restore();
     argl = adjoin_arg(val, argl);
@@ -460,7 +460,7 @@ void *ev_appl_accum_last_arg()
     go_to(apply_dispatch);
 }
 
-void *apply_dispatch()
+void *apply_dispatch(void)
 {
     test(is_primitive_procedure(proc));
     branch(primitive_apply);
@@ -469,14 +469,14 @@ void *apply_dispatch()
     go_to(unknown_procedure_type);
 }
 
-void *primitive_apply()
+void *primitive_apply(void)
 {
     val = apply_primitive_procedure(proc, argl);
     cont = (state_t *)restore();
     go_to(cont);
 }
 
-void *compound_apply()
+void *compound_apply(void)
 {
     unev = procedure_parameters(proc);
     env = procedure_environment(proc);
@@ -485,14 +485,14 @@ void *compound_apply()
     go_to(ev_sequence);
 }
 
-void *ev_begin()
+void *ev_begin(void)
 {
     unev = begin_actions(expr);
     save((void *)cont);
     go_to(ev_sequence);
 }
 
-void *ev_sequence()
+void *ev_sequence(void)
 {
     expr = first_exp(unev);
     test(is_last_exp(unev));
@@ -503,7 +503,7 @@ void *ev_sequence()
     go_to(eval_dispatch);
 }
 
-void *ev_sequence_continue()
+void *ev_sequence_continue(void)
 {
     env = restore();
     unev = restore();
@@ -511,13 +511,13 @@ void *ev_sequence_continue()
     go_to(ev_sequence);
 }
 
-void *ev_sequence_last_exp()
+void *ev_sequence_last_exp(void)
 {
     cont = (state_t *)restore();
     go_to(eval_dispatch);
 }
 
-void *ev_if()
+void *ev_if(void)
 {
     save(expr); // save expression for later
     save(env);
@@ -527,7 +527,7 @@ void *ev_if()
     go_to(eval_dispatch); // evaluate the predicate
 }
 
-void *ev_if_decide()
+void *ev_if_decide(void)
 {
     cont = (state_t *)restore();
     env = restore();
@@ -537,19 +537,19 @@ void *ev_if_decide()
     go_to(ev_if_alternative);
 }
 
-void *ev_if_alternative()
+void *ev_if_alternative(void)
 {
     expr = if_alternative(expr);
     go_to(eval_dispatch);
 }
 
-void *ev_if_consequent()
+void *ev_if_consequent(void)
 {
     expr = if_consequent(expr);
     go_to(eval_dispatch);
 }
 
-void *ev_assignment()
+void *ev_assignment(void)
 {
     unev = assignment_variable(expr);
     save(unev); // save variable for later
@@ -560,7 +560,7 @@ void *ev_assignment()
     go_to(eval_dispatch); // evaluate the assignment value
 }
 
-void *ev_assignment_1()
+void *ev_assignment_1(void)
 {
     cont = (state_t *)restore();
     env = restore();
@@ -570,7 +570,7 @@ void *ev_assignment_1()
     go_to(cont);
 }
 
-void *ev_definition()
+void *ev_definition(void)
 {
     unev = definition_variable(expr);
     save(unev); // save variable for later
@@ -581,7 +581,7 @@ void *ev_definition()
     go_to(eval_dispatch); // evaluate the definition value
 }
 
-void *ev_definition_1()
+void *ev_definition_1(void)
 {
     cont = (state_t *)restore();
     env = restore();
@@ -593,7 +593,7 @@ void *ev_definition_1()
 
 //----------------------------
 
-void *read_eval_print_loop()
+void *read_eval_print_loop(void)
 {
     initialize_stack();
     prompt_for_input(";;; EC-Eval input:");
@@ -603,27 +603,27 @@ void *read_eval_print_loop()
     go_to(eval_dispatch);
 }
 
-void *print_result()
+void *print_result(void)
 {
     announce_output(";;; EC-Eval value:");
     user_print(val);
     go_to(read_eval_print_loop);
 }
 
-void *unknown_expression_type()
+void *unknown_expression_type(void)
 {
     val = unknown_expression_type_error;
     go_to(signal_error);
 }
 
-void *unknown_procedure_type()
+void *unknown_procedure_type(void)
 {
     cont = (state_t *)restore(); // clean up stack (from apply_dispatch)
     val = unknown_procedure_type_error;
     go_to(signal_error);
 }
 
-void *signal_error()
+void *signal_error(void)
 {
     user_print(val);
     go_to(read_eval_print_loop);
@@ -631,7 +631,7 @@ void *signal_error()
 
 //----------------------------
 
-int main()
+int main(void)
 {
     global_environment = setup_environment();
     state_t *cur = read_eval_print_loop;
