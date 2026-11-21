@@ -358,10 +358,9 @@ int main(int argc, char *argv[]) {
 	interactive = false;
 	global_argv = &argv[1];
     }
-    void *ptr = read_eval_print_loop;
-    for (;ptr;) {
-	impl_func_t func = (impl_func_t)ptr;
-	ptr = func();
+    impl_func_t func = read_eval_print_loop;
+    while (func) {
+	func = (impl_func_t)func();
     }
     return 0;
 }

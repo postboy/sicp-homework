@@ -349,14 +349,3 @@ void *rest_operands(void *ops)
 {
     return cdr(ops);
 }
-
-//----------------------------
-
-int main(void)
-{
-    global_environment = setup_environment();
-    state_t *cur = read_eval_print_loop;
-    while (cur)
-        cur = (state_t *)cur();
-    return 0;
-}
