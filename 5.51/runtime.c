@@ -201,7 +201,7 @@ lelt *string_to_lisp(char *str, char **next, bool in_list)
 }
 
 // GNU readline? name of func? load function is must-have
-lelt *read_stdin(void) {
+lelt *read_input(void) {
     char *line = NULL;
     if (interactive) {
 	char *tmp_line = NULL;

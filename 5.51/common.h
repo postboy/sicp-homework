@@ -125,7 +125,7 @@ lelt *fatal(const char *file, int line, const char *inv);
 void prompt_for_input(const char *str);
 void announce_output(const char *str);
 lelt *user_print(lelt *e);
-lelt *read_stdin(void);
+lelt *read_input(void);
 
 void initialize_stack(void);
 lelt *push(lelt *e);
