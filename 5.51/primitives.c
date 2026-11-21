@@ -1,6 +1,19 @@
 #include "common.h"
 #include <string.h>
 
+typedef lelt *(*callback_2_t)(lelt *, lelt *);
+
+// todo: more general and more effective
+lelt *apply_2(lelt *args, callback_2_t func)
+{
+	lelt *first = car(args);
+	ensure(first);
+	lelt *second = cadr(args);
+	ensure(second);
+	ensure(!cddr(args));	
+	return func(first, second);
+}
+
 lelt *set_car(lelt *e, lelt *val)
 {
 	ensure(is_pair(e));
@@ -28,12 +41,7 @@ lelt *cons(lelt *car, lelt *cdr)
 
 lelt *cons_wrapper(lelt *args)
 {
-	// todo: more general and more effective
-	lelt *first = car(args);
-	ensure(first);
-	lelt *second = cadr(args);
-	ensure(second);
-	return cons(first, second);
+	return apply_2(args, cons);
 }
 
 lelt *car(lelt *e)
@@ -99,12 +107,11 @@ bool is_eq(lelt *a, lelt *b)
 	return false;
 }
 
-typedef lelt *(*primitive_func_t)(lelt *);
-
 // todo proper apply because this is ugly
 lelt *apply_primitive_procedure(lelt *proc, lelt *args)
 {
 	ensure(proc);
+	typedef lelt *(*primitive_func_t)(lelt *);
 	primitive_func_t impl = proc->func;
 	ensure(impl);
 	return impl(args);
