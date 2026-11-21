@@ -22,7 +22,7 @@ void *gc_alloc(size_t size)
 
 char *gc_strdup(const char *str)
 {
-	size_t len = strlen(str); // useless?
+	size_t len = strlen(str);
 	char *result = malloc(len + 1);
 	ensure(result);
 	memcpy(result, str, len + 1);
@@ -38,7 +38,7 @@ lelt *fatal(const char *file, int line, const char *inv)
 	int size = backtrace(bt_stack, sizeof(bt_stack)/sizeof(*bt_stack));
 	backtrace_symbols_fd(bt_stack, size, STDERR_FILENO);
 #endif // __GLIBC__
-	exit(1); //?
+	exit(1); // todo
 	return NULL;
 }
 
@@ -86,20 +86,19 @@ bool user_print_internal(lelt *e, bool needs_parens, bool needs_separator, bool 
 		if (needs_parens) printf(")");
 	}
 	else {
-		ensure(0); //error
+		ensure(0); // error
 	}
 	return true;
 }
 
 lelt *user_print(lelt *e)
 {
-	ensure(e); //?
+	ensure(e);
 	user_print_internal(e, true, false, false);
 	printf("\n");
 	return e;
 }
 
-// forward decl
 lelt *string_to_lisp(char *str, char **next, bool in_list);
 
 lelt *elt_or_sublist(lelt *elt, char **next, bool in_list)
@@ -124,7 +123,6 @@ lelt *string_to_lisp(char *str, char **next, bool in_list)
 		}
 		else if (isdigit(str[0])) {
 			lelt *elt = gc_alloc(sizeof(lelt));
-			// ensure?
 			elt->type = number;
 			elt->num = strtol(str, next, 0);
 			//str = str_end;
@@ -170,11 +168,9 @@ lelt *string_to_lisp(char *str, char **next, bool in_list)
 			} while (str[0] != '"');
 			str[0] = '\0';
 			//char *copy = gc_strdup(start);
-			// ensure?
 			*next = ++str;
 
 			lelt *elt = gc_alloc(sizeof(lelt));
-			// ensure?
 			elt->type = string;
 			elt->str = start;
 			//result = elt; // todo
@@ -194,12 +190,10 @@ lelt *string_to_lisp(char *str, char **next, bool in_list)
 			char tmp = str[0];
 			str[0] = '\0'; // end
 			char *copy = gc_strdup(start);
-			// ensure?
 			str[0] = tmp;
 			*next = str;
 
 			lelt *elt = gc_alloc(sizeof(lelt));
-			// ensure?
 			elt->type = symbol;
 			elt->sym = copy;
 			//result = elt; // todo
@@ -236,11 +230,9 @@ lelt *read_input(void)
 	return string_to_lisp(line, &next, false);
 }
 
-// automatic memory?
 lelt *stack_mem[2048];
 size_t stack_elts = 0;
 
-//  static, (void)
 void initialize_stack(void)
 {
 	stack_elts = 0;
@@ -268,7 +260,7 @@ int main(int argc, char *argv[])
 	}
 	impl_func_t func = read_eval_print_loop;
 	while (func) {
-		func = (impl_func_t)func();
+		func = func();
 	}
 	return 0;
 }

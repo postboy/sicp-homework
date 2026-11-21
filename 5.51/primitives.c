@@ -17,11 +17,10 @@ lelt *set_cdr(lelt *e, lelt *val)
 	return e;
 }
 
-// not sure
 lelt *cons(lelt *car, lelt *cdr)
 {
+    //ensure(car); // todo: why it's not working?
 	lelt *result = gc_alloc(sizeof(lelt));
-	ensure(result);
 	result->type = pair;
 	result->pair.car = car;
 	result->pair.cdr = cdr;
@@ -57,7 +56,7 @@ bool is_eq(lelt *a, lelt *b)
 	if (!a || !b)
 		return false;
 	if (a->type != b->type)
-		return false; // error?
+		return false;
 	if (a->type == string)
 		return !strcmp(a->str, b->str);
 	if (a->type == symbol)
@@ -65,7 +64,7 @@ bool is_eq(lelt *a, lelt *b)
 	if (a->type == number)
 		return (a->num == b->num);
 	if (a->type == pair)
-		return (is_eq(a->pair.car, b->pair.car) && is_eq(a->pair.cdr, b->pair.cdr));
+		return (is_eq(car(a), car(b)) && is_eq(cdr(a), cdr(b)));
 	ensure(false); // error!
 	return false;
 }
