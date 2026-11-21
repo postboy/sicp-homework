@@ -57,15 +57,15 @@ lelt *cons(lelt *car, lelt *cdr);
 lelt *car(lelt *e);
 lelt *cdr(lelt *e);
 
-lelt *cons_wrapper(lelt *args);
-
-bool is_eq(lelt *a, lelt *b);
-
 bool is_number(lelt *e);
 bool is_string(lelt *e);
 bool is_symbol(lelt *e);
 bool is_pair(lelt *e);
 bool is_primitive_procedure(lelt *e);
+
+bool is_eq(lelt *a, lelt *b);
+
+lelt *plus(lelt *a, lelt *b);
 
 // combinations.c
 

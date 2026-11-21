@@ -126,3 +126,13 @@ bool is_eq(lelt *a, lelt *b)
 	ensure(false); // error!
 	return false;
 }
+
+lelt *plus(lelt *a, lelt *b)
+{
+	ensure(is_number(a));
+	ensure(is_number(b));
+	lelt *result = gc_alloc(sizeof(lelt));
+	result->type = number;
+	result->num = a->num + b->num;
+	return result;
+}
