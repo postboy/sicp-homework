@@ -146,13 +146,15 @@ lelt *extend_environment(lelt *vars, lelt *vals, lelt *base_env)
 }
 
 lelt cons_name = { symbol, "cons" };
+//lelt car_name = { symbol, "car" };
 lelt cons_primitive = { primitive, .func = { cons, two_args } };
-lelt primitive_procedure_names = { pair, .pair = { &cons_name, empty_list } };
-lelt primitive_procedure_objects = { pair, .pair = { &cons_primitive, empty_list } };
+//lelt car_primitive = { primitive, .func = { car, one_arg } };
 
 void *setup_environment(void)
 {
-	void *initial_env = extend_environment(&primitive_procedure_names, &primitive_procedure_objects, the_empty_environment);
+	lelt *primitive_procedure_names = cons(&cons_name, empty_list);
+	lelt *primitive_procedure_objects = cons(&cons_primitive, empty_list);
+	void *initial_env = extend_environment(primitive_procedure_names, primitive_procedure_objects, the_empty_environment);
 	define_variable(&true_const, &true_const, initial_env);
 	define_variable(&false_const, &false_const, initial_env);
 	return initial_env;
