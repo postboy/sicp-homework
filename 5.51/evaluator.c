@@ -3,16 +3,9 @@ language of your choice) by translating the explicit-control evaluator of sectio
 order to run this code you will need to also provide appropriate storage-allocation routines and
 other run-time support. */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include "common.h"
 
-// -Wall so on
-// makefile or script
-// several files: evaluator, primitives
-
-//  bool type?
-int last_test_result = 0;
+bool last_test_result = false;
 
 //  error checks, names, all args in ()
 #define assign(a, b) a = b
@@ -25,16 +18,15 @@ int last_test_result = 0;
 #define restore(e) e = pop()
 
 //  types, = NULL, static
-lelt *exp_reg;
-void *env_reg; //?
-lelt *val_reg;
-void *proc_reg; //?
-lelt *argl_reg;
-void *continue_reg; //?
-void *unev_reg; //?
+lelt *exp_reg = NULL;
+void *env_reg = NULL;
+lelt *val_reg = NULL;
+void *proc_reg = NULL;
+lelt *argl_reg = NULL;
+void *continue_reg = NULL;
+void *unev_reg  = NULL;
 
 char **global_argv = NULL;
-bool interactive = true;
 
 // forward decl
 state(read_eval_print_loop);

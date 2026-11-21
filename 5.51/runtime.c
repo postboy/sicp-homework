@@ -9,6 +9,8 @@
 #include <execinfo.h>
 #endif // __GLIBC__
 
+bool interactive = true;
+
 // gc_free
 void *gc_alloc(size_t size)
 {
