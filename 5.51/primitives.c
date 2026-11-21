@@ -19,7 +19,6 @@ lelt *set_cdr(lelt *e, lelt *val)
 
 lelt *cons(lelt *car, lelt *cdr)
 {
-    //ensure(car); // todo: why it's not working?
 	lelt *result = gc_alloc(sizeof(lelt));
 	result->type = pair;
 	result->pair.car = car;

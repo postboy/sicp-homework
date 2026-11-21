@@ -93,8 +93,10 @@ bool user_print_internal(lelt *e, bool needs_parens, bool needs_separator, bool 
 
 lelt *user_print(lelt *e)
 {
-	ensure(e);
-	user_print_internal(e, true, false, false);
+	if (!e)
+		printf("()");
+	else
+		user_print_internal(e, true, false, false);
 	printf("\n");
 	return e;
 }
@@ -132,7 +134,6 @@ lelt *string_to_lisp(char *str, char **next, bool in_list)
 		else if (str[0] == '\'') {
 			str++;
 			lelt *elt = string_to_lisp(str, &str, in_list);
-			ensure(elt);
 			return make_quoted(elt);
 		}
 		else if (str[0] == '(') {
@@ -146,7 +147,7 @@ lelt *string_to_lisp(char *str, char **next, bool in_list)
 			//result = elt; // todo
 			// empty list
 			if (!elt)
-				return cons(empty_list, empty_list); // wtf?
+				return empty_list;
 			//return elt;
 			return elt_or_sublist(elt, next, in_list);
 		}
