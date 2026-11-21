@@ -30,10 +30,14 @@ typedef struct {
 
 #define empty_list NULL
 
-// interpreter.c
+// evaluator.c
 
 extern char **global_argv;
 extern bool interactive;
+
+#define state(name) void *name(void)
+state(read_eval_print_loop);
+typedef void *(*impl_func_t)(void);
 
 // primitives.c
 
@@ -61,7 +65,11 @@ bool is_string(lelt *e);
 bool is_symbol(lelt *e);
 bool is_pair(lelt *e);
 
-// evaluator.c
+// interpreter.c
+
+lelt *apply_primitive_procedure(lelt *proc, lelt *args);
+bool is_self_evaluating(lelt *e);
+bool is_variable(lelt *e);
 
 bool is_true(lelt *e);
 
@@ -130,7 +138,3 @@ lelt *read_input(void);
 void initialize_stack(void);
 lelt *push(lelt *e);
 lelt *pop();
-
-#define state(name) void *name(void)
-state(read_eval_print_loop);
-typedef void *(*impl_func_t)(void);
