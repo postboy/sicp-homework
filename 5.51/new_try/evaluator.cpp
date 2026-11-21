@@ -352,44 +352,6 @@ void *rest_operands(void *ops)
 
 //----------------------------
 
-void *read_eval_print_loop(void)
-{
-    initialize_stack();
-    prompt_for_input(";;; EC-Eval input:");
-    expr = read();
-    env = get_global_environment();
-    cont = print_result;
-    go_to(eval_dispatch);
-}
-
-void *print_result(void)
-{
-    announce_output(";;; EC-Eval value:");
-    user_print(val);
-    go_to(read_eval_print_loop);
-}
-
-void *unknown_expression_type(void)
-{
-    val = unknown_expression_type_error;
-    go_to(signal_error);
-}
-
-void *unknown_procedure_type(void)
-{
-    cont = (state_t *)restore(); // clean up stack (from apply_dispatch)
-    val = unknown_procedure_type_error;
-    go_to(signal_error);
-}
-
-void *signal_error(void)
-{
-    user_print(val);
-    go_to(read_eval_print_loop);
-}
-
-//----------------------------
-
 int main(void)
 {
     global_environment = setup_environment();
