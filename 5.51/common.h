@@ -79,6 +79,8 @@ lelt *cdadr(lelt *e);
 lelt *cdddr(lelt *e);
 lelt *cadddr(lelt *e);
 
+lelt *make_inv_list(lelt *first, ...);
+
 lelt *append(lelt *a, lelt *b);
 
 //lelt *sequence_to_exp(lelt *e);
