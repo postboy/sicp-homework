@@ -24,8 +24,6 @@ lelt *argl_reg = NULL;
 void *continue_reg = NULL;
 void *unev_reg  = NULL;
 
-char **global_argv = NULL;
-
 state(print_result)
 {
     perform(announce_output("result: "));

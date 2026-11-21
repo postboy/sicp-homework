@@ -10,6 +10,7 @@
 #endif // __GLIBC__
 
 bool interactive = true;
+char **global_argv = NULL;
 
 // gc_free
 void *gc_alloc(size_t size)

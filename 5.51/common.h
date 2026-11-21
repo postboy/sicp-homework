@@ -32,12 +32,11 @@ typedef struct {
 
 // evaluator.c
 
-extern char **global_argv;
 extern bool interactive;
 
 #define state(name) void *name(void)
-state(read_eval_print_loop);
 typedef void *(*impl_func_t)(void);
+state(read_eval_print_loop);
 
 // primitives.c
 
