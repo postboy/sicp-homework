@@ -11,35 +11,16 @@ lelt begin_const = { symbol, "begin" };
 lelt primitive_const = { symbol, "primitive" };
 lelt procedure_const = { symbol, "procedure" };
 
-bool is_self_evaluating(lelt *e)
-{
-	return (is_number(e) || is_string(e));
-}
+bool is_self_evaluating(lelt *e) { return (is_number(e) || is_string(e)); }
+bool is_variable(lelt *e) { return is_symbol(e); }
+bool is_false(lelt *e) { return is_eq(e, &false_const); }
 
-bool is_variable(lelt *e)
-{
-	return is_symbol(e);
-}
-
-bool is_false(lelt *e)
-{
-	return is_eq(e, &false_const);
-}
-
-bool is_tagged_list(lelt *e, lelt *tag)
-{
-	return is_pair(e) && is_eq(car(e), tag);
-}
+bool is_tagged_list(lelt *e, lelt *tag) { return (is_pair(e) && is_eq(car(e), tag)); }
 
 bool is_quoted(lelt *e) { return is_tagged_list(e, &quote_const); }
 lelt *text_of_quotation(lelt *e) { return cadr(e); }
-lelt *make_quoted(lelt *e)
-{
-	//return cons(&quote_const, e); // many errors
-	return cons(&quote_const, cons(e, empty_list));
-}
+lelt *make_quoted(lelt *e) { return cons(&quote_const, cons(e, empty_list)); }
 
-// exp as variable?
 bool is_assignment(lelt *e) { return is_tagged_list(e, &set_const); }
 lelt *assignment_value(lelt *e) { return cadr(e); }
 lelt *assignment_variable(lelt *e) { return caddr(e); }
@@ -47,43 +28,17 @@ lelt *assignment_variable(lelt *e) { return caddr(e); }
 bool is_lambda(lelt *e) { return is_tagged_list(e, &lambda_const); }
 lelt *lambda_parameters(lelt *e) { return cadr(e); }
 lelt *lambda_body(lelt *e) { return cddr(e); }
-
-lelt *make_lambda(lelt *parameters, lelt *body)
-{
-	return cons(&lambda_const, cons(parameters, body));
-}
+lelt *make_lambda(lelt *parameters, lelt *body) { return cons(&lambda_const, cons(parameters, body)); }
 
 bool is_definition(lelt *e) { return is_tagged_list(e, &define_const); }
-
-lelt *definition_variable(lelt *e)
-{
-	if (is_symbol(cadr(e)))
-		return cadr(e);
-	return caadr(e);
-}
-
-lelt *definition_value(lelt *e)
-{
-	if (is_symbol(cadr(e)))
-		return caddr(e);
-	return make_lambda(cdadr(e), cddr(e));
-}
+lelt *definition_variable(lelt *e) { return (is_symbol(cadr(e)) ? cadr(e) : caadr(e)); }
+lelt *definition_value(lelt *e) { return (is_symbol(cadr(e)) ? caddr(e) : make_lambda(cdadr(e), cddr(e))); }
 
 bool is_if(lelt *e) { return is_tagged_list(e, &if_const); }
 lelt *if_predicate(lelt *e) { return cadr(e); }
 lelt *if_consequent(lelt *e) { return caddr(e); }
-
-lelt *if_alternative(lelt *e)
-{
-	if (cdddr(e))
-		return cadddr(e);
-	return &false_const;
-}
-
-lelt *make_if(lelt *predicate, lelt *consequent, lelt *alternative)
-{
-	return cons(&if_const, cons(predicate, cons(consequent, cons(alternative, empty_list))));
-}
+lelt *if_alternative(lelt *e) {	return (cdddr(e) ? cadddr(e) : &false_const); }
+lelt *make_if(lelt *pred, lelt *conseq, lelt *alt) { return cons(&if_const, cons(pred, cons(conseq, cons(alt, empty_list)))); }
 
 bool is_begin(lelt *e) { return is_tagged_list(e, &begin_const); }
 lelt *begin_actions(lelt *e) { return cdr(e); }
