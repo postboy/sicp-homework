@@ -18,6 +18,7 @@ assert () {
 # several arguments at once
 assert 0 0
 assert 123 123
+assert '""' '""'
 assert '"abc"' '"abc"'
 assert "'6" 6
 assert "'x" 'x'
