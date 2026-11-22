@@ -44,6 +44,9 @@ assert "(- 10 (- 3 2))" "9"
 assert "(* 6 3)" "18"
 assert "(* -6 3)" "-18"
 assert "(quotient 18 5)" "3"
+assert "(define a 1)" '"ok"'
+#assert "(define a_a 1)" '"ok"'
+#assert "(define a-a 1)" '"ok"'
 
 # tests that don't pass yet. provide extra arguments to this script to run them
 if [ "$#" -ne 0 ]; then
