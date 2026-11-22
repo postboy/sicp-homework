@@ -37,6 +37,7 @@ assert "(quote 1)" "1"
 assert "(quote (quote a))" "(quote a)"
 assert "(cons 1 2)" "(1 . 2)"
 assert "(cons 1 (cons 2 3))" "(1 2 . 3)"
+assert "(cons 1 (cons 2 '()))" "(1 2)"
 assert "(car (cons 1 2))" "1"
 assert "(cdr (cons 1 2))" "2"
 assert "(+ 1 (+ 2 3))" "6"
@@ -56,8 +57,6 @@ assert "'(1 '\"aaa\")" "(1 (quote \"aaa\"))"
 
 assert "1 1" "multiline"
 assert '"aa" "aa"' "multiline"
-
-assert "(cons 1 (cons 2 '()))" "(1 2)"
 
 # space at the end of the string
 # unpaired brackets, other incomplete and incorrect constructions

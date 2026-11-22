@@ -18,7 +18,6 @@ lelt *apply_2(callback_2_t func, lelt *args)
 	lelt *first = car(args);
 	ensure(first);
 	lelt *second = cadr(args);
-	ensure(second);
 	ensure(!cddr(args));
 	return func(first, second);
 }
