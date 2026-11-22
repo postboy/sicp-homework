@@ -148,6 +148,7 @@ lelt *extend_environment(lelt *vars, lelt *vals, lelt *base_env)
 lelt cons_name = { symbol, "cons" };
 lelt car_name = { symbol, "car" };
 lelt cdr_name = { symbol, "cdr" };
+lelt list_name = { symbol, "list" };
 lelt plus_name = { symbol, "+" };
 lelt minus_name = { symbol, "-" };
 lelt multiply_name = { symbol, "*" };
@@ -155,6 +156,7 @@ lelt quotient_name = { symbol, "quotient" };
 lelt cons_primitive = { primitive, .func = { cons, two_args } };
 lelt car_primitive = { primitive, .func = { car, one_arg } };
 lelt cdr_primitive = { primitive, .func = { cdr, one_arg } };
+lelt list_primitive = { primitive, .func = { list, two_args } };
 lelt plus_primitive = { primitive, .func = { plus, two_args } };
 lelt minus_primitive = { primitive, .func = { minus, two_args } };
 lelt multiply_primitive = { primitive, .func = { multiply, two_args } };
@@ -165,6 +167,7 @@ void *setup_environment(void)
 	lelt *primitive_procedure_names = make_inv_list(&cons_name,
 													&car_name,
 													&cdr_name,
+													&list_name,
 													&plus_name,
 													&minus_name,
 													&multiply_name,
@@ -173,6 +176,7 @@ void *setup_environment(void)
 	lelt *primitive_procedure_objects = make_inv_list(&cons_primitive,
 													  &car_primitive,
 													  &cdr_primitive,
+													  &list_primitive,
 													  &plus_primitive,
 													  &minus_primitive,
 													  &multiply_primitive,

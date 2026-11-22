@@ -82,6 +82,8 @@ lelt *cdadr(lelt *e);
 lelt *cdddr(lelt *e);
 lelt *cadddr(lelt *e);
 
+lelt *list(lelt *a, lelt *b);
+
 lelt *make_inv_list(lelt *first, ...);
 
 lelt *append(lelt *a, lelt *b);

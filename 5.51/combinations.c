@@ -11,6 +11,8 @@ lelt *cdadr(lelt *e) { return cdr(car(cdr(e))); }
 lelt *cdddr(lelt *e) { return cdr(cdr(cdr(e))); }
 lelt *cadddr(lelt *e) { return car(cdr(cdr(cdr(e)))); }
 
+lelt *list(lelt *a, lelt *b) { return cons(a, cons(b, empty_list)); }
+
 lelt *make_inv_list(lelt *first, ...)
 {
 	if (!first)
