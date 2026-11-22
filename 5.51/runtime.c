@@ -179,14 +179,13 @@ lelt *string_to_lisp(char *str, char **next, bool in_list)
 		} else {
 			char *start = str;
 			do {
-				ensure(str[0]);
 				// skip next symbol
 				/*if (str[0] == "\\") {
 				  str++;
 				  ensure(str[0]);
 				  }*/ // todo
 				str++;
-			} while (isalnum(str[0]));
+			} while (str && !isspace(str[0]) && str[0] != ')');
 			char tmp = str[0];
 			str[0] = '\0'; // end
 			char *copy = gc_strdup(start);
