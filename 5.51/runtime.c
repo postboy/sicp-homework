@@ -199,7 +199,7 @@ lelt *to_lisp(char *str, char **next, bool in_list)
 			return elt_or_sublist(elt, next, in_list);
 		}
 	}
-	ensure(0); // ?
+	ensure(0); // todo
 	return empty_list;
 }
 

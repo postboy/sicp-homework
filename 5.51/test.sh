@@ -64,4 +64,5 @@ assert "(cons 1 (cons 2 '()))" "(1 2)"
 
 assert if error
 assert x error
+assert "" error
 fi
