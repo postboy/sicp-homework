@@ -11,6 +11,7 @@
 
 bool interactive = true;
 char **global_argv = NULL;
+char *unprocessed = NULL;
 
 // todo: garbage collector
 void *gc_alloc(size_t size)
@@ -51,7 +52,7 @@ void announce_output(const char *str)
 
 void prompt_for_input(const char *str)
 {
-	if (!interactive)
+	if (!interactive || (unprocessed && unprocessed[0]))
 		return;
 	printf("%s", str);
 	fflush(stdout);
@@ -210,7 +211,10 @@ lelt *to_lisp(char *str, char **next, bool in_list)
 lelt *read_input(void)
 {
 	char *line = NULL;
-	if (interactive) {
+	if (unprocessed && unprocessed[0]) {
+		line = unprocessed;
+	}
+	else if (interactive) {
 		char *tmp_line = NULL;
 		size_t len = 0;
 		ensure(getline(&tmp_line, &len, stdin) != -1);
@@ -227,9 +231,8 @@ lelt *read_input(void)
 			exit(0);
 		global_argv++;
 	}
-	char *next = line;
 	//return user_print(to_lisp(line, NULL)); // debug
-	return to_lisp(line, &next, false);
+	return to_lisp(line, &unprocessed, false);
 }
 
 lelt *stack_mem[2048];
