@@ -188,7 +188,7 @@ lelt *to_lisp(char *str, char **next, bool in_list)
 				  ensure(str[0]);
 				  }*/ // todo
 				str++;
-			} while (str && !isspace(str[0]) && str[0] != ')');
+			} while (str[0] && !isspace(str[0]) && str[0] != ')');
 			char tmp = str[0];
 			str[0] = '\0'; // end
 			char *copy = gc_strdup(start);
