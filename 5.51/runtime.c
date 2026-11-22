@@ -101,13 +101,13 @@ lelt *print(lelt *e)
 	return e;
 }
 
-lelt *string_to_lisp(char *str, char **next, bool in_list);
+lelt *to_lisp(char *str, char **next, bool in_list);
 
 lelt *elt_or_sublist(lelt *elt, char **next, bool in_list)
 {
 	if (in_list) {
 		ensure(next);
-		return cons(elt, string_to_lisp(*next, next, true));
+		return cons(elt, to_lisp(*next, next, true));
 	}
 	else {
 		return elt;
@@ -115,7 +115,7 @@ lelt *elt_or_sublist(lelt *elt, char **next, bool in_list)
 }
 
 // beware of stack overflow!
-lelt *string_to_lisp(char *str, char **next, bool in_list)
+lelt *to_lisp(char *str, char **next, bool in_list)
 {
 	ensure(str);
 	//lelt *result = NULL;
@@ -133,14 +133,14 @@ lelt *string_to_lisp(char *str, char **next, bool in_list)
 		}
 		else if (str[0] == '\'') {
 			str++;
-			lelt *elt = string_to_lisp(str, next, false);
+			lelt *elt = to_lisp(str, next, false);
 			return make_quoted(elt);
 		}
 		else if (str[0] == '(') {
 			str++;
-			lelt *elt = string_to_lisp(str, next, true);
+			lelt *elt = to_lisp(str, next, true);
 			//ensure(car_elt);
-			//lelt *cdr_elt = string_to_lisp(str, &str, true);
+			//lelt *cdr_elt = to_lisp(str, &str, true);
 			//ensure(cdr_elt); // no, end of list!
 				   //lelt *elt = cons(car_elt, cdr_elt);
 			//ensure(elt);
@@ -225,8 +225,8 @@ lelt *read_input(void)
 		global_argv++;
 	}
 	char *next = line;
-	//return user_print(string_to_lisp(line, NULL)); // debug
-	return string_to_lisp(line, &next, false);
+	//return user_print(to_lisp(line, NULL)); // debug
+	return to_lisp(line, &next, false);
 }
 
 lelt *stack_mem[2048];
