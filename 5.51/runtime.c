@@ -133,7 +133,7 @@ lelt *string_to_lisp(char *str, char **next, bool in_list)
 		}
 		else if (str[0] == '\'') {
 			str++;
-			lelt *elt = string_to_lisp(str, &str, in_list);
+			lelt *elt = string_to_lisp(str, next, false);
 			return make_quoted(elt);
 		}
 		else if (str[0] == '(') {
