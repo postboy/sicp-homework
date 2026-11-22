@@ -86,7 +86,7 @@ bool print_internal(lelt *e, bool needs_parens, bool needs_separator, bool is_cd
 		if (needs_parens) printf(")");
 	}
 	else {
-		ensure(0); // error
+		ensure(false); // error
 	}
 	return true;
 }
@@ -202,7 +202,7 @@ lelt *to_lisp(char *str, char **next, bool in_list)
 			return elt_or_sublist(elt, next, in_list);
 		}
 	}
-	ensure(0); // todo
+	ensure(false); // error, todo fix
 	return empty_list;
 }
 
