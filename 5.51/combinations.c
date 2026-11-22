@@ -16,7 +16,7 @@ lelt *make_inv_list(lelt *first, ...)
 	if (!first)
 		return empty_list;
 	
-    va_list args;
+	va_list args;
 	va_start(args, first);
 
 	lelt *result = empty_list;
@@ -26,7 +26,7 @@ lelt *make_inv_list(lelt *first, ...)
 		elt = va_arg(args, void *);
 	} while (elt);
 	
-    va_end(args);
+	va_end(args);
 	return result;
 }
 
