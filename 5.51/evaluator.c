@@ -27,13 +27,13 @@ void *unev_reg  = NULL;
 state(print_result)
 {
 	perform(announce_output("result: "));
-	perform(user_print(val_reg));
+	perform(print(val_reg));
 	go_to(read_eval_print_loop);
 }
 
 state(signal_error)
 {
-	perform(user_print(val_reg));
+	perform(print(val_reg));
 	go_to(read_eval_print_loop);
 }
 
