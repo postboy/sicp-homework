@@ -11,7 +11,7 @@ lelt begin_const = { symbol, "begin" };
 lelt primitive_const = { symbol, "primitive" };
 lelt procedure_const = { symbol, "procedure" };
 
-bool is_self_evaluating(lelt *e) { return (is_number(e) || is_string(e)); }
+bool is_self_evaluating(lelt *e) { return (!e || is_number(e) || is_string(e)); }
 bool is_variable(lelt *e) { return is_symbol(e); }
 bool is_false(lelt *e) { return is_eq(e, &false_const); }
 

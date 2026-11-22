@@ -134,6 +134,9 @@ lelt *to_lisp(char *str, char **next, bool in_list)
 		else if (str[0] == '\'') {
 			str++;
 			lelt *elt = to_lisp(str, next, false);
+			if (!elt) {
+				return elt_or_sublist(empty_list, next, in_list);
+			}
 			return make_quoted(elt);
 		}
 		else if (str[0] == '(') {
