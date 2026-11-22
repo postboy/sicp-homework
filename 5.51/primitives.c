@@ -7,7 +7,7 @@ lelt *apply_1(callback_1_t func, lelt *args)
 {
 	lelt *first = car(args);
 	ensure(first);
-	ensure(!cdr(args));	
+	ensure(!cdr(args));
 	return func(first);
 }
 
@@ -19,7 +19,7 @@ lelt *apply_2(callback_2_t func, lelt *args)
 	ensure(first);
 	lelt *second = cadr(args);
 	ensure(second);
-	ensure(!cddr(args));	
+	ensure(!cddr(args));
 	return func(first, second);
 }
 
